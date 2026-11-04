@@ -16,3 +16,4 @@ coverage/
 .DS_Store
 .tmp-expo-home/
 *.log
+.handoff/

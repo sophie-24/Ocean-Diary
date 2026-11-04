@@ -10,23 +10,35 @@
     "splash": {
       "image": "./assets/icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#EAF2EC"
+      "backgroundColor": "#F4F8FC"
     },
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.oceandiary.app",
-      "buildNumber": "1"
+      "buildNumber": "1",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "package": "com.oceandiary.app",
       "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#EAF2EC"
+        "backgroundColor": "#F4F8FC"
       },
       "edgeToEdgeEnabled": true
     },
     "plugins": [
+      "expo-router",
+      "expo-font",
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false
+        }
+      ],
       [
         "expo-image-picker",
         {
@@ -35,6 +47,10 @@
           "microphonePermission": false
         }
       ]
-    ]
+    ],
+    "scheme": "oceandiary",
+    "experiments": {
+      "typedRoutes": true
+    }
   }
 }

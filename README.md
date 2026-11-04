@@ -1,10 +1,10 @@
 # OCEAN DIARY
 
-Monorepo for the OCEAN DIARY MVP. Current scope: a diver selects one underwater photo, confirms or corrects an AI species suggestion, and saves a discovery to a private collection.
+Monorepo for OCEAN DIARY. **v2 is in progress** (iOS first, then Android): five tabs — 홈 · 도감 · 발견 · 로그북 · 나의 바다 — rebuilt from the design canvas. See `docs/plan-v2.md` for decisions, routes, data model and phases; it supersedes the v1 scope notes below.
 
 ## Workspace
 
-- `apps/mobile`: Expo + React Native mobile app
+- `apps/mobile`: Expo + React Native mobile app (expo-router tabs in `app/`, v1 flow kept in `src/legacy/LegacyApp.tsx` until it is ported)
 - `services/api`: FastAPI backend
 - `services/api/app/worker.py`: asynchronous identification and retryable cleanup worker
 - `infra`: local PostgreSQL and MinIO setup
@@ -12,6 +12,7 @@ Monorepo for the OCEAN DIARY MVP. Current scope: a diver selects one underwater 
 
 ## Product documents
 
+- `docs/plan-v2.md`: v2 decisions, screen-to-route map, data model and delivery phases
 - `docs/feature-spec-v1.md`: MVP implementation baseline with screen behavior, states, data rules, privacy requirements, and completion criteria
 - `docs/api-contract-v1.md`: mobile/server request and response contract
 - `docs/progress.md`: latest development milestone, static checks, and release gates
