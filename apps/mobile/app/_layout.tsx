@@ -44,6 +44,9 @@ export default function RootLayout() {
         <Stack.Screen name="discover/analyzing" options={{ animation: "fade", gestureEnabled: false }} />
         <Stack.Screen name="discover/result" options={{ animation: "fade" }} />
         <Stack.Screen name="discover/collected" options={{ animation: "fade", gestureEnabled: false }} />
+        <Stack.Screen name="log/new" options={{ presentation: "modal" }} />
+        <Stack.Screen name="log/[id]" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="diary/[logId]/write" options={{ animation: "slide_from_right" }} />
       </Stack>
     </>
   );

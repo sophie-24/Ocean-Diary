@@ -1,4 +1,4 @@
-import Svg, { Circle, Path } from "react-native-svg";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { colors } from "../theme/tokens";
 
 type P = { size?: number; color?: string; strokeWidth?: number };
@@ -119,5 +119,49 @@ export const SoundOffIcon = ({ size = 20, color = colors.white, strokeWidth = 2 
 export const FishIcon = ({ size = 18, color = colors.navy, strokeWidth = 2 }: P) => (
   <Svg width={size} height={size} viewBox="0 0 24 24">
     <Path d="M2 12 C6 6 14 5 19 10 L22 7 V17 L19 14 C14 19 6 18 2 12 Z" {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const ScubaIcon = ({ size = 16, color = colors.navy, strokeWidth = 2 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Rect x={8} y={3} width={8} height={18} rx={4} {...base(color, strokeWidth)} />
+    <Path d="M10 3 V1.5 H14 V3" {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const FreeIcon = ({ size = 16, color = colors.navy, strokeWidth = 2 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Circle cx={12} cy={5} r={2.5} {...base(color, strokeWidth)} />
+    <Path d="M12 8 V15 M8 21 L12 15 L16 21 M7 11 H17" {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const SnorkelIcon = ({ size = 16, color = colors.navy, strokeWidth = 2 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M3 9 H14 Q15 9 15 10 V13 Q15 15 13 15 H11 L9 13 L7 15 H5 Q3 15 3 13 Z" {...base(color, strokeWidth)} />
+    <Path d="M19 3 V15 Q19 19 15 19 H12" {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const PlusIcon = ({ size = 20, color = colors.white, strokeWidth = 2.6 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Path d="M12 5 V19 M5 12 H19" {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const StampBookIcon = ({ size = 20, color = colors.navy, strokeWidth = 1.9 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Rect x={4} y={4} width={7} height={7} rx={1.5} {...base(color, strokeWidth)} />
+    <Rect x={13} y={4} width={7} height={7} rx={1.5} {...base(color, strokeWidth)} />
+    <Rect x={4} y={13} width={7} height={7} rx={1.5} {...base(color, strokeWidth)} />
+    <Rect x={13} y={13} width={7} height={7} rx={1.5} {...base(color, strokeWidth)} />
+  </Svg>
+);
+
+export const CameraIcon = ({ size = 20, color = colors.white, strokeWidth = 2 }: P) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24">
+    <Rect x={3} y={7} width={18} height={13} rx={3} {...base(color, strokeWidth)} />
+    <Path d="M8 7 L9.5 4.5 H14.5 L16 7" {...base(color, strokeWidth)} />
+    <Circle cx={12} cy={13.5} r={3.4} {...base(color, strokeWidth)} />
   </Svg>
 );
