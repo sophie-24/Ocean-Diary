@@ -47,6 +47,7 @@ export default function RootLayout() {
         <Stack.Screen name="log/new" options={{ presentation: "modal" }} />
         <Stack.Screen name="log/[id]" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="diary/[logId]/write" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="sea/map" options={{ animation: "slide_from_right" }} />
       </Stack>
     </>
   );
