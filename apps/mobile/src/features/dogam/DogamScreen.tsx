@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { FlatList, Pressable, ScrollView, StyleSheet, Switch, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
 import { ScreenHeader, RoundIconButton } from "../../components/ui/ScreenHeader";
 import { Chip } from "../../components/ui/Chip";
@@ -17,6 +18,7 @@ const ALL = "전체";
 const MILESTONE_STEP = 10;
 
 export function DogamScreen() {
+  const router = useRouter();
   const [book, setBook] = useState<Book>("species");
   const [group, setGroup] = useState(ALL);
   const [siteCat, setSiteCat] = useState(ALL);
@@ -178,7 +180,14 @@ export function DogamScreen() {
           windowSize={7}
           renderItem={({ item }) => {
             const mark = collected.get(item.no);
-            return <SpeciesCard species={item} collected={!!mark} isNew={mark?.isNew} />;
+            return (
+              <SpeciesCard
+                species={item}
+                collected={!!mark}
+                isNew={mark?.isNew}
+                onPress={() => router.push({ pathname: "/species/[no]", params: { no: item.no } })}
+              />
+            );
           }}
         />
       ) : (

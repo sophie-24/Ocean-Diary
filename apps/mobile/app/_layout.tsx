@@ -40,6 +40,10 @@ export default function RootLayout() {
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.mist } }}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="species/[no]" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="discover/analyzing" options={{ animation: "fade", gestureEnabled: false }} />
+        <Stack.Screen name="discover/result" options={{ animation: "fade" }} />
+        <Stack.Screen name="discover/collected" options={{ animation: "fade", gestureEnabled: false }} />
       </Stack>
     </>
   );

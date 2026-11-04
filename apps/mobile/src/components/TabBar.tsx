@@ -62,6 +62,8 @@ function TabIcon({ tab, color }: { tab: TabKey; color: string }) {
 export function TabBar({ state, navigateToTab, insets }: BottomTabBarProps) {
   const activeName = state.routes[state.index]?.name;
   const dark = activeName === "sea";
+  // The 발견 picker is a full-screen task with its own bottom sheet, like the design.
+  if (activeName === "discover") return null;
   const bar = dark
     ? { bg: "rgba(8,24,58,0.92)", line: "rgba(142,197,255,0.18)", ring: "#0B2150" }
     : { bg: colors.white, line: colors.line, ring: colors.white };
