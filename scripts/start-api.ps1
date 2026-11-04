@@ -7,7 +7,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $apiRoot = Join-Path $projectRoot "services\api"
 $python = Join-Path $apiRoot ".venv\Scripts\python.exe"
 $composeFile = Join-Path $projectRoot "infra\docker-compose.yml"
-$requiredSchemaRevision = "0012_retire_legacy_upload_intents"
+$requiredSchemaRevision = "0013_v2_logbook"
 $projectEnvFile = Join-Path $projectRoot ".env"
 $projectEnvExample = Join-Path $projectRoot ".env.example"
 

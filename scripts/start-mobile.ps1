@@ -3,7 +3,7 @@ param(
 )
 
 $ErrorActionPreference = 'Stop'
-$requiredSchemaRevision = '0012_retire_legacy_upload_intents'
+$requiredSchemaRevision = '0013_v2_logbook'
 $projectRoot = (Resolve-Path (Join-Path $PSScriptRoot '..')).Path
 $mobileRoot = Join-Path $projectRoot 'apps\mobile'
 $mobileEnv = Join-Path $mobileRoot '.env'
