@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Pressable } from "react-native";
 import Animated, { Easing, Extrapolation, interpolate, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withTiming } from "react-native-reanimated";
 import { Critter } from "../../components/Critter";
+import { useOnStage } from "./stage";
 
 type Ring = { n: number; rx: number; ry: number; cy: number; w: number; dur: number };
 
@@ -52,7 +53,7 @@ function OrbitFish({ ring, index, onPress }: { ring: Ring; index: number; onPres
   );
 }
 
-export function BaitBall({ left, top, onPress }: { left: number; top: number; onPress: () => void }) {
+function BaitBallInner({ left, top, onPress }: { left: number; top: number; onPress: () => void }) {
   return (
     <Pressable
       onPress={onPress}
@@ -63,4 +64,8 @@ export function BaitBall({ left, top, onPress }: { left: number; top: number; on
       {RINGS.flatMap((ring, ri) => Array.from({ length: ring.n }, (_, i) => <OrbitFish key={`${ri}-${i}`} ring={ring} index={i} onPress={onPress} />))}
     </Pressable>
   );
+}
+
+export function BaitBall(props: { left: number; top: number; onPress: () => void }) {
+  return useOnStage("trevally") ? <BaitBallInner {...props} /> : null;
 }

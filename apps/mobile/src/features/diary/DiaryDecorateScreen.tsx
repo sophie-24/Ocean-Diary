@@ -14,9 +14,11 @@ import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { SPECIES_BY_NO } from "../../data/species";
 import { STICKER_ART, STICKER_CATEGORIES, STICKER_NAMES, type StickerKind } from "../../data/stickers";
-import { MOCK_COLLECTION } from "../../mocks/collection";
 import { colors, fonts } from "../../theme/tokens";
-import { logStore, type PlacedSticker } from "../log/logStore";
+import type { DiveLog, PlacedSticker } from "../log/logStore";
+import { useCollection, useDiveLog, useUpdateDiveLog } from "../../api/queries";
+import { errorMessage } from "../../api/client";
+import { StateView } from "../../components/ui/StateView";
 import { DRAW_H, DRAW_W, StickerArt, itemSize } from "./DiaryCanvas";
 import { Manuscript } from "./Manuscript";
 
@@ -119,10 +121,24 @@ function PlacedItem({
 }
 
 export function DiaryDecorateScreen({ logId }: { logId: string }) {
+  const { data: log, isLoading, error, refetch } = useDiveLog(logId);
+  if (!log) {
+    return (
+      <SafeAreaView style={[styles.root, { justifyContent: "center" }]}>
+        <StateView loading={isLoading} error={error} onRetry={() => void refetch()} empty="기록을 찾을 수 없어요" />
+      </SafeAreaView>
+    );
+  }
+  return <DiaryDecorateInner key={log.id} log={log} />;
+}
+
+function DiaryDecorateInner({ log }: { log: DiveLog }) {
+  const logId = log.id;
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { width } = useWindowDimensions();
-  const log = logStore.find(logId);
+  const update = useUpdateDiveLog();
+  const { data: collection } = useCollection();
   const [layout, setLayout] = useState<PlacedSticker[]>(log?.layout ?? []);
   const [selected, setSelected] = useState<string | null>(null);
   const [cat, setCat] = useState<string>("mine");
@@ -133,7 +149,10 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
   const drawScale = (pageW - 28) / DRAW_W;
 
   const mine: CritterKind[] = Array.from(
-    new Set([...(log?.stickers ?? []), ...MOCK_COLLECTION.map((c) => SPECIES_BY_NO[c.no]?.art).filter((k): k is CritterKind => !!k)]),
+    new Set([
+      ...log.stickers,
+      ...Array.from(collection?.keys() ?? []).map((no) => SPECIES_BY_NO[no]?.art).filter((k): k is CritterKind => !!k),
+    ]),
   );
 
   const add = (item: Omit<PlacedSticker, "id" | "x" | "y" | "scale" | "rot">) => {
@@ -154,11 +173,11 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
   };
 
   const done = () => {
-    if (log) {
-      const critters = layout.filter((it) => it.type === "critter").map((it) => it.kind as CritterKind);
-      logStore.update(log.id, { layout, stickers: Array.from(new Set(critters)).slice(0, 3), extraStickers: Math.max(0, new Set(critters).size - 3), draft: false });
-    }
-    router.replace({ pathname: "/log/[id]", params: { id: logId } });
+    if (update.isPending) return;
+    update.mutate(
+      { id: logId, patch: { sticker_layout: layout.map((it) => ({ ...it, x: Math.round(it.x), y: Math.round(it.y) })), is_draft: false } },
+      { onSuccess: () => router.replace({ pathname: "/log/[id]", params: { id: logId } }) },
+    );
   };
 
   const share = async () => {
@@ -172,7 +191,7 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
     }
   };
 
-  const d = log ? new Date(`${log.date}T00:00:00`) : new Date();
+  const d = new Date(`${log.date}T00:00:00`);
   const trayItems =
     cat === "mine"
       ? mine.map((k) => ({ key: k, type: "critter" as const, kind: k }))
@@ -193,7 +212,7 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
           </Pressable>
           <Pressable accessibilityRole="button" onPress={done} style={[styles.hit, { width: 52 }]}>
             <Txt size={15} weight="black" color={colors.oceanBlue}>
-              완료
+              {update.isPending ? "저장…" : "완료"}
             </Txt>
           </Pressable>
         </View>
@@ -221,7 +240,7 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
               요일
             </Txt>
             <Txt size={15} style={styles.crayon} numberOfLines={1}>
-              {log?.point ?? ""}
+              {log.point}
             </Txt>
           </View>
           <View style={[styles.drawing, { height: DRAW_H * drawScale + 4 }]}>
@@ -250,12 +269,12 @@ export function DiaryDecorateScreen({ logId }: { logId: string }) {
             ) : null}
           </View>
           <View style={{ alignItems: "center", marginTop: 8 }}>
-            <Manuscript text={log?.diary ?? ""} rows={3} cell={(pageW - 30) / 12} />
+            <Manuscript text={log.diary ?? ""} rows={3} cell={(pageW - 30) / 12} />
           </View>
         </View>
       </View>
-      <Txt size={11} weight="bold" color={colors.ink2} align="center" style={{ marginTop: 8 }}>
-        끌어서 옮기고 · 두 손가락으로 크기와 방향을 바꿔요
+      <Txt size={11} weight="bold" color={update.isError ? colors.coral : colors.ink2} align="center" style={{ marginTop: 8 }} accessibilityLiveRegion="polite">
+        {update.isError ? `${errorMessage(update.error)} 완료를 다시 눌러 주세요.` : "끌어서 옮기고 · 두 손가락으로 크기와 방향을 바꿔요"}
       </Txt>
 
       <View style={[styles.tray, { paddingBottom: 12 + insets.bottom }]}>

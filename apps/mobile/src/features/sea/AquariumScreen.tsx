@@ -5,32 +5,34 @@ import { SPECIES_BY_NO } from "../../data/species";
 import { ReefScene } from "./ReefScene";
 import { SwimmingFish } from "./SwimmingFish";
 import { Dance, Peek } from "./TankParts";
-import { TankShell, type Resident } from "./TankShell";
+import { InTank } from "./stage";
+import { TankShell, useResidents, type Cast } from "./TankShell";
 
-// Mock residents of the reef tank (first meeting per species). Phase 5: GET /v1/collection.
-const RESIDENTS: Partial<Record<CritterKind, Resident>> = {
-  napoleon: { no: "029", date: "2025년 9월 14일", place: "호주 리저드섬 코드 홀", count: 1 },
-  lionfish: { no: "027", date: "2025년 4월 14일", place: "보홀 발리카삭", count: 2 },
-  boxfish: { no: "032", date: "2025년 4월 16일", place: "보홀 발리카삭", count: 1 },
-  puffer: { no: "031", date: "2025년 11월 22일", place: "모알보알 페스카도르 섬", count: 1 },
-  mandarin: { no: "026", date: "2026년 11월 1일", place: "말라파스쿠아 라이트하우스", count: 1 },
-  moray: { no: "030", date: "2025년 4월 15일", place: "보홀 발리카삭", count: 4 },
-  epaulette: { no: "015", date: "2025년 9월 12일", place: "호주 헤론섬", count: 1 },
-  whitetip: { no: "006", date: "2025년 4월 15일", place: "보홀 발리카삭", count: 3 },
-  blacktip: { no: "005", date: "2025년 4월 15일", place: "보홀 발리카삭", count: 2 },
-  grouper: { no: "028", date: "2025년 9월 14일", place: "호주 리저드섬 코드 홀", count: 1 },
-  trevally: { no: "034", date: "2025년 4월 15일", place: "보홀 발리카삭", count: 2 },
+// Choreographed critters of the reef tank → catalog no. Only species the diver has met appear.
+const CAST: Cast = {
+  napoleon: "029",
+  lionfish: "027",
+  boxfish: "032",
+  puffer: "031",
+  mandarin: "026",
+  moray: "030",
+  epaulette: "015",
+  whitetip: "006",
+  blacktip: "005",
+  grouper: "028",
+  trevally: "034",
 };
 
-const name = (k: CritterKind) => SPECIES_BY_NO[RESIDENTS[k]!.no].nameKo;
+const name = (k: CritterKind) => SPECIES_BY_NO[CAST[k]!]?.nameKo ?? "";
 
 export function AquariumScreen() {
+  const residents = useResidents(CAST);
   return (
     <TankShell
       title="나의 바다"
-      subtitle={`산호초 수조 · ${Object.keys(RESIDENTS).length}종이 살고 있어요`}
+      subtitle={(n) => `산호초 수조 · ${n}종이 살고 있어요`}
       scene={(rays) => <ReefScene rays={rays} />}
-      residents={RESIDENTS}
+      residents={residents}
       current="reef"
     >
       {({ night, dark, pick }) => {
@@ -53,24 +55,32 @@ export function AquariumScreen() {
               <SwimmingFish key={`far${i}`} {...f} duration={f.dur} far label={`${name(f.kind)} · 눌러서 명판 보기`} onPress={pick(f.kind)} />
             ))}
             {!night ? (
-              <Pressable style={{ position: "absolute", left: 250, top: 644 }} onPress={pick("whitetip")} accessibilityRole="button" accessibilityLabel="백기흉상어 · 쉬는 중">
-                <Critter kind="whitetip" width={136} height={56} />
-              </Pressable>
+              <InTank kind="whitetip">
+                <Pressable style={{ position: "absolute", left: 250, top: 644 }} onPress={pick("whitetip")} accessibilityRole="button" accessibilityLabel="백기흉상어 · 쉬는 중">
+                  <Critter kind="whitetip" width={136} height={56} />
+                </Pressable>
+              </InTank>
             ) : (
-              <Pressable style={{ position: "absolute", left: 160, top: 576, opacity: 0.75 }} onPress={pick("napoleon")} accessibilityRole="button" accessibilityLabel="나폴레옹피쉬 · 자는 중">
-                <Critter kind="napoleon" width={150} height={71} />
-              </Pressable>
+              <InTank kind="napoleon">
+                <Pressable style={{ position: "absolute", left: 160, top: 576, opacity: 0.75 }} onPress={pick("napoleon")} accessibilityRole="button" accessibilityLabel="나폴레옹피쉬 · 자는 중">
+                  <Critter kind="napoleon" width={150} height={71} />
+                </Pressable>
+              </InTank>
             )}
             <Peek onPress={pick("moray")} />
-            <Pressable style={{ position: "absolute", left: 270, top: 520 }} onPress={pick("lionfish")} accessibilityRole="button" accessibilityLabel="라이언피쉬 · 눌러서 명판 보기">
-              <Critter kind="lionfish" width={92} height={60} />
-            </Pressable>
+            <InTank kind="lionfish">
+              <Pressable style={{ position: "absolute", left: 270, top: 520 }} onPress={pick("lionfish")} accessibilityRole="button" accessibilityLabel="라이언피쉬 · 눌러서 명판 보기">
+                <Critter kind="lionfish" width={92} height={60} />
+              </Pressable>
+            </InTank>
             {dark ? (
               <Dance onPress={pick("mandarin")} />
             ) : (
-              <Pressable style={{ position: "absolute", left: 190, top: 682, opacity: 0.55 }} onPress={pick("mandarin")} accessibilityRole="button" accessibilityLabel="만다린피쉬 · 산호 틈에 숨어 있어요. 해 질 녘에 나와요">
-                <Critter kind="mandarin" width={30} height={19} />
-              </Pressable>
+              <InTank kind="mandarin">
+                <Pressable style={{ position: "absolute", left: 190, top: 682, opacity: 0.55 }} onPress={pick("mandarin")} accessibilityRole="button" accessibilityLabel="만다린피쉬 · 산호 틈에 숨어 있어요. 해 질 녘에 나와요">
+                  <Critter kind="mandarin" width={30} height={19} />
+                </Pressable>
+              </InTank>
             )}
             {mid.map((f) => (
               <SwimmingFish key={f.kind} {...f} duration={f.dur} label={`${name(f.kind)} · 눌러서 명판 보기`} onPress={pick(f.kind)} />

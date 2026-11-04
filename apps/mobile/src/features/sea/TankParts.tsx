@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Pressable, View } from "react-native";
 import Animated, { Easing, useAnimatedStyle, useReducedMotion, useSharedValue, withRepeat, withSequence, withTiming } from "react-native-reanimated";
 import { Critter } from "../../components/Critter";
+import { useOnStage } from "./stage";
 
 export function Particle({ x, y, size, dur, delay }: { x: number; y: number; size: number; dur: number; delay: number }) {
   const t = useSharedValue(0);
@@ -14,7 +15,7 @@ export function Particle({ x, y, size, dur, delay }: { x: number; y: number; siz
   return <Animated.View pointerEvents="none" style={[{ position: "absolute", left: x, top: y, width: size, height: size, borderRadius: size, backgroundColor: "rgba(255,255,255,0.75)" }, st]} />;
 }
 
-export function Peek({ onPress, left = 96, top = 636 }: { onPress: () => void; left?: number; top?: number }) {
+function PeekInner({ onPress, left = 96, top = 636 }: { onPress: () => void; left?: number; top?: number }) {
   const t = useSharedValue(0);
   useEffect(() => {
     t.value = withRepeat(withSequence(withTiming(0, { duration: 2100 }), withTiming(1, { duration: 1000 }), withTiming(1, { duration: 2800 }), withTiming(0, { duration: 1100 })), -1);
@@ -31,7 +32,7 @@ export function Peek({ onPress, left = 96, top = 636 }: { onPress: () => void; l
   );
 }
 
-export function Dance({ onPress, left = 176, top = 636 }: { onPress: () => void; left?: number; top?: number }) {
+function DanceInner({ onPress, left = 176, top = 636 }: { onPress: () => void; left?: number; top?: number }) {
   const t = useSharedValue(0);
   useEffect(() => {
     t.value = withRepeat(withTiming(1, { duration: 2100, easing: Easing.inOut(Easing.sin) }), -1, true);
@@ -49,3 +50,11 @@ export function Dance({ onPress, left = 176, top = 636 }: { onPress: () => void;
   );
 }
 
+
+export function Peek(props: { onPress: () => void; left?: number; top?: number }) {
+  return useOnStage("moray") ? <PeekInner {...props} /> : null;
+}
+
+export function Dance(props: { onPress: () => void; left?: number; top?: number }) {
+  return useOnStage("mandarin") ? <DanceInner {...props} /> : null;
+}

@@ -8,7 +8,8 @@ import { Chip } from "../../components/ui/Chip";
 import { Txt } from "../../components/ui/Txt";
 import { SPECIES, SPECIES_GROUPS, TOTAL_SPECIES, type SpeciesEntry } from "../../data/species";
 import { SITES, SITE_CATEGORIES, type SiteEntry } from "../../data/sites";
-import { MOCK_COLLECTION } from "../../mocks/collection";
+import { useCollection, useSiteStamps } from "../../api/queries";
+import { StateView } from "../../components/ui/StateView";
 import { colors } from "../../theme/tokens";
 import { SpeciesCard } from "./SpeciesCard";
 import { SiteStampCard } from "./SiteStampCard";
@@ -24,9 +25,13 @@ export function DogamScreen() {
   const [siteCat, setSiteCat] = useState(ALL);
   const [showHidden, setShowHidden] = useState(true);
 
-  const collected = useMemo(() => new Map(MOCK_COLLECTION.map((c) => [c.no, c])), []);
+  const collectionQuery = useCollection();
+  const stampsQuery = useSiteStamps();
+  const collected = useMemo(() => collectionQuery.data ?? new Map(), [collectionQuery.data]);
+  const stamps = useMemo(() => stampsQuery.data ?? new Map<string, string>(), [stampsQuery.data]);
+  const sites = useMemo(() => SITES.map((s) => ({ ...s, collectedOn: stamps.get(s.no) ?? null })), [stamps]);
   const gotCount = collected.size;
-  const sitesGot = SITES.filter((s) => s.collectedOn).length;
+  const sitesGot = sites.filter((s) => s.collectedOn).length;
 
   const groupChips = useMemo(
     () =>
@@ -39,17 +44,17 @@ export function DogamScreen() {
   const siteChips = useMemo(
     () =>
       [ALL, ...SITE_CATEGORIES].map((c) => {
-        const inCat = c === ALL ? SITES : SITES.filter((s) => s.category === c);
+        const inCat = c === ALL ? sites : sites.filter((s) => s.category === c);
         return { label: c, count: `${inCat.filter((s) => s.collectedOn).length}/${inCat.length}` };
       }),
-    [],
+    [sites],
   );
 
   const speciesItems = useMemo(
     () => SPECIES.filter((s) => (group === ALL || s.group === group) && (showHidden || collected.has(s.no))),
     [group, showHidden, collected],
   );
-  const siteItems = useMemo(() => SITES.filter((s) => siteCat === ALL || s.category === siteCat), [siteCat]);
+  const siteItems = useMemo(() => sites.filter((s) => siteCat === ALL || s.category === siteCat), [siteCat, sites]);
 
   const nextMilestone = Math.ceil((gotCount + 1) / MILESTONE_STEP) * MILESTONE_STEP;
   const pct = Math.round((gotCount / TOTAL_SPECIES) * 100);
@@ -178,6 +183,9 @@ export function DogamScreen() {
           contentContainerStyle={styles.list}
           initialNumToRender={8}
           windowSize={7}
+          ListFooterComponent={<StateView error={collectionQuery.error} onRetry={() => void collectionQuery.refetch()} />}
+          refreshing={collectionQuery.isRefetching}
+          onRefresh={() => void collectionQuery.refetch()}
           renderItem={({ item }) => {
             const mark = collected.get(item.no);
             return (
@@ -200,6 +208,7 @@ export function DogamScreen() {
           columnWrapperStyle={styles.columns}
           contentContainerStyle={styles.list}
           renderItem={({ item }) => <SiteStampCard site={item} />}
+          ListFooterComponent={<StateView error={stampsQuery.error} onRetry={() => void stampsQuery.refetch()} />}
         />
       )}
     </SafeAreaView>

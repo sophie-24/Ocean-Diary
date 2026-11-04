@@ -8,7 +8,9 @@ import { colors, fonts } from "../../theme/tokens";
 import { Manuscript } from "../diary/Manuscript";
 import { DRAW_W, DiaryCanvas } from "../diary/DiaryCanvas";
 import { useWindowDimensions } from "react-native";
-import { KIND_LABEL, useLogs } from "./logStore";
+import { KIND_LABEL } from "./logStore";
+import { useDiveLog } from "../../api/queries";
+import { StateView } from "../../components/ui/StateView";
 
 const DETAIL_LABELS: Record<string, string> = {
   maxDepth: "최대 수심 (m)",
@@ -37,18 +39,15 @@ const DETAIL_LABELS: Record<string, string> = {
 
 export function LogDetailScreen({ id }: { id: string }) {
   const router = useRouter();
-  const logs = useLogs();
-  const log = logs.find((l) => l.id === id);
+  const { data: log, isLoading, error, refetch } = useDiveLog(id);
   const { width } = useWindowDimensions();
   const drawScale = (width - 40 - 28) / DRAW_W;
   const goBack = () => (router.canGoBack() ? router.back() : router.navigate("/log"));
 
   if (!log) {
     return (
-      <SafeAreaView style={[styles.root, { alignItems: "center", justifyContent: "center" }]}>
-        <Txt size={16} weight="bold">
-          기록을 찾을 수 없어요
-        </Txt>
+      <SafeAreaView style={[styles.root, { justifyContent: "center" }]}>
+        <StateView loading={isLoading} error={error} onRetry={() => void refetch()} empty="기록을 찾을 수 없어요" />
       </SafeAreaView>
     );
   }

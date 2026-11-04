@@ -11,6 +11,7 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { Critter } from "../../components/Critter";
+import { useOnStage } from "./stage";
 import type { CritterKind } from "../../data/illustrations";
 
 type Props = {
@@ -44,7 +45,7 @@ const R = [180, 180, 90, 0, 0, -90, -180];
 const BANK = [0, 0, -7, 0, 0, 7, 0];
 const O = [0.82, 0.82, 0.7, 1, 1, 0.7, 0.82];
 
-export function SwimmingFish({ kind, w, h, left, top, dx, duration, phase = 0, far, dim, label, onPress }: Props) {
+function SwimmingFishInner({ kind, w, h, left, top, dx, duration, phase = 0, far, dim, label, onPress }: Props) {
   const reduced = useReducedMotion();
   const p = useSharedValue(0);
   const offset = (((phase % duration) + duration) % duration) / duration;
@@ -95,4 +96,8 @@ export function SwimmingFish({ kind, w, h, left, top, dx, duration, phase = 0, f
       </Pressable>
     </Animated.View>
   );
+}
+
+export function SwimmingFish(props: Props) {
+  return useOnStage(props.kind) ? <SwimmingFishInner {...props} /> : null;
 }

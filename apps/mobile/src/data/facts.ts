@@ -1,4 +1,4 @@
-// Field-guide copy for a few species. The full set will come from the species API (phase 4).
+// Field-guide copy for species we've written up so far (shown in 도감 detail and 홈).
 
 export type SpeciesFacts = {
   family: string;
@@ -11,7 +11,7 @@ export type SpeciesFacts = {
   manner?: string;
 };
 
-export const MOCK_FACTS: Record<string, SpeciesFacts> = {
+export const SPECIES_FACTS: Record<string, SpeciesFacts> = {
   "001": {
     family: "고래상어과",
     iucn: "IUCN 위기(EN)",

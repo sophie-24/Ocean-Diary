@@ -5,7 +5,10 @@ import { useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { colors, fonts } from "../../theme/tokens";
-import { logStore } from "../log/logStore";
+import type { DiveLog } from "../log/logStore";
+import { useDiveLog, useUpdateDiveLog } from "../../api/queries";
+import { errorMessage } from "../../api/client";
+import { StateView } from "../../components/ui/StateView";
 import { Manuscript, manuscriptPages } from "./Manuscript";
 
 export const DIARY_MAX = 500;
@@ -17,9 +20,22 @@ const formatDate = (iso: string) => {
 };
 
 export function DiaryWriteScreen({ logId }: { logId: string }) {
+  const { data: log, isLoading, error, refetch } = useDiveLog(logId);
+  if (!log) {
+    return (
+      <SafeAreaView style={[styles.root, { justifyContent: "center" }]}>
+        <StateView loading={isLoading} error={error} onRetry={() => void refetch()} empty="기록을 찾을 수 없어요" />
+      </SafeAreaView>
+    );
+  }
+  return <DiaryWriteInner key={log.id} log={log} />;
+}
+
+function DiaryWriteInner({ log }: { log: DiveLog }) {
+  const logId = log.id;
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const log = logStore.find(logId);
+  const update = useUpdateDiveLog();
   const [text, setText] = useState(log?.diary ?? "");
   const [polish, setPolish] = useState(false);
 
@@ -29,9 +45,16 @@ export function DiaryWriteScreen({ logId }: { logId: string }) {
   const addPrompt = (p: string) => onText(`${text}${text && !text.endsWith("\n") ? "\n" : ""}${p}: `);
 
   const finish = (withText: boolean) => {
-    if (log) logStore.update(log.id, { diary: withText ? text : log.diary, draft: withText, title: withText && text.trim() ? text.trim().split("\n")[0].slice(0, 20) : log.title });
-    if (withText) router.replace({ pathname: "/diary/[logId]/decorate", params: { logId } });
-    else router.replace({ pathname: "/log/[id]", params: { id: logId } });
+    if (update.isPending) return;
+    update.mutate(
+      { id: logId, patch: withText ? { diary_text: text, is_draft: true } : { is_draft: false } },
+      {
+        onSuccess: () => {
+          if (withText) router.replace({ pathname: "/diary/[logId]/decorate", params: { logId } });
+          else router.replace({ pathname: "/log/[id]", params: { id: logId } });
+        },
+      },
+    );
   };
 
   return (
@@ -130,6 +153,11 @@ export function DiaryWriteScreen({ logId }: { logId: string }) {
       </KeyboardAvoidingView>
 
       <View style={[styles.footer, { paddingBottom: 12 + insets.bottom }]}>
+        {update.isError ? (
+          <Txt size={12} weight="bold" color={colors.coral} style={styles.footerError} accessibilityLiveRegion="assertive">
+            {errorMessage(update.error)}
+          </Txt>
+        ) : null}
         <Pressable accessibilityRole="button" onPress={() => finish(false)} style={styles.secondary}>
           <Txt size={14} weight="bold">
             글 없이 저장
@@ -143,7 +171,7 @@ export function DiaryWriteScreen({ logId }: { logId: string }) {
           accessibilityState={{ disabled: !text.trim() }}
         >
           <Txt size={15} weight="black" color={colors.white}>
-            그림일기 만들기
+            {update.isPending ? "저장 중…" : "그림일기 만들기"}
           </Txt>
           <ChevronRight color={colors.white} />
         </Pressable>
@@ -166,6 +194,7 @@ const styles = StyleSheet.create({
   textarea: { minHeight: 220, fontFamily: fonts.diary, fontSize: 20, lineHeight: 30, color: "#2B2B2B" },
   paperFoot: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   preview: { gap: 10, padding: 12, borderRadius: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  footerError: { position: "absolute", left: 16, right: 16, top: -22 },
   footer: { position: "absolute", left: 0, right: 0, bottom: 0, flexDirection: "row", gap: 8, paddingTop: 12, paddingHorizontal: 16, backgroundColor: "rgba(255,255,255,0.97)", borderTopWidth: 1, borderTopColor: colors.line },
   secondary: { width: 112, height: 52, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   primary: { flex: 1, height: 52, borderRadius: 16, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },

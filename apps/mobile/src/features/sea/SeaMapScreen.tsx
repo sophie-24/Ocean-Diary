@@ -9,34 +9,61 @@ import mapData from "../../../../../data/map/world-map.json";
 import { Critter } from "../../components/Critter";
 import { ChevronLeft, ChevronRight, CloseIcon, SearchIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
-import type { CritterKind } from "../../data/illustrations";
+import { isCritterKind, type CritterKind } from "../../data/illustrations";
+import { usePlaces } from "../../api/queries";
 import { colors, fonts } from "../../theme/tokens";
 
 type Mode = "world" | "ph" | "au";
 type VB = [number, number, number, number];
 type Region = { k: keyof typeof mapData.P; name: string; n: number; meta: string; logs: number; sites: number; kinds: CritterKind[]; mode: Mode; tank?: string };
 
-// Mock visited regions until GET /v1/places (phase 4) groups the diver's logs by region.
-const REGIONS: Region[] = [
-  { k: "malapascua", name: "말라파스쿠아", n: 6, meta: "세부 북쪽 · 2026.11.1 – 11.4", logs: 4, sites: 2, kinds: ["thresher", "whitetip", "mandarin", "lionfish", "moray", "trevally"], mode: "ph", tank: "malapascua" },
-  { k: "moalboal", name: "모알보알", n: 5, meta: "세부 남서쪽", logs: 6, sites: 0, kinds: ["puffer", "whitetip", "blacktip", "lionfish", "moray"], mode: "ph" },
-  { k: "balicasag", name: "발리카삭", n: 4, meta: "보홀", logs: 5, sites: 0, kinds: ["trevally", "whitetip", "blacktip", "moray"], mode: "ph" },
-  { k: "anilao", name: "아닐라오", n: 2, meta: "바탕가스", logs: 4, sites: 0, kinds: ["lionfish", "boxfish"], mode: "ph" },
-  { k: "tubbataha", name: "투바타하", n: 3, meta: "술루해 리브어보드", logs: 15, sites: 0, kinds: ["silvertip", "tawny", "whitetip"], mode: "ph" },
-  { k: "lizard", name: "리저드섬", n: 3, meta: "그레이트배리어리프", logs: 2, sites: 0, kinds: ["grouper", "napoleon", "boxfish"], mode: "au" },
-  { k: "heron", name: "헤론섬", n: 3, meta: "그레이트배리어리프", logs: 2, sites: 1, kinds: ["epaulette", "zebra", "portjackson"], mode: "au" },
-];
+type Known = { k: Region["k"]; name: string; area: string; country: string; aliases: string[]; mode: Mode; tank?: string };
 
-const SEARCH_INDEX: { label: string; sub: string; mode: Mode; sel?: Region["k"]; visited: boolean }[] = [
-  { label: "필리핀", sub: "다녀왔어요 · 생물 16종", mode: "ph", visited: true },
-  { label: "필리핀 › 세부 말라파스쿠아", sub: "다녀왔어요 · 생물 6종 · 명소 2", mode: "ph", sel: "malapascua", visited: true },
-  { label: "필리핀 › 세부 모알보알", sub: "다녀왔어요 · 생물 5종", mode: "ph", sel: "moalboal", visited: true },
-  { label: "필리핀 › 보홀 발리카삭", sub: "다녀왔어요 · 생물 4종", mode: "ph", sel: "balicasag", visited: true },
-  { label: "필리핀 › 투바타하", sub: "다녀왔어요 · 생물 3종", mode: "ph", sel: "tubbataha", visited: true },
-  { label: "필리핀 › 팔라완 코론", sub: "아직 안 가봤어요 · 난파선 명소", mode: "ph", visited: false },
-  { label: "호주", sub: "다녀왔어요 · 생물 6종", mode: "au", visited: true },
-  { label: "호주 › 리저드섬", sub: "다녀왔어요 · 생물 3종", mode: "au", sel: "lizard", visited: true },
+// Dive regions the map can pin (coordinates live in world-map.json → P). The diver's
+// logs are matched by region label; we never store GPS.
+const KNOWN: Known[] = [
+  { k: "malapascua", name: "말라파스쿠아", area: "세부 북쪽", country: "필리핀", aliases: ["말라파스쿠아", "malapascua"], mode: "ph", tank: "malapascua" },
+  { k: "moalboal", name: "모알보알", area: "세부 남서쪽", country: "필리핀", aliases: ["모알보알", "moalboal"], mode: "ph" },
+  { k: "balicasag", name: "발리카삭", area: "보홀", country: "필리핀", aliases: ["발리카삭", "balicasag", "보홀", "bohol"], mode: "ph" },
+  { k: "anilao", name: "아닐라오", area: "바탕가스", country: "필리핀", aliases: ["아닐라오", "anilao", "바탕가스"], mode: "ph" },
+  { k: "tubbataha", name: "투바타하", area: "술루해 리브어보드", country: "필리핀", aliases: ["투바타하", "tubbataha"], mode: "ph" },
+  { k: "lizard", name: "리저드섬", area: "그레이트배리어리프", country: "호주", aliases: ["리저드", "lizard"], mode: "au" },
+  { k: "heron", name: "헤론섬", area: "그레이트배리어리프", country: "호주", aliases: ["헤론", "heron"], mode: "au" },
 ];
+const COUNTRY_ID: Record<Exclude<Mode, "world">, string> = { ph: "608", au: "036" };
+
+const fmtRange = (a: string, b: string) => {
+  const d = (x: string) => x.replace(/-/g, ".");
+  return a === b ? d(a) : `${d(a)} – ${d(b).slice(5)}`;
+};
+
+/** Group the diver's places (GET /v1/places) onto the known map regions. */
+function useRegions() {
+  const { data: places } = usePlaces();
+  return useMemo(() => {
+    const regions: Region[] = [];
+    for (const known of KNOWN) {
+      const hits = (places ?? []).filter((p) => known.aliases.some((a) => p.region_label.toLowerCase().includes(a.toLowerCase())));
+      if (!hits.length) continue;
+      const species = new Map<string, string | null>();
+      for (const h of hits) for (const sp of h.species) species.set(sp.species_id, sp.art_key);
+      const first = hits.map((h) => h.first_date).sort()[0];
+      const last = hits.map((h) => h.last_date).sort().at(-1) ?? first;
+      regions.push({
+        k: known.k,
+        name: known.name,
+        n: species.size,
+        meta: `${known.area} · ${fmtRange(first, last)}`,
+        logs: hits.reduce((n, h) => n + h.log_count, 0),
+        sites: hits.reduce((n, h) => n + h.stamp_count, 0),
+        kinds: [...species.values()].filter((a): a is CritterKind => !!a && isCritterKind(a)).slice(0, 8),
+        mode: known.mode,
+        tank: known.tank,
+      });
+    }
+    return regions;
+  }, [places]);
+}
 
 const pad = (b: number[][], k: number): VB => {
   const [[x0, y0], [x1, y1]] = b;
@@ -65,6 +92,7 @@ const fit = (vb: VB, aspect: number): VB => {
 export function SeaMapScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
+  const regions = useRegions();
   const [size, setSize] = useState({ w: 390, h: 600 });
   const aspect = size.w / size.h;
   const [mode, setMode] = useState<Mode>("world");
@@ -138,10 +166,24 @@ export function SeaMapScreen() {
     [zoomed],
   );
   const toScreen = (p: number[]) => [((p[0] - vb[0]) * size.w) / vb[2], ((p[1] - vb[1]) * size.h) / vb[3]];
-  const visitedCountries = mapData.world.filter((c) => c.v).length;
-  const region = REGIONS.find((r) => r.k === sel);
-  const results = q.trim() ? SEARCH_INDEX.filter((r) => r.label.includes(q.trim())).slice(0, 5) : [];
-  const pins = mode === "world" ? [] : REGIONS.filter((r) => r.mode === mode);
+  const visitedIds = useMemo(() => new Set(regions.map((r) => COUNTRY_ID[r.mode as Exclude<Mode, "world">])), [regions]);
+  const visitedCountries = visitedIds.size;
+  const region = regions.find((r) => r.k === sel);
+  const searchIndex = useMemo(() => {
+    const out: { label: string; sub: string; mode: Mode; sel?: Region["k"]; visited: boolean }[] = [];
+    for (const m of ["ph", "au"] as const) {
+      const rs = regions.filter((r) => r.mode === m);
+      const country = KNOWN.find((k) => k.mode === m)!.country;
+      out.push({ label: country, sub: rs.length ? `다녀왔어요 · 지역 ${rs.length}곳` : "아직 안 가봤어요", mode: m, visited: rs.length > 0 });
+      for (const k of KNOWN.filter((x) => x.mode === m)) {
+        const r = rs.find((x) => x.k === k.k);
+        out.push({ label: `${country} › ${k.area.split(" ")[0]} ${k.name}`, sub: r ? `다녀왔어요 · 생물 ${r.n}종` : "아직 안 가봤어요", mode: m, sel: r ? k.k : undefined, visited: !!r });
+      }
+    }
+    return out;
+  }, [regions]);
+  const results = q.trim() ? searchIndex.filter((r) => r.label.includes(q.trim())).slice(0, 5) : [];
+  const pins = mode === "world" ? [] : regions.filter((r) => r.mode === mode);
 
   return (
     <SafeAreaView edges={["top"]} style={styles.root}>
@@ -244,7 +286,7 @@ export function SeaMapScreen() {
             <Path d={mapData.sph} fill="#CFE3FA" />
             <Path d={mapData.grat} stroke="#B9D4F3" strokeWidth={vb[2] / 1000} fill="none" />
             {land.map((c) => (
-              <Path key={`${c.id}-${c.name}`} d={c.d} fill={c.v ? "#6FA3EC" : colors.white} stroke={c.v ? colors.oceanBlue : "#B9CCE6"} strokeWidth={vb[2] / 1400} />
+              <Path key={`${c.id}-${c.name}`} d={c.d} fill={visitedIds.has(c.id ?? "") ? "#6FA3EC" : colors.white} stroke={visitedIds.has(c.id ?? "") ? colors.oceanBlue : "#B9CCE6"} strokeWidth={vb[2] / 1400} />
             ))}
           </Svg>
 

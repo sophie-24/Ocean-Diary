@@ -10,28 +10,56 @@ import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { SPECIES_BY_NO } from "../../data/species";
 import { colors } from "../../theme/tokens";
+import { useCollection } from "../../api/queries";
+import { OnStage } from "./stage";
 import { Particle } from "./TankParts";
 import { PHASES, PHASE_LOOK, clockLabel, phaseOf, type Phase } from "./timeOfDay";
 
-export type Resident = { no: string; date: string; place: string; count: number; log?: string; isNew?: boolean };
+export type Resident = { no: string; date: string; count: number; isNew?: boolean };
+/** Stage roster: which catalog species each choreographed critter stands for. */
+export type Cast = Partial<Record<CritterKind, string>>;
+
+
+const fmtDate = (iso: string) => {
+  const [y, m, d] = iso.slice(0, 10).split("-").map(Number);
+  return `${y}년 ${m}월 ${d}일`;
+};
+
+/** Resolve the stage roster against the diver's real collection. */
+export function useResidents(cast: Cast, only?: Set<string>) {
+  const { data: collection } = useCollection();
+  return useMemo(() => {
+    const out: Partial<Record<CritterKind, Resident>> = {};
+    for (const [kind, no] of Object.entries(cast) as [CritterKind, string][]) {
+      if (only && !only.has(no)) continue;
+      const mark = collection?.get(no);
+      if (!mark) continue;
+      out[kind] = { no, date: fmtDate(mark.firstSeen), count: mark.count, isNew: mark.isNew };
+    }
+    return out;
+  }, [cast, only, collection]);
+}
 export type TankKey = "reef" | "ocean" | "macro" | "deep";
 
 export const TANKS: { key: TankKey; name: string; count: string; href?: Href; locked?: boolean }[] = [
-  { key: "reef", name: "산호초 수조", count: "11종", href: "/sea" },
-  { key: "ocean", name: "대양 수조", count: "5종", href: "/sea/tank/ocean" },
-  { key: "macro", name: "마크로 수조", count: "8종 · 돋보기", href: "/sea/tank/macro" },
-  { key: "deep", name: "심해 수조", count: "30종에 열려요", locked: true },
+  { key: "reef", name: "산호초 수조", count: "산호초 친구들", href: "/sea" },
+  { key: "ocean", name: "대양 수조", count: "큰 바다 친구들", href: "/sea/tank/ocean" },
+  { key: "macro", name: "마크로 수조", count: "돋보기로 찾기", href: "/sea/tank/macro" },
+  { key: "deep", name: "심해 수조", count: "곧 열려요", locked: true },
 ];
 
 export type TankApi = { phase: Phase; night: boolean; dark: boolean; pick: (k: CritterKind) => () => void };
 
 type Props = {
   title: string;
-  subtitle: string;
+  /** Receives the number of species actually living in the tank. */
+  subtitle: (count: number) => string;
   eyebrow?: string;
   /** Called with light-shaft opacity for the current phase. */
   scene: (rays: number) => ReactNode;
   residents: Partial<Record<CritterKind, Resident>>;
+  /** Shown when nothing in this tank has been met yet. */
+  emptyHint?: string;
   /** Stage content (fish), authored on a 390×844 stage. */
   children: (api: TankApi) => ReactNode;
   current?: TankKey;
@@ -41,7 +69,7 @@ type Props = {
   footer?: ReactNode;
 };
 
-export function TankShell({ title, subtitle, eyebrow, scene, residents, children, current, backHref, notes, footer }: Props) {
+export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHint = "아직 이 수조에서 만난 친구가 없어요. 발견 탭에서 사진을 올려 보세요", children, current, backHref, notes, footer }: Props) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [sel, setSel] = useState<CritterKind | null>(null);
@@ -72,6 +100,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, children
     [],
   );
 
+  const onStage = useMemo(() => new Set(Object.keys(residents) as CritterKind[]), [residents]);
   const r = sel ? residents[sel] : undefined;
   const s = r ? SPECIES_BY_NO[r.no] : undefined;
 
@@ -79,7 +108,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, children
     <View style={styles.root} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
       <View style={stage}>
         <View style={StyleSheet.absoluteFill}>{scene(look.rays)}</View>
-        {children(api)}
+        <OnStage.Provider value={onStage}>{children(api)}</OnStage.Provider>
         {particles.map((p, i) => (
           <Particle key={i} {...p} />
         ))}
@@ -97,6 +126,16 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, children
           <Rect width="100%" height="100%" fill="url(#tankTint)" />
         </Svg>
       </View>
+
+      {onStage.size === 0 ? (
+        <View pointerEvents="none" style={styles.emptyWrap}>
+          <View style={styles.glass}>
+            <Txt size={14} weight="bold" color={colors.white} style={{ textAlign: "center", lineHeight: 22 }}>
+              {emptyHint}
+            </Txt>
+          </View>
+        </View>
+      ) : null}
 
       {hud ? (
         <View style={[styles.hudTop, { paddingTop: insets.top + 8 }]} pointerEvents="box-none">
@@ -117,7 +156,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, children
                   {title}
                 </Txt>
                 <Txt size={11} color={colors.darkInkSoft} numberOfLines={1}>
-                  {subtitle}
+                  {subtitle(onStage.size)}
                 </Txt>
               </View>
             </View>
@@ -182,12 +221,11 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, children
             <CloseIcon size={14} color={colors.white} />
           </Pressable>
           <NameTag ko={s.nameKo} en={s.nameEn} size="md" filled />
-          <Txt size={15} weight="extraBold" color={colors.white} style={{ marginTop: 4 }}>
-            {r.date}
-            {r.isNew ? "  · 첫 만남" : ""}
+          <Txt size={13} color={colors.darkInkSoft} style={{ marginTop: 4 }}>
+            처음 만난 날{r.isNew ? " · NEW" : ""}
           </Txt>
-          <Txt size={13} color={colors.darkInkSoft}>
-            {r.place}에서 처음 만났어요{r.log ? ` · ${r.log}` : ""}
+          <Txt size={15} weight="extraBold" color={colors.white}>
+            {r.date}
           </Txt>
           <View style={{ flexDirection: "row", gap: 8, marginTop: 6, alignSelf: "stretch" }}>
             <View style={styles.plaqueCount}>
@@ -240,6 +278,7 @@ export const tankStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: "#0B2C66", overflow: "hidden" },
+  emptyWrap: { position: "absolute", left: 32, right: 32, top: "40%", alignItems: "center" },
   hudTop: { position: "absolute", left: 0, right: 0, top: 0, paddingHorizontal: 16, gap: 10 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
   glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 18, paddingVertical: 10, paddingHorizontal: 14 },

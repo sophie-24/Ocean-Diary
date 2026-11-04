@@ -7,8 +7,8 @@ import { ChevronLeft, ChevronRight, InfoIcon, ShareIcon } from "../../components
 import { NameTag } from "../../components/ui/NameTag";
 import { Txt } from "../../components/ui/Txt";
 import { SPECIES_BY_NO } from "../../data/species";
-import { MOCK_COLLECTION } from "../../mocks/collection";
-import { MOCK_ENCOUNTERS, MOCK_FACTS, REGULAR_BADGE_GOAL } from "../../mocks/speciesDetail";
+import { SPECIES_FACTS, REGULAR_BADGE_GOAL } from "../../data/facts";
+import { useCollection, useSpeciesEncounters } from "../../api/queries";
 import { colors, shadow } from "../../theme/tokens";
 
 const ENCOUNTER_PHOTO_BG = ["#1E4E86", "#27609A", "#1B4579"];
@@ -16,9 +16,19 @@ const ENCOUNTER_PHOTO_BG = ["#1E4E86", "#27609A", "#1B4579"];
 export function SpeciesDetailScreen({ no }: { no: string }) {
   const router = useRouter();
   const species = SPECIES_BY_NO[no];
-  const facts = MOCK_FACTS[no];
-  const encounters = MOCK_ENCOUNTERS[no] ?? [];
-  const mark = MOCK_COLLECTION.find((c) => c.no === no);
+  const facts = SPECIES_FACTS[no];
+  const { data: collection } = useCollection();
+  const mark = collection?.get(no);
+  const { data: raw } = useSpeciesEncounters(mark?.speciesId);
+  const encounters = (raw ?? []).map((e, i) => ({
+    key: e.id,
+    round: i + 1,
+    date: e.observedAt.slice(0, 10).replace(/-/g, "."),
+    place: e.region ?? "장소 기록 없음",
+    meta: e.diveLogId ? "로그북에 연결됨" : "사진 기록",
+    first: i === 0,
+    logId: e.diveLogId,
+  }));
   const collected = !!mark;
 
   const goBack = () => (router.canGoBack() ? router.back() : router.navigate("/dogam"));
@@ -38,7 +48,7 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
 
   const count = mark?.count ?? 0;
   const places = new Set(encounters.map((e) => e.place)).size || (collected ? 1 : 0);
-  const last = encounters.at(-1)?.date ?? mark?.firstSeen ?? "—";
+  const last = (mark?.latestSeen ?? "—").replace(/-/g, ".");
 
   return (
     <View style={styles.root}>
@@ -179,7 +189,7 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
                 {encounters.map((e, i) => {
                   const dot = e.first ? colors.coral : colors.oceanBlue;
                   return (
-                    <View key={e.round} style={styles.tlRow}>
+                    <View key={e.key} style={styles.tlRow}>
                       <View style={styles.tlRail}>
                         <View style={[styles.tlDot, { backgroundColor: dot, shadowColor: dot }]} />
                         {i < encounters.length - 1 ? <View style={styles.tlLine} /> : null}
@@ -209,10 +219,18 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
                           </Txt>
                           <Txt size={12} color={colors.ink2}>
                             {e.meta}
-                            {e.logLabel ? ` · ${e.logLabel}` : ""}
                           </Txt>
                         </View>
-                        <ChevronRight size={18} color={colors.ink3} />
+                        {e.logId ? (
+                          <Pressable
+                            accessibilityRole="button"
+                            accessibilityLabel={`${e.round}회차 로그북 보기`}
+                            onPress={() => router.push({ pathname: "/log/[id]", params: { id: e.logId! } })}
+                            hitSlop={8}
+                          >
+                            <ChevronRight size={18} color={colors.ink3} />
+                          </Pressable>
+                        ) : null}
                       </View>
                     </View>
                   );

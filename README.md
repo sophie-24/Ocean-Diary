@@ -4,7 +4,7 @@ Monorepo for OCEAN DIARY. **v2 is in progress** (iOS first, then Android): five 
 
 ## Workspace
 
-- `apps/mobile`: Expo + React Native mobile app (expo-router tabs in `app/`, v1 flow kept in `src/legacy/LegacyApp.tsx` until it is ported)
+- `apps/mobile`: Expo + React Native mobile app (expo-router tabs in `app/`, API hooks in `src/api/`)
 - `services/api`: FastAPI backend
 - `services/api/app/worker.py`: asynchronous identification and retryable cleanup worker
 - `infra`: local PostgreSQL and MinIO setup

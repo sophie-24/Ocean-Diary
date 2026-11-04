@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -6,7 +6,9 @@ import { CameraIcon, CheckIcon, ChevronRight, InfoIcon } from "../../components/
 import { Txt } from "../../components/ui/Txt";
 import { colors } from "../../theme/tokens";
 import { ChipGroup, Field, KindToggle, MiniField, Section, Segmented } from "./formParts";
-import { logStore, nextLabel, useLogs, type LogKind } from "./logStore";
+import { nextLabel, type LogKind } from "./logStore";
+import { errorMessage } from "../../api/client";
+import { newIdempotencyKey, useCreateDiveLog, useDiveLogs } from "../../api/queries";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const today = () => {
@@ -42,7 +44,11 @@ const pick = <T,>(src: Record<string, T>, keys: string[]) =>
 export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const logs = useLogs();
+  const { data: logData } = useDiveLogs();
+  const logs = useMemo(() => logData?.logs ?? [], [logData]);
+  const create = useCreateDiveLog();
+  // One key per form: a retry after a lost response returns the same log instead of a duplicate.
+  const saveKey = useRef(newIdempotencyKey("log"));
   const [kind, setKind] = useState<LogKind>(initialKind);
   const [date, setDate] = useState(today());
   const [region, setRegion] = useState("");
@@ -91,44 +97,44 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
 
   const save = (thenDiary: boolean) => {
     setSubmitted(true);
-    if (requiredDone < 3) return;
+    if (requiredDone < 3 || create.isPending) return;
     const m = date.trim().match(DATE_RE)!;
     const iso = `${m[1]}-${pad(Number(m[2]))}-${pad(Number(m[3]))}`;
-    const summary =
-      kind === "scuba"
-        ? [num.maxDepth && `최대 ${num.maxDepth}m`, (num.bottom || bottomTime) && `${num.bottom || bottomTime}분`, num.waterTemp && `${num.waterTemp}°C`].filter(Boolean).join(" · ")
+    const details =
+      kind === "snorkel"
+        ? { when: snorkel.when, waterClarity: snorkel.vis, memo }
         : kind === "free"
-          ? [num.bestDepth && `최고 ${num.bestDepth}m`, num.dives && `${num.dives}회`, num.longest && `최장 ${num.longest}`].filter(Boolean).join(" · ")
-          : `${snorkel.when} · 시야 ${snorkel.vis === "맑음" ? "좋음" : snorkel.vis}`;
-    const log = logStore.add({
-      kind,
-      date: iso,
-      region: region.trim(),
-      point: point.trim(),
-      title: memo.trim().slice(0, 24) || `${point.trim()}에서`,
-      summary: summary || "기록 저장됨",
-      coverKind: kind === "snorkel" ? "boxfish" : kind === "free" ? "puffer" : "whitetip",
-      coverBg: kind === "snorkel" ? "#3C8AD0" : "#1B4F86",
-      stickers: [],
-      extraStickers: 0,
-      draft: thenDiary,
-      details:
-        kind === "snorkel"
-          ? { when: snorkel.when, waterClarity: snorkel.vis, memo }
-          : kind === "free"
-            ? { ...pick(num, ["bestDepth", "longest", "dives", "waterTemp", "vis", "weight", "eq"]), ...pick(chips, ["discipline", "freePlace", "freeSafety"]), weather, buddy, memo, condition }
-            : {
-                ...pick(num, ["surfTemp", "interval", "waterTemp", "timeIn", "barIn", "vis", "bottom", "avgDepth", "maxDepth", "timeOut", "barOut", "weight", "o2"]),
-                ...(bottomTime && !num.bottom ? { bottom: bottomTime } : {}),
-                ...pick(chips, ["safety", "weightType", "wave", "current", "tank", "gas", "suit", "suitAdd", "gear", "type"]),
-                weather,
-                dayNight,
-                buddy,
-                memo,
-              },
-    });
-    if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
-    else router.replace({ pathname: "/log/[id]", params: { id: log.id } });
+          ? { ...pick(num, ["bestDepth", "longest", "dives", "waterTemp", "vis", "weight", "eq"]), ...pick(chips, ["discipline", "freePlace", "freeSafety"]), weather, buddy, memo, condition }
+          : {
+              ...pick(num, ["surfTemp", "interval", "waterTemp", "timeIn", "barIn", "vis", "bottom", "avgDepth", "maxDepth", "timeOut", "barOut", "weight", "o2"]),
+              ...(bottomTime && !num.bottom ? { bottom: bottomTime } : {}),
+              ...pick(chips, ["safety", "weightType", "wave", "current", "tank", "gas", "suit", "suitAdd", "gear", "type"]),
+              weather,
+              dayNight,
+              buddy,
+              memo,
+            };
+    create.mutate(
+      {
+        key: saveKey.current,
+        body: {
+          kind,
+          dive_date: iso,
+          region_label: region.trim(),
+          point_label: point.trim(),
+          title: memo.trim().slice(0, 24) || null,
+          details,
+          is_draft: thenDiary,
+        },
+      },
+      {
+        onSuccess: (log) => {
+          saveKey.current = newIdempotencyKey("log");
+          if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
+          else router.replace({ pathname: "/log/[id]", params: { id: log.id } });
+        },
+      },
+    );
   };
 
   return (
@@ -164,12 +170,12 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
 
           <Section title="기본 정보" note="* 3개만 필수">
             <View style={{ flexDirection: "row", gap: 12, alignItems: "flex-start" }}>
-              <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind)}`}>
+              <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind, logData?.counts)}`}>
                 <Txt size={9} weight="extraBold" color={colors.ink3}>
                   {kind === "snorkel" ? "snorkel" : "dive no."}
                 </Txt>
                 <Txt size={24} weight="black">
-                  {nextLabel(kind).replace("#", "")}
+                  {nextLabel(kind, logData?.counts).replace("#", "")}
                 </Txt>
               </View>
               <View style={{ flex: 1 }}>
@@ -387,6 +393,11 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
             선택 항목 {optionalFilled}개 입력
           </Txt>
         </View>
+        {create.isError ? (
+          <Txt size={12} weight="bold" color={colors.coral} accessibilityLiveRegion="assertive">
+            {errorMessage(create.error)} 같은 내용으로 다시 눌러도 기록이 두 번 생기지 않아요.
+          </Txt>
+        ) : null}
         <View style={{ flexDirection: "row", gap: 8 }}>
           <Pressable accessibilityRole="button" onPress={() => save(false)} style={styles.secondary}>
             <Txt size={14} weight="bold">
@@ -395,7 +406,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
           </Pressable>
           <Pressable accessibilityRole="button" onPress={() => save(true)} style={styles.primary}>
             <Txt size={15} weight="black" color={colors.white}>
-              저장하고 그림일기 쓰기
+              {create.isPending ? "저장 중…" : "저장하고 그림일기 쓰기"}
             </Txt>
             <ChevronRight color={colors.white} />
           </Pressable>

@@ -12,7 +12,7 @@ export type SiteEntry = {
   depth: string;
   level: string;
   art: SiteArtKey;
-  /** Placeholder until stamps come from the API (phase 4). */
+  /** First visit date from GET /v1/site-stamps (filled in by the screen). */
   collectedOn: string | null;
 };
 
@@ -29,7 +29,7 @@ export const SITES: SiteEntry[] = data.sites.map((s) => ({
   depth: s.depth_m,
   level: s.level,
   art: isSiteArt(s.art_key) ? s.art_key : "ferry",
-  collectedOn: s.collected === "Y" ? s.collected_date : null,
+  collectedOn: null,
 }));
 
 export const SITE_CATEGORIES: string[] = Array.from(new Set(SITES.map((s) => s.category)));

@@ -300,6 +300,7 @@ def list_observations(
     limit: int = Query(default=20, ge=1, le=50),
     cursor: str | None = None,
     unidentified_only: bool = Query(default=False),
+    species_id: UUID | None = None,
 ) -> ObservationListResponse:
     statement = (
         select(Observation)
@@ -311,6 +312,8 @@ def list_observations(
     )
     if unidentified_only:
         statement = statement.where(Observation.species_id.is_(None))
+    if species_id is not None:
+        statement = statement.where(Observation.species_id == species_id)
     if cursor:
         last_seen_at, last_id = _decode_cursor(cursor)
         statement = statement.where(tuple_(Observation.observed_at, Observation.id) < (last_seen_at, last_id))

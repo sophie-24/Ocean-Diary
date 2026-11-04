@@ -18,7 +18,7 @@ from sqlalchemy import delete  # noqa: E402
 import app.auth as auth  # noqa: E402
 import app.main as main  # noqa: E402
 from app.database import SessionLocal  # noqa: E402
-from app.models import ApiRateLimitEvent, DiveLog, Observation, SiteStamp  # noqa: E402
+from app.models import ApiRateLimitEvent, DiveLog, MediaAsset, Observation, SiteStamp  # noqa: E402
 
 USERS = {
     "user-a": UUID("aaaaaaaa-0000-4000-8000-00000000000a"),
@@ -38,6 +38,7 @@ def _cleanup():
             s.execute(delete(Observation).where(Observation.user_id == uid))
             s.execute(delete(SiteStamp).where(SiteStamp.user_id == uid))
             s.execute(delete(DiveLog).where(DiveLog.user_id == uid))
+            s.execute(delete(MediaAsset).where(MediaAsset.owner_user_id == uid))
         s.execute(delete(ApiRateLimitEvent))
 
 

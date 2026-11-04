@@ -7,7 +7,9 @@ import { PlusIcon, StampBookIcon } from "../../components/icons";
 import { ScreenHeader, RoundIconButton } from "../../components/ui/ScreenHeader";
 import { Txt } from "../../components/ui/Txt";
 import { colors, fonts } from "../../theme/tokens";
-import { MOCK_TOTALS, logStore, useLogs, type DiveLog, type LogKind } from "./logStore";
+import { logStats, type DiveLog, type LogKind } from "./logStore";
+import { useDiveLogs } from "../../api/queries";
+import { StateView } from "../../components/ui/StateView";
 
 type Filter = "all" | LogKind;
 
@@ -21,8 +23,10 @@ const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "
 
 export function LogListScreen() {
   const router = useRouter();
-  const logs = useLogs();
-  const counts = logStore.counts();
+  const { data, isLoading, error, refetch, isRefetching } = useDiveLogs();
+  const logs = useMemo(() => data?.logs ?? [], [data]);
+  const counts = data?.counts ?? { scuba: 0, free: 0, snorkel: 0 };
+  const stats = logStats(logs);
   const [filter, setFilter] = useState<Filter>("all");
   const total = counts.scuba + counts.free + counts.snorkel;
 
@@ -63,8 +67,8 @@ export function LogListScreen() {
         {(
           [
             ["총 다이빙", `${counts.scuba}회`],
-            ["누적 시간", MOCK_TOTALS.scubaTime],
-            ["최대 수심", MOCK_TOTALS.maxDepth],
+            ["누적 시간", stats.time],
+            ["최대 수심", stats.maxDepth],
           ] as const
         ).map(([k, v]) => (
           <View key={k} style={styles.stat}>
@@ -119,10 +123,10 @@ export function LogListScreen() {
             onPress={() => router.push({ pathname: "/log/[id]", params: { id: item.id } })}
           />
         )}
+        refreshing={isRefetching}
+        onRefresh={() => void refetch()}
         ListEmptyComponent={
-          <Txt size={14} color={colors.ink2} align="center" style={{ marginTop: 40 }}>
-            아직 기록이 없어요. 오른쪽 위 + 버튼으로 첫 기록을 남겨 보세요.
-          </Txt>
+          <StateView loading={isLoading} error={error} onRetry={() => void refetch()} empty="아직 기록이 없어요. 오른쪽 위 + 버튼으로 첫 기록을 남겨 보세요." />
         }
       />
     </SafeAreaView>
