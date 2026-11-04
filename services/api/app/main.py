@@ -18,6 +18,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.account import router as account_router
+from app.dive_logs import router as dive_logs_router
 from app.auth import _resolve_current_user_id
 from app.database import SessionLocal
 from app.media import router as media_router
@@ -37,7 +38,7 @@ if settings.app_env == "development":
         allow_origins=[],
         allow_origin_regex=r"^http://(?:localhost|127\.0\.0\.1|\[::1\]):(?:808[0-9]|19006)$",
         allow_credentials=False,
-        allow_methods=["GET", "POST", "PATCH", "DELETE", "OPTIONS"],
+        allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
         expose_headers=["Retry-After", "X-Request-ID"],
     )
@@ -46,12 +47,14 @@ app.include_router(species_router)
 app.include_router(media_router)
 app.include_router(identification_router)
 app.include_router(observations_router)
+app.include_router(dive_logs_router)
 logger = logging.getLogger("ocean_diary.api")
-REQUIRED_DB_SCHEMA_REVISION = "0012_retire_legacy_upload_intents"
+REQUIRED_DB_SCHEMA_REVISION = "0013_v2_logbook"
 RATE_LIMIT_RULES = {
     ("POST", "/v1/media/upload-intents"): (20, 600),
     ("POST", "/v1/identification-jobs"): (10, 600),
     ("POST", "/v1/observations"): (60, 3600),
+    ("POST", "/v1/dive-logs"): (60, 3600),
     ("DELETE", "/v1/account"): (5, 3600),
 }
 MEDIA_RATE_LIMIT_RULES = {

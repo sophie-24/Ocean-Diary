@@ -35,6 +35,11 @@ def species_response(species: Species) -> SpeciesResponse:
         scientific_name=species.scientific_name,
         description_ko=species.description_ko,
         artwork=artwork,
+        catalog_no=species.catalog_no,
+        group_ko=species.group_ko,
+        subgroup_ko=species.subgroup_ko,
+        common_name_en=species.common_name_en,
+        art_key=species.art_key,
     )
 
 

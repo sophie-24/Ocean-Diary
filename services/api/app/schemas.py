@@ -18,6 +18,11 @@ class SpeciesResponse(BaseModel):
     scientific_name: str
     description_ko: str
     artwork: ArtworkResponse | None = None
+    catalog_no: str | None = None
+    group_ko: str | None = None
+    subgroup_ko: str | None = None
+    common_name_en: str | None = None
+    art_key: str | None = None
 
 
 class SpeciesListResponse(BaseModel):

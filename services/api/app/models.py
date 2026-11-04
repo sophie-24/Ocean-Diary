@@ -1,8 +1,10 @@
-from datetime import datetime, timezone
+from datetime import date, datetime, timezone
 from uuid import UUID, uuid4
 
 from sqlalchemy import (
     BigInteger,
+    Date,
+    Integer,
     Boolean,
     CheckConstraint,
     DateTime,
@@ -36,6 +38,12 @@ class Species(Base):
     description_ko: Mapped[str] = mapped_column(Text, nullable=False)
     taxonomy_json: Mapped[dict | None] = mapped_column(JSONB, nullable=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    # v2 field-guide catalog (data/species/species-v3.json). Null for the legacy v1 coastal set.
+    catalog_no: Mapped[str | None] = mapped_column(String(3), unique=True, nullable=True)
+    group_ko: Mapped[str | None] = mapped_column(String(40), nullable=True, index=True)
+    subgroup_ko: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    common_name_en: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    art_key: Mapped[str | None] = mapped_column(String(40), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
@@ -195,6 +203,9 @@ class Observation(Base):
         Uuid(as_uuid=True), ForeignKey("identification_jobs.id", ondelete="SET NULL"), nullable=True
     )
     identified_by: Mapped[str] = mapped_column(String(30), nullable=False)
+    dive_log_id: Mapped[UUID | None] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("dive_logs.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     region_label: Mapped[str | None] = mapped_column(String(100), nullable=True)
     observed_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
@@ -249,3 +260,77 @@ class AccountDeletionTombstone(Base):
     )
     completed_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
     block_expires_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+
+class DiveSite(Base):
+    """명소 (wrecks, sculptures, caves, monuments) from data/sites/sites-v1.json."""
+
+    __tablename__ = "dive_sites"
+
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True)
+    catalog_no: Mapped[str] = mapped_column(String(3), unique=True, nullable=False)
+    category_ko: Mapped[str] = mapped_column(String(40), nullable=False, index=True)
+    name_ko: Mapped[str] = mapped_column(String(100), nullable=False, index=True)
+    name_en: Mapped[str] = mapped_column(String(160), nullable=False)
+    country_ko: Mapped[str] = mapped_column(String(60), nullable=False)
+    region_ko: Mapped[str] = mapped_column(String(100), nullable=False)
+    note_ko: Mapped[str] = mapped_column(Text, nullable=False, default="")
+    depth_label: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    level_label: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    art_key: Mapped[str] = mapped_column(String(40), nullable=False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+
+
+class DiveLog(Base):
+    """A scuba dive, freediving session or snorkel outing. Location is stored by name only (no GPS)."""
+
+    __tablename__ = "dive_logs"
+    __table_args__ = (
+        CheckConstraint("kind IN ('scuba', 'free', 'snorkel')", name="ck_dive_logs_kind"),
+        CheckConstraint("char_length(diary_text) <= 500", name="ck_dive_logs_diary_length"),
+        UniqueConstraint("user_id", "kind", "seq", name="uq_dive_logs_user_kind_seq"),
+        UniqueConstraint("user_id", "idempotency_key", name="uq_dive_logs_idempotency"),
+        Index("ix_dive_logs_user_date", "user_id", "dive_date"),
+    )
+
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True, default=uuid4)
+    user_id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), nullable=False, index=True)
+    kind: Mapped[str] = mapped_column(String(10), nullable=False)
+    seq: Mapped[int] = mapped_column(Integer, nullable=False)
+    dive_date: Mapped[date] = mapped_column(Date, nullable=False)
+    region_label: Mapped[str] = mapped_column(String(100), nullable=False)
+    point_label: Mapped[str] = mapped_column(String(100), nullable=False)
+    title: Mapped[str | None] = mapped_column(String(60), nullable=True)
+    details: Mapped[dict] = mapped_column(JSONB, nullable=False, default=dict)
+    diary_text: Mapped[str | None] = mapped_column(Text, nullable=True)
+    sticker_layout: Mapped[list | None] = mapped_column(JSONB, nullable=True)
+    is_draft: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
+    site_id: Mapped[UUID | None] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("dive_sites.id", ondelete="SET NULL"), nullable=True
+    )
+    idempotency_key: Mapped[str] = mapped_column(String(128), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), onupdate=func.now()
+    )
+    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+
+    site: Mapped[DiveSite | None] = relationship()
+
+
+class SiteStamp(Base):
+    """First visit to a 명소, stamped from a dive log."""
+
+    __tablename__ = "site_stamps"
+
+    user_id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), primary_key=True)
+    site_id: Mapped[UUID] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("dive_sites.id", ondelete="CASCADE"), primary_key=True
+    )
+    dive_log_id: Mapped[UUID | None] = mapped_column(
+        Uuid(as_uuid=True), ForeignKey("dive_logs.id", ondelete="SET NULL"), nullable=True
+    )
+    stamped_on: Mapped[date] = mapped_column(Date, nullable=False)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    site: Mapped[DiveSite] = relationship()

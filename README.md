@@ -153,6 +153,16 @@ npx eas-cli build --platform android --profile production
 
 The `versionCode` is maintained locally; increment it in `app.json` before each Play Store release. Builds were not submitted to EAS because this requires uploading the project source and configuring an EAS account/API environment.
 
+## API tests
+
+Integration tests run against a real PostgreSQL that has been migrated and seeded (they create and remove two throw-away users):
+
+```powershell
+cd "C:\Users\20231\Ocean Diary\services\api"
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pytest
+```
+
 ## Product decisions
 
 The first release supports photos only. Video analysis, maps, dive logs, community, and ocean decoration are out of MVP scope. AI suggestions are not definitive; users can search manually or save an unidentified discovery.
