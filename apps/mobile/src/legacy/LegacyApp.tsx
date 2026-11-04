@@ -1,23 +1,23 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
 import type { Session } from "@supabase/supabase-js";
-import { supabase, supabaseEnabled } from "./src/lib/supabase";
-import { CatalogCollectionSection } from "./src/features/catalog/CatalogCollectionSection";
-import { SpeciesDetailModal } from "./src/features/catalog/SpeciesDetailModal";
-import { AuthModal } from "./src/features/auth/AuthModal";
-import { AccountSettingsModal } from "./src/features/account/AccountSettingsModal";
-import type { Species } from "./src/types/species";
-import type { ObservationCard, ObservationFilter, ObservationSummary } from "./src/types/observation";
-import { ObservationListModal } from "./src/features/observations/ObservationListModal";
-import { ObservationDetailModal } from "./src/features/observations/ObservationDetailModal";
-import { PhotoPreviewModal } from "./src/features/observations/PhotoPreviewModal";
-import { ObservationSavedModal } from "./src/features/observations/ObservationSavedModal";
-import { IdentificationFlowModal } from "./src/features/observations/IdentificationFlowModal";
-import { HomeDiscoverySection } from "./src/features/home/HomeDiscoverySection";
-import { PhotoCaptureAction } from "./src/features/home/PhotoCaptureAction";
-import type { ClientConfig } from "./src/types/clientConfig";
-import type { IdentificationCandidate, SelectionSource } from "./src/types/identification";
-import type { PhotoSelection } from "./src/types/photo";
+import { supabase, supabaseEnabled } from "../lib/supabase";
+import { CatalogCollectionSection } from "../features/catalog/CatalogCollectionSection";
+import { SpeciesDetailModal } from "../features/catalog/SpeciesDetailModal";
+import { AuthModal } from "../features/auth/AuthModal";
+import { AccountSettingsModal } from "../features/account/AccountSettingsModal";
+import type { Species } from "../types/species";
+import type { ObservationCard, ObservationFilter, ObservationSummary } from "../types/observation";
+import { ObservationListModal } from "../features/observations/ObservationListModal";
+import { ObservationDetailModal } from "../features/observations/ObservationDetailModal";
+import { PhotoPreviewModal } from "../features/observations/PhotoPreviewModal";
+import { ObservationSavedModal } from "../features/observations/ObservationSavedModal";
+import { IdentificationFlowModal } from "../features/observations/IdentificationFlowModal";
+import { HomeDiscoverySection } from "../features/home/HomeDiscoverySection";
+import { PhotoCaptureAction } from "../features/home/PhotoCaptureAction";
+import type { ClientConfig } from "../types/clientConfig";
+import type { IdentificationCandidate, SelectionSource } from "../types/identification";
+import type { PhotoSelection } from "../types/photo";
 import { Directory, File, Paths } from "expo-file-system";
 import {
   AppState,
@@ -30,7 +30,7 @@ import {
   StyleSheet,
   Text,
 } from "react-native";
-import catalog from "../../data/species/catalog.json";
+import catalog from "../../../../data/species/catalog.json";
 
 type UploadIntent = {
   media_id: string;
