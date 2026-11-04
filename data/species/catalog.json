@@ -1,0 +1,98 @@
+{
+  "catalog_version": 2,
+  "locale": "ko-KR",
+  "source_policy": "Names and scientific names are cross-checked against National Institute of Fisheries Science species records. Descriptions are original draft copy. Illustrations are original inline SVG code in the mobile app and still need biological review; species without an illustration use the neutral placeholder. NIFS photographs are not copied.",
+  "species": [
+    {
+      "id": "f3a8e115-0c52-58ef-8e9b-6b51aa32460c",
+      "slug": "jari-dom",
+      "common_name_ko": "자리돔",
+      "scientific_name": "Chromis notata",
+      "category_ko": "물고기",
+      "description_ko": "바위와 산호 주변을 무리 지어 오가는 작은 바닷물고기예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=10001",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "jari-dom",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "99e85ce7-0513-5f97-8cdc-119bd6285eaa",
+      "slug": "jwi-noraemi",
+      "common_name_ko": "쥐노래미",
+      "scientific_name": "Hexagrammos otakii",
+      "category_ko": "물고기",
+      "description_ko": "바닥 가까이에서 만날 수 있는 연안 바닷물고기예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=10538",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "jwi-noraemi",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "18cf7dd4-58f0-529a-a04d-2f7828c3c25e",
+      "slug": "dol-dom",
+      "common_name_ko": "돌돔",
+      "scientific_name": "Oplegnathus fasciatus",
+      "category_ko": "물고기",
+      "description_ko": "바위가 많은 연안 바다에서 만날 수 있는 바닷물고기예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11116",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "dol-dom",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "b04c9deb-2a9c-5d25-b0e6-a3913edbdbe1",
+      "slug": "bol-rak",
+      "common_name_ko": "볼락",
+      "scientific_name": "Sebastes inermis",
+      "category_ko": "물고기",
+      "description_ko": "바위틈과 해조류 주변을 살피며 살아가는 연안 물고기예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11748",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "bol-rak",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "8cf25b0f-3577-52fa-bb21-de3f00ebdec8",
+      "slug": "jopi-bol-rak",
+      "common_name_ko": "조피볼락",
+      "scientific_name": "Sebastes schlegelii",
+      "category_ko": "물고기",
+      "description_ko": "우리 바다 연안에서 만날 수 있는 볼락과 물고기예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11759",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "jopi-bol-rak",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "72a36ff2-ed3b-594f-b9a0-d784bc091d34",
+      "slug": "gamseong-dom",
+      "common_name_ko": "감성돔",
+      "scientific_name": "Acanthopagrus schlegelii",
+      "category_ko": "물고기",
+      "description_ko": "해조류가 있는 모래 바닥이나 암초 주변의 연안에서 만날 수 있어요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=9541",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "gamseong-dom",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    },
+    {
+      "id": "afa0294c-d699-5b87-ac2b-63ad9b643333",
+      "slug": "cham-muneo",
+      "common_name_ko": "참문어",
+      "scientific_name": "Octopus vulgaris",
+      "category_ko": "두족류",
+      "description_ko": "낮에는 어초 틈이나 큰 갈조류 주변에 몸을 숨기는 야행성 문어예요.",
+      "source_url": "https://www.nifs.go.kr/portal/bt/frctA/actionSpeciesSearchView.do?taxonId=11082",
+      "illustration_path": "apps/mobile/src/components/SpeciesArtwork.tsx",
+      "illustration_variant": "cham-muneo",
+      "illustration_status": "inline_svg_draft",
+      "review_status": "draft"
+    }
+  ]
+}

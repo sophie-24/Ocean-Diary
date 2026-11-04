@@ -1,0 +1,37 @@
+{
+  "name": "ocean-diary-mobile",
+  "version": "0.1.0",
+  "private": true,
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "preview:web": "expo start --web --localhost",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@react-native-async-storage/async-storage": "^2.2.0",
+    "@supabase/supabase-js": "^2.118.0",
+    "expo": "~58.0.0",
+    "expo-file-system": "~58.0.13",
+    "expo-image-picker": "~58.0.10",
+    "expo-secure-store": "~58.0.2",
+    "hermes-parser": "^0.36.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-svg": "^15.16.0",
+    "react-native-url-polyfill": "^4.0.0",
+    "react-native-web": "^0.21.4"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@types/react": "~19.3.0",
+    "typescript": "~6.0.3"
+  },
+  "overrides": {
+    "glob": "14.0.2",
+    "minimatch": "11.0.1"
+  }
+}

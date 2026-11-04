@@ -1,0 +1,27 @@
+{
+  "cli": {
+    "version": ">=27.2.0",
+    "appVersionSource": "local"
+  },
+  "build": {
+    "preview": {
+      "distribution": "internal",
+      "environment": "preview",
+      "env": {
+        "OCEAN_DIARY_BUILD_TARGET": "preview"
+      },
+      "android": {
+        "buildType": "apk"
+      }
+    },
+    "production": {
+      "environment": "production",
+      "env": {
+        "OCEAN_DIARY_BUILD_TARGET": "production"
+      },
+      "android": {
+        "buildType": "app-bundle"
+      }
+    }
+  }
+}

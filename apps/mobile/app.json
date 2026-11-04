@@ -1,0 +1,40 @@
+{
+  "expo": {
+    "name": "OCEAN DIARY",
+    "slug": "ocean-diary",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "light",
+    "newArchEnabled": true,
+    "icon": "./assets/icon.png",
+    "splash": {
+      "image": "./assets/icon.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#EAF2EC"
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.oceandiary.app",
+      "buildNumber": "1"
+    },
+    "android": {
+      "package": "com.oceandiary.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#EAF2EC"
+      },
+      "edgeToEdgeEnabled": true
+    },
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "OCEAN DIARY가 다이빙 중 만난 생물을 기록할 사진을 선택할 수 있도록 사진 보관함에 접근합니다.",
+          "cameraPermission": false,
+          "microphonePermission": false
+        }
+      ]
+    ]
+  }
+}
