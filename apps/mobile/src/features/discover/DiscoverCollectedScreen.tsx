@@ -144,7 +144,7 @@ export function DiscoverCollectedScreen() {
       </Animated.View>
 
       <View style={styles.bottom}>
-        <Pressable accessibilityRole="button" onPress={() => router.navigate("/log")} style={styles.primary}>
+        <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: "d38" } })} style={styles.primary}>
           <Txt size={16} weight="black" color={colors.white}>
             그림일기에 스티커로 붙이기
           </Txt>

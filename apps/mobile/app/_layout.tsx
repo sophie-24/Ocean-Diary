@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { useFonts } from "expo-font";
 import {
   NotoSansKR_400Regular,
@@ -36,7 +37,7 @@ export default function RootLayout() {
   if (!loaded && !error) return null;
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <StatusBar style="dark" />
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.mist } }}>
         <Stack.Screen name="(tabs)" />
@@ -47,8 +48,12 @@ export default function RootLayout() {
         <Stack.Screen name="log/new" options={{ presentation: "modal" }} />
         <Stack.Screen name="log/[id]" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="diary/[logId]/write" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="diary/[logId]/decorate" options={{ animation: "slide_from_right", gestureEnabled: false }} />
         <Stack.Screen name="sea/map" options={{ animation: "slide_from_right" }} />
+        <Stack.Screen name="sea/tank/ocean" options={{ animation: "fade" }} />
+        <Stack.Screen name="sea/tank/macro" options={{ animation: "fade" }} />
+        <Stack.Screen name="sea/place/[id]" options={{ animation: "fade" }} />
       </Stack>
-    </>
+    </GestureHandlerRootView>
   );
 }

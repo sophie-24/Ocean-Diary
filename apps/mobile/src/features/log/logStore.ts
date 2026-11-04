@@ -1,5 +1,11 @@
 import { useSyncExternalStore } from "react";
 import type { CritterKind } from "../../data/illustrations";
+import type { StickerKind } from "../../data/stickers";
+
+/** A sticker placed on the picture-diary drawing area (coordinates in the 338×218 drawing space). */
+export type PlacedSticker =
+  | { id: string; type: "sticker"; kind: StickerKind; x: number; y: number; scale: number; rot: number }
+  | { id: string; type: "critter"; kind: CritterKind; x: number; y: number; scale: number; rot: number; flip?: boolean };
 
 export type LogKind = "scuba" | "free" | "snorkel";
 
@@ -20,6 +26,7 @@ export type DiveLog = {
   extraStickers: number;
   draft: boolean;
   diary?: string;
+  layout?: PlacedSticker[];
   details: Record<string, string | number | boolean | string[]>;
 };
 
@@ -28,7 +35,13 @@ const SEED: DiveLog[] = [
   { id: "d38", kind: "scuba", label: "#38", date: "2026-11-02", region: "말라파스쿠아", point: "모나드 숄", title: "새벽 4시 반, 환도상어", summary: "최대 24.3m · 41분 · 26°C", coverKind: "thresher", coverBg: "#1B4F86", stickers: ["thresher", "trevally"], extraStickers: 0, draft: false, details: {} },
   { id: "f12", kind: "free", label: "F12", date: "2026-11-01", region: "말라파스쿠아", point: "바운티 비치", title: "바이핀으로 18m 찍은 날", summary: "최고 18.4m · 12회 · 최장 1:12", coverKind: "puffer", coverBg: "#2A6FB8", stickers: [], extraStickers: 0, draft: false, details: {} },
   { id: "d37", kind: "scuba", label: "#37", date: "2026-11-01", region: "말라파스쿠아", point: "라이트하우스", title: "만다린피쉬의 노을 춤", summary: "최대 7m · 48분 · 28°C", coverKind: "mandarin", coverBg: "#0F2F57", stickers: ["mandarin", "lionfish", "moray"], extraStickers: 0, draft: false, details: {} },
-  { id: "d36", kind: "scuba", label: "#36", date: "2026-11-01", region: "말라파스쿠아", point: "가토 섬", title: "동굴 속 백기흉상어", summary: "최대 18m · 52분 · 28°C", coverKind: "whitetip", coverBg: "#1B4579", stickers: ["whitetip"], extraStickers: 2, draft: true, diary: "오늘은 가토 섬 동굴 다이빙! 입구가 생각보다 좁아서 살짝 긴장했는데 안에 들어가니까 백기흉상어 두 마리가 바닥에 누워서 쉬고 있었다.", details: { maxDepth: "18", bottom: "52", waterTemp: "28", buddy: "이하늘" } },
+  { id: "d36", kind: "scuba", label: "#36", date: "2026-11-01", region: "말라파스쿠아", point: "가토 섬", title: "동굴 속 백기흉상어", summary: "최대 18m · 52분 · 28°C", coverKind: "whitetip", coverBg: "#1B4579", stickers: ["whitetip"], extraStickers: 2, draft: true, layout: [
+    { id: "a", type: "sticker", kind: "cave", x: -10, y: 70, scale: 1.5, rot: 0 },
+    { id: "b", type: "sticker", kind: "branch", x: 252, y: 128, scale: 0.7, rot: 0 },
+    { id: "c", type: "critter", kind: "whitetip", x: 112, y: 160, scale: 1, rot: -2 },
+    { id: "d", type: "sticker", kind: "diver", x: 150, y: 36, scale: 0.96, rot: -8 },
+    { id: "e", type: "sticker", kind: "wow", x: 242, y: 12, scale: 0.8, rot: 6 },
+  ], diary: "오늘은 가토 섬 동굴 다이빙! 입구가 생각보다 좁아서 살짝 긴장했는데 안에 들어가니까 백기흉상어 두 마리가 바닥에 누워서 쉬고 있었다.", details: { maxDepth: "18", bottom: "52", waterTemp: "28", buddy: "이하늘" } },
 ];
 
 /** Totals for the canvas header (older logs are not in the mock list). */

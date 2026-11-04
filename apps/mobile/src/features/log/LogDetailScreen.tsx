@@ -6,6 +6,8 @@ import { ChevronLeft } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { colors, fonts } from "../../theme/tokens";
 import { Manuscript } from "../diary/Manuscript";
+import { DRAW_W, DiaryCanvas } from "../diary/DiaryCanvas";
+import { useWindowDimensions } from "react-native";
 import { KIND_LABEL, useLogs } from "./logStore";
 
 const DETAIL_LABELS: Record<string, string> = {
@@ -37,6 +39,8 @@ export function LogDetailScreen({ id }: { id: string }) {
   const router = useRouter();
   const logs = useLogs();
   const log = logs.find((l) => l.id === id);
+  const { width } = useWindowDimensions();
+  const drawScale = (width - 40 - 28) / DRAW_W;
   const goBack = () => (router.canGoBack() ? router.back() : router.navigate("/log"));
 
   if (!log) {
@@ -79,15 +83,21 @@ export function LogDetailScreen({ id }: { id: string }) {
               {log.region} · {log.point}
             </Txt>
           </View>
-          <View style={[styles.drawing, { backgroundColor: log.coverBg }]}>
-            <View style={styles.glare} />
-            <Critter kind={log.coverKind} width={220} height={120} />
-            <View style={styles.stickerRow}>
-              {log.stickers.map((k) => (
-                <Critter key={k} kind={k} width={64} height={36} />
-              ))}
+          {log.layout && log.layout.length > 0 ? (
+            <View style={styles.drawFrame}>
+              <DiaryCanvas layout={log.layout} scale={drawScale} />
             </View>
-          </View>
+          ) : (
+            <View style={[styles.drawing, { backgroundColor: log.coverBg }]}>
+              <View style={styles.glare} />
+              <Critter kind={log.coverKind} width={220} height={120} />
+              <View style={styles.stickerRow}>
+                {log.stickers.map((k) => (
+                  <Critter key={k} kind={k} width={64} height={36} />
+                ))}
+              </View>
+            </View>
+          )}
           <Txt size={22} style={{ fontFamily: fonts.diaryBold, marginVertical: 8 }} align="center">
             {log.title}
           </Txt>
@@ -111,11 +121,15 @@ export function LogDetailScreen({ id }: { id: string }) {
               {log.diary ? "일기 고치기" : "그림일기 쓰기"}
             </Txt>
           </Pressable>
-          <View style={[styles.secondary, { opacity: 0.55 }]} accessibilityLabel="크레파스 스티커 꾸미기, 준비 중">
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } })}
+            style={styles.secondary}
+          >
             <Txt size={14} weight="bold">
-              스티커 꾸미기 · 곧
+              스티커 꾸미기
             </Txt>
-          </View>
+          </Pressable>
         </View>
 
         <View style={styles.card}>
@@ -147,6 +161,7 @@ const styles = StyleSheet.create({
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   page: { padding: 14, borderRadius: 18, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", shadowColor: "#1E468C", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
   pageHead: { flexDirection: "row", justifyContent: "space-between", gap: 8, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: "#EADFC8", marginBottom: 10 },
+  drawFrame: { borderWidth: 2, borderColor: "#3B4C86", borderRadius: 4, overflow: "hidden" },
   drawing: { height: 190, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: "hidden" },
   glare: { position: "absolute", left: -20, top: -40, width: 70, height: 280, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "20deg" }] },
   stickerRow: { position: "absolute", left: 8, bottom: 6, flexDirection: "row", gap: 4 },

@@ -29,8 +29,9 @@ export function DiaryWriteScreen({ logId }: { logId: string }) {
   const addPrompt = (p: string) => onText(`${text}${text && !text.endsWith("\n") ? "\n" : ""}${p}: `);
 
   const finish = (withText: boolean) => {
-    if (log) logStore.update(log.id, { diary: withText ? text : log.diary, draft: false, title: withText && text.trim() ? text.trim().split("\n")[0].slice(0, 20) : log.title });
-    router.replace({ pathname: "/log/[id]", params: { id: logId } });
+    if (log) logStore.update(log.id, { diary: withText ? text : log.diary, draft: withText, title: withText && text.trim() ? text.trim().split("\n")[0].slice(0, 20) : log.title });
+    if (withText) router.replace({ pathname: "/diary/[logId]/decorate", params: { logId } });
+    else router.replace({ pathname: "/log/[id]", params: { id: logId } });
   };
 
   return (
