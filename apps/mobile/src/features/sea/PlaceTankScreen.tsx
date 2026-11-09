@@ -62,6 +62,7 @@ export function PlaceTankScreen({ id }: { id: string }) {
       scene={(rays) => <OceanScene rays={rays} />}
       residents={residents}
       backHref="/sea/map"
+      sound="scuba"
       notes={{ dawn: "환도상어가 클리닝 스테이션에 올라와요", day: "만다린피쉬는 산호 틈에 숨었어요", dusk: "만다린피쉬 짝짓기 춤 시간", night: "백기흉상어가 사냥 중" }}
       footer={
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.strip} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>

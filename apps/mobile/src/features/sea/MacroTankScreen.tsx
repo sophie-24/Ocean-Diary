@@ -11,6 +11,7 @@ import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { colors } from "../../theme/tokens";
 import { MacroScene } from "./MacroScene";
+import { useOceanSound } from "./oceanSound";
 import { useCollection } from "../../api/queries";
 import { SPECIES } from "../../data/species";
 
@@ -62,6 +63,8 @@ export function MacroTankScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [found, setFound] = useState<Set<CritterKind>>(() => new Set<CritterKind>());
+  // Same ambience as the reef tank while the diver has sound on.
+  useOceanSound("bubbles");
   const { data: collection } = useCollection();
   const hidden = useMemo<Hidden[]>(
     () =>

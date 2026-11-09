@@ -18,6 +18,7 @@ export function OceanTankScreen() {
       scene={(rays) => <OceanScene rays={rays} />}
       residents={residents}
       current="ocean"
+      sound="scuba"
       notes={{ dawn: "물빛이 밝아지고 있어요", day: "햇빛이 깊이 들어와요", dusk: "바다가 보랏빛으로 물들어요", night: "달빛 아래 천천히 헤엄쳐요" }}
     >
       {({ pick }) => (

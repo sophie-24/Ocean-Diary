@@ -12,6 +12,7 @@ import { SPECIES_BY_NO } from "../../data/species";
 import { colors } from "../../theme/tokens";
 import { useCollection } from "../../api/queries";
 import { OnStage } from "./stage";
+import { useOceanSound, type OceanTrack } from "./oceanSound";
 import { Particle } from "./TankParts";
 import { PHASES, PHASE_LOOK, clockLabel, phaseOf, type Phase } from "./timeOfDay";
 
@@ -67,13 +68,16 @@ type Props = {
   /** Optional note override per phase (e.g. place-specific behaviour). */
   notes?: Partial<Record<Phase, string>>;
   footer?: ReactNode;
+  /** Ambient loop for this tank. */
+  sound?: OceanTrack;
 };
 
-export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHint = "아직 이 수조에서 만난 친구가 없어요. 발견 탭에서 사진을 올려 보세요", children, current, backHref, notes, footer }: Props) {
+export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHint = "아직 이 수조에서 만난 친구가 없어요. 발견 탭에서 사진을 올려 보세요", children, current, backHref, notes, footer, sound = "bubbles" }: Props) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const [sel, setSel] = useState<CritterKind | null>(null);
   const [hud, setHud] = useState(true);
+  const ambience = useOceanSound(sound);
   const [preview, setPreview] = useState<Phase | null>(null);
   const [now, setNow] = useState(() => new Date());
   useEffect(() => {
@@ -194,9 +198,15 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
               </View>
             </Pressable>
             <View style={{ gap: 8 }}>
-              <Pressable accessibilityRole="button" accessibilityLabel="바다 소리 설정 · 음원 준비 중" style={[styles.glass, styles.round]}>
-                <Txt size={11} weight="extraBold" color={colors.white}>
-                  소리
+              <Pressable
+                accessibilityRole="switch"
+                accessibilityState={{ checked: ambience.on }}
+                accessibilityLabel="바다 소리"
+                onPress={ambience.toggle}
+                style={[styles.glass, styles.round, ambience.on && styles.roundOn]}
+              >
+                <Txt size={11} weight="extraBold" color={ambience.on ? colors.navy : colors.white}>
+                  {ambience.on ? "소리 켬" : "소리"}
                 </Txt>
               </Pressable>
               <Pressable accessibilityRole="button" accessibilityLabel="감상 모드 · 화면 글자 숨기기" onPress={() => { setHud(false); setSel(null); }} style={[styles.glass, styles.round]}>
@@ -278,6 +288,7 @@ export const tankStyles = StyleSheet.create({
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: "#0B2C66", overflow: "hidden" },
+  roundOn: { backgroundColor: "rgba(255,255,255,0.92)" },
   emptyWrap: { position: "absolute", left: 32, right: 32, top: "40%", alignItems: "center" },
   hudTop: { position: "absolute", left: 0, right: 0, top: 0, paddingHorizontal: 16, gap: 10 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
