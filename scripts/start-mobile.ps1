@@ -1,5 +1,7 @@
 ﻿param(
-    [string]$ApiUrl
+    [string]$ApiUrl,
+    # Optional: force the PC address put in the Expo QR code (e.g. the hotspot adapter's IPv4).
+    [string]$HostIp
 )
 
 $ErrorActionPreference = 'Stop'
@@ -34,34 +36,33 @@ if (-not [Uri]::TryCreate($ApiUrl, [UriKind]::Absolute, [ref]$parsedApiUrl) -or 
     throw "EXPO_PUBLIC_API_URL must be an absolute HTTP or HTTPS URL. Current value: $ApiUrl"
 }
 
-if ($parsedApiUrl.IsLoopback -and -not $apiUrlWasProvided) {
-    try {
-        $lanAddress = Get-NetRoute -DestinationPrefix '0.0.0.0/0' -ErrorAction Stop |
-            Sort-Object RouteMetric, InterfaceMetric |
-            ForEach-Object {
-                Get-NetIPAddress -AddressFamily IPv4 -InterfaceIndex $_.InterfaceIndex -ErrorAction SilentlyContinue |
-                    Where-Object { $_.AddressState -eq 'Preferred' -and $_.IPAddress -notmatch '^(127\.|169\.254\.)' } |
-                    Select-Object -First 1 -ExpandProperty IPAddress
-            } |
-            Select-Object -First 1
-    } catch {
-        $lanAddress = $null
-    }
-    if (-not $lanAddress) {
-        throw 'The mobile API URL points to this PC only, and Windows could not find a LAN IPv4 address. Run this again with -ApiUrl "http://<PC-LAN-IPv4>:8765".'
-    }
-
-    $apiUrlBuilder = [UriBuilder]::new($parsedApiUrl)
-    $apiUrlBuilder.Host = $lanAddress
-    $ApiUrl = $apiUrlBuilder.Uri.AbsoluteUri.TrimEnd('/')
-    Write-Host "The default API URL was local-only. Using this PC LAN address for Expo Go: $ApiUrl"
-} elseif ($parsedApiUrl.IsLoopback) {
-    throw 'Expo Go on a physical phone cannot reach 127.0.0.1 on this PC. Pass this PC LAN address with -ApiUrl, for example -ApiUrl "http://192.168.0.10:8765".'
+# Phone-facing addresses are worked out automatically in development:
+#  - the app swaps 127.0.0.1 for the address Expo Go used to reach this PC (Metro), and
+#  - the API signs photo-upload URLs for the address the phone used (S3_PUBLIC_ENDPOINT_URL=auto).
+# So a new hotspot/Wi-Fi IP only needs this script to be started again.
+$lanAddresses = @()
+try {
+    $lanAddresses = @(Get-NetIPAddress -AddressFamily IPv4 -ErrorAction Stop |
+        Where-Object { $_.AddressState -eq 'Preferred' -and $_.IPAddress -notmatch '^(127\.|169\.254\.)' } |
+        Select-Object -ExpandProperty IPAddress)
+} catch {
+    $lanAddresses = @()
 }
-$parsedApiUrl = [Uri]$ApiUrl
+if ($HostIp) {
+    $parsedHost = $null
+    if (-not [System.Net.IPAddress]::TryParse($HostIp, [ref]$parsedHost)) {
+        throw "-HostIp must be an IPv4 address such as 172.20.10.2. Current value: $HostIp"
+    }
+    $env:REACT_NATIVE_PACKAGER_HOSTNAME = $HostIp
+    Write-Host "Expo QR code will use this PC address: $HostIp"
+} elseif ($lanAddresses.Count -gt 0) {
+    Write-Host "This PC's network addresses: $($lanAddresses -join ', ')"
+    Write-Host 'If the QR code shows a different network than the phone is on, rerun with -HostIp <one of these>.'
+}
+if ($parsedApiUrl.IsLoopback) {
+    Write-Host 'API URL is local (127.0.0.1); on the phone the app uses the same PC address as the Expo QR code.'
+}
 
-# Presigned MinIO URLs are opened by the phone directly, so localhost in this setting
-# points at the phone itself. Check only this endpoint value; never print .env secrets.
 $publicStorageUrl = $env:S3_PUBLIC_ENDPOINT_URL
 if (-not $publicStorageUrl) {
     $projectEnv = Join-Path $projectRoot '.env'
@@ -74,12 +75,14 @@ if (-not $publicStorageUrl) {
         $publicStorageUrl = 'http://127.0.0.1:9000'
     }
 }
-$parsedStorageUrl = $null
-if (-not [Uri]::TryCreate($publicStorageUrl, [UriKind]::Absolute, [ref]$parsedStorageUrl) -or $parsedStorageUrl.Scheme -notin @('http', 'https')) {
-    throw 'S3_PUBLIC_ENDPOINT_URL must be an absolute HTTP or HTTPS URL. Check its value in the project-root .env.'
-}
-if ($parsedStorageUrl.IsLoopback -and -not $parsedApiUrl.IsLoopback) {
-    throw 'S3_PUBLIC_ENDPOINT_URL still points to this PC local-only address. Set it in the project-root .env to http://<PC-LAN-IPv4>:9000, keep S3_ENDPOINT_URL at 127.0.0.1 for the API, then restart the API before connecting a phone.'
+if ($publicStorageUrl -ne 'auto') {
+    $parsedStorageUrl = $null
+    if (-not [Uri]::TryCreate($publicStorageUrl, [UriKind]::Absolute, [ref]$parsedStorageUrl) -or $parsedStorageUrl.Scheme -notin @('http', 'https')) {
+        throw 'S3_PUBLIC_ENDPOINT_URL must be auto or an absolute HTTP(S) URL. Check its value in the project-root .env.'
+    }
+    if ($parsedStorageUrl.IsLoopback) {
+        Write-Warning 'S3_PUBLIC_ENDPOINT_URL points to 127.0.0.1, so photo upload will fail on a phone. Set S3_PUBLIC_ENDPOINT_URL=auto in the project-root .env and restart the API.'
+    }
 }
 
 Write-Host "Checking API readiness at $ApiUrl/v1/ready ..."
@@ -106,7 +109,7 @@ if (-not (Test-Path (Join-Path $mobileRoot 'node_modules'))) {
 
 Write-Host 'API is ready. Starting Expo with LAN access; scan its QR code in Expo Go.'
 Write-Host "The app will use API URL: $($ApiUrl.TrimEnd('/'))"
-Write-Host 'For a physical phone, use this PC LAN IPv4 address and set S3_PUBLIC_ENDPOINT_URL in the project-root .env to the same host before restarting the API.'
+Write-Host 'Phone on the same Wi-Fi/hotspot: scan the QR code with the iPhone camera (Expo Go opens it).'
 $previousMobileApiUrl = $env:EXPO_PUBLIC_API_URL
 $env:EXPO_PUBLIC_API_URL = $ApiUrl.TrimEnd('/')
 Push-Location $mobileRoot

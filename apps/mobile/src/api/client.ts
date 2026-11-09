@@ -1,6 +1,21 @@
 import { Platform } from "react-native";
+import Constants from "expo-constants";
 
-export const API_BASE_URL = (process.env.EXPO_PUBLIC_API_URL ?? "http://127.0.0.1:8765").replace(/\/$/, "");
+const CONFIGURED_API_URL = (process.env.EXPO_PUBLIC_API_URL ?? "http://127.0.0.1:8765").replace(/\/$/, "");
+
+/**
+ * In development on a real phone, 127.0.0.1 is the phone itself. Expo Go already reached this
+ * PC's dev server (Metro) at some IP, so we point the API at that same IP: a new hotspot or
+ * Wi-Fi address then needs no .env edit. Release builds always use the configured URL.
+ */
+function devReachableUrl(url: string): string {
+  if (!__DEV__ || Platform.OS === "web") return url;
+  const metroHost = Constants.expoConfig?.hostUri?.split(":")[0] ?? "";
+  if (!/^\d{1,3}(\.\d{1,3}){3}$/.test(metroHost)) return url;
+  return url.replace(/\/\/(127\.0\.0\.1|localhost)(?=[:/]|$)/, `//${metroHost}`);
+}
+
+export const API_BASE_URL = devReachableUrl(CONFIGURED_API_URL);
 export const DEV_AUTH_TOKEN = process.env.EXPO_PUBLIC_DEV_AUTH_TOKEN ?? "";
 
 const REQUEST_TIMEOUT_MS = 30_000;

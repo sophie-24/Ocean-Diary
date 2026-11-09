@@ -26,7 +26,7 @@ if (-not (Test-Path -LiteralPath $projectEnvFile)) {
     }
     Copy-Item -LiteralPath $projectEnvExample -Destination $projectEnvFile
     Write-Host "로컬 개발용 .env를 만들었습니다: $projectEnvFile"
-    Write-Host "실제 기기 사진 업로드를 설정하기 전 S3_PUBLIC_ENDPOINT_URL을 이 PC LAN 주소로 바꾸고 API를 다시 시작하세요."
+    Write-Host "실제 폰에서 사진을 올리려면 .env의 S3_PUBLIC_ENDPOINT_URL=auto 인지 확인하세요(새 .env는 기본값이 auto)."
 }
 
 $listener = Get-NetTCPConnection -LocalPort $Port -State Listen -ErrorAction SilentlyContinue |

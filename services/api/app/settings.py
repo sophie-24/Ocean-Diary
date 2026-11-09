@@ -75,6 +75,8 @@ if (
 
 if settings.app_env != "development" and settings.dev_auth_enabled:
     raise RuntimeError("DEV_AUTH_ENABLED must be false outside development")
+if settings.app_env != "development" and settings.s3_public_endpoint_url.strip().lower() == "auto":
+    raise RuntimeError("S3_PUBLIC_ENDPOINT_URL=auto is for local development only")
 if settings.app_env != "development":
     if (
         settings.s3_access_key_id.lower() == "minioadmin"

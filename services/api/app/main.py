@@ -27,7 +27,7 @@ from app.models import ApiRateLimitEvent
 from app.observations import router as observations_router
 from app.species import router as species_router
 from app.settings import EXTERNAL_AI_DISCLOSURE_VERSION, settings
-from app.storage import storage_client
+from app.storage import request_host, storage_client
 
 app = FastAPI(title="OCEAN DIARY API", version="0.1.0")
 if settings.app_env == "development":
@@ -171,6 +171,7 @@ def _rate_limit_policy(method: str, path: str) -> tuple[str, tuple[int, int] | N
 @app.middleware("http")
 async def ensure_json_utf8_charset(request, call_next):
     request.state.request_id = str(uuid4())
+    request_host.set(request.url.hostname)
     bucket_path, rule = _rate_limit_policy(request.method, request.url.path)
     rate_limit = None
     if rule is not None:
