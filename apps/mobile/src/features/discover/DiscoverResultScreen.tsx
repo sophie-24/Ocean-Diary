@@ -13,7 +13,8 @@ import { localDate, saveObservation, searchSpecies } from "../../api/discover";
 import { keys, useCollection, useDiveLogs } from "../../api/queries";
 import type { ApiSpecies } from "../../api/types";
 import { colors, fonts } from "../../theme/tokens";
-import { discoverStore, useDiscover } from "./discoverStore";
+import { discoverStore, matchLog, useDiscover } from "./discoverStore";
+import { LogPickerSheet } from "./LogPickerSheet";
 
 const BAND: Record<string, { label: string; w: number }> = {
   high: { label: "높음", w: 92 },
@@ -35,7 +36,8 @@ export function DiscoverResultScreen() {
   const router = useRouter();
   const qc = useQueryClient();
   const insets = useSafeAreaInsets();
-  const { pickedCandidate, selected, current, work, manual } = useDiscover();
+  const { pickedCandidate, selected, current, work, manual, logChoice } = useDiscover();
+  const [picker, setPicker] = useState(false);
   const photo = discoverStore.currentPhoto();
   const id = selected[current];
   const w = id ? work[id] : undefined;
@@ -49,8 +51,9 @@ export function DiscoverResultScreen() {
   const search = useQuery({ queryKey: ["species-search", q.trim()], queryFn: () => searchSpecies(q.trim()), enabled: q.trim().length >= 1 });
 
   const day = photo?.takenAt ? localDate(photo.takenAt) : null;
-  const log = day ? logData?.logs.find((l) => l.date === day) : undefined;
-  const context = [day?.replace(/-/g, "."), log ? `${log.region} ${log.point}` : null, log ? `로그 ${log.label}에 연결` : "연결할 로그 없음"]
+  const match = matchLog(photo, logData?.logs, logChoice);
+  const log = match.log;
+  const context = [day?.replace(/-/g, "."), log ? `${log.region} ${log.point}` : null, log ? `로그 ${log.label}에 연결` : "로그 연결 안 함"]
     .filter(Boolean)
     .join(" · ");
   const chosen: ApiSpecies | null = manual ?? candidates[pickedCandidate]?.species ?? null;
@@ -110,6 +113,19 @@ export function DiscoverResultScreen() {
         </SafeAreaView>
       </View>
 
+      {picker && logData ? (
+        <LogPickerSheet
+          date={day}
+          logs={logData.logs}
+          selectedId={log?.id ?? null}
+          onPick={(logId) => {
+            if (day) discoverStore.chooseLog(day, logId);
+            setPicker(false);
+          }}
+          onClose={() => setPicker(false)}
+        />
+      ) : null}
+
       {/* Candidate sheet */}
       <View style={styles.sheet}>
         <View style={styles.grabber} />
@@ -121,7 +137,15 @@ export function DiscoverResultScreen() {
             <PinIcon />
             <Txt size={13} color={colors.ink2} style={{ flex: 1 }}>
               {context || "촬영 날짜를 알 수 없는 사진"}
+              {match.guessed ? " (시간으로 추정)" : ""}
             </Txt>
+            {logData?.logs.length && day ? (
+              <Pressable accessibilityRole="button" accessibilityLabel="연결할 로그 바꾸기" onPress={() => setPicker(true)} hitSlop={8}>
+                <Txt size={13} weight="bold" color={colors.oceanBlue}>
+                  바꾸기
+                </Txt>
+              </Pressable>
+            ) : null}
           </View>
           <View accessibilityRole="radiogroup" style={{ gap: 10, marginTop: 14 }}>
             {candidates.map((c, i) => {

@@ -71,7 +71,7 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
                 accessibilityRole="button"
                 accessibilityLabel="도감 카드 공유"
                 style={styles.backBtn}
-                onPress={() => void Share.share({ message: `오션 다이어리 도감 No.${species.no} ${species.nameKo} (${species.nameEn})` })}
+                onPress={() => void Share.share({ message: `Mola 도감 No.${species.no} ${species.nameKo} (${species.nameEn})` })}
               >
                 <ShareIcon />
               </Pressable>

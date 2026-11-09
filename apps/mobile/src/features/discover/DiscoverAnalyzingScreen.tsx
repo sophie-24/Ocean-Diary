@@ -69,7 +69,7 @@ export function DiscoverAnalyzingScreen() {
         const job = await identify(mediaId, w.identifyKey, isCancelled);
         if (creep) clearInterval(creep);
         if (isCancelled()) return;
-        discoverStore.patchWork(id, { jobId: job.job_id, candidates: job.candidates, error: undefined });
+        discoverStore.patchWork(id, { jobId: job.job_id, candidates: job.candidates });
         setPct(100);
         discoverStore.set({ pickedCandidate: 0, manual: null });
         setTimeout(() => !isCancelled() && router.replace("/discover/result"), reduced ? 0 : 500);
@@ -86,9 +86,11 @@ export function DiscoverAnalyzingScreen() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, attempt]);
 
+  const nextIndex = discoverStore.nextOpen(current);
   const skip = () => {
-    if (current + 1 < selected.length) {
-      discoverStore.set({ current: current + 1 });
+    if (id) discoverStore.patchWork(id, { skipped: true });
+    if (nextIndex >= 0) {
+      discoverStore.set({ current: nextIndex });
       setPct(0);
       setAttempt((a) => a + 1);
     } else {
@@ -187,7 +189,7 @@ export function DiscoverAnalyzingScreen() {
         <View style={{ flexDirection: "row", gap: 10, marginHorizontal: 20, marginTop: "auto" }}>
           <Pressable accessibilityRole="button" onPress={skip} style={[styles.later, { flex: 1, marginHorizontal: 0 }]}>
             <Txt size={15} weight="bold" color={colors.white}>
-              {current + 1 < selected.length ? "이 사진 건너뛰기" : "그만하기"}
+              {nextIndex >= 0 ? "이 사진 건너뛰기" : "이 사진 빼고 끝내기"}
             </Txt>
           </Pressable>
           <Pressable

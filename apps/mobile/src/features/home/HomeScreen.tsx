@@ -11,6 +11,7 @@ import { SPECIES, SPECIES_BY_NO, TOTAL_SPECIES } from "../../data/species";
 import { SPECIES_FACTS, REGULAR_BADGE_GOAL } from "../../data/facts";
 import { useAuth } from "../../api/auth";
 import { useCollection, useSummary } from "../../api/queries";
+import { discoverStore, useDiscover } from "../discover/discoverStore";
 import { colors, shadow } from "../../theme/tokens";
 
 const MILESTONES = [10, 20, 30, 50, 80, 120, 181];
@@ -24,6 +25,8 @@ export function HomeScreen() {
   const router = useRouter();
   const { email } = useAuth();
   const { data: summary } = useSummary();
+  useDiscover();
+  const pending = discoverStore.openCount();
   const { data: collection } = useCollection();
   const nickname = email ? email.split("@")[0] : "다이버";
   const initial = nickname.slice(0, 1).toUpperCase();
@@ -62,7 +65,7 @@ export function HomeScreen() {
         <View style={styles.header}>
           <View>
             <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
-              OCEAN DIARY
+              MOLA
             </Txt>
             <Txt accessibilityRole="header" size={26} weight="black" tracking={-0.02}>
               {nickname}님의 바다
@@ -104,7 +107,7 @@ export function HomeScreen() {
         <Pressable
           onPress={() => router.navigate("/discover")}
           accessibilityRole="button"
-          accessibilityLabel="다이빙 사진으로 생물 찾기"
+          accessibilityLabel={pending ? `남은 사진 ${pending}장 이어서 식별하기` : "다이빙 사진으로 생물 찾기"}
           style={styles.banner}
         >
           <View style={styles.photoStack}>
@@ -116,15 +119,15 @@ export function HomeScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Txt size={14} weight="extraBold" color={colors.white}>
-              다이빙 사진 속 친구를 찾아볼까요?
+              {pending ? `식별하던 사진 ${pending}장이 남아 있어요` : "다이빙 사진 속 친구를 찾아볼까요?"}
             </Txt>
             <Txt size={12} color="#C3D8F5">
-              사진을 고르면 AI가 생물 이름을 알려줘요
+              {pending ? "멈춘 곳부터 이어서 할 수 있어요" : "사진을 고르면 AI가 생물 이름을 알려줘요"}
             </Txt>
           </View>
           <View style={styles.bannerCta}>
             <Txt size={13} weight="black">
-              식별하기
+              {pending ? "이어서 하기" : "식별하기"}
             </Txt>
           </View>
         </Pressable>

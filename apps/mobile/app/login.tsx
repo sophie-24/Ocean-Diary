@@ -50,7 +50,7 @@ export default function LoginScreen() {
         <View style={styles.hero}>
           <Critter kind="whale" width={280} height={120} />
           <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue} style={{ marginTop: 16 }}>
-            OCEAN DIARY
+            MOLA
           </Txt>
           <Txt accessibilityRole="header" size={28} weight="black" align="center">
             바다에서 만난 친구들을{"\n"}도감과 그림일기로

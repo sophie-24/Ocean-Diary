@@ -60,10 +60,16 @@ export function DiscoverCollectedScreen() {
   const log = saved?.observation.dive_log_id ? logData?.logs.find((l) => l.id === saved.observation.dive_log_id) : undefined;
   const day = photo?.takenAt ? localDate(photo.takenAt) : localDate(new Date().toISOString());
   const meta = { date: day.replace(/-/g, "."), point: log?.point ?? "—", log: log ? `로그 ${log.label}` : "—" };
-  const hasNext = current + 1 < selected.length;
+  const nextIndex = discoverStore.nextOpen(current);
+  const hasNext = nextIndex >= 0;
+  /** Leaving the flow: drop the session once every photo is done, otherwise keep it to resume. */
+  const leave = (go: () => void) => {
+    go();
+    if (!hasNext) setTimeout(() => discoverStore.reset(), 400);
+  };
   const art = sp?.art_key && isCritterKind(sp.art_key) ? sp.art_key : null;
   const next = () => {
-    discoverStore.set({ current: current + 1, pickedCandidate: 0, manual: null });
+    discoverStore.set({ current: nextIndex, pickedCandidate: 0, manual: null });
     router.replace("/discover/analyzing");
   };
 
@@ -85,14 +91,14 @@ export function DiscoverCollectedScreen() {
       <Sparkle x={300} y={470} s={14} delay={1300} />
 
       <View style={styles.topRow}>
-        <Pressable accessibilityRole="button" accessibilityLabel="닫기" onPress={() => router.navigate("/")} style={styles.close}>
+        <Pressable accessibilityRole="button" accessibilityLabel="닫기" onPress={() => leave(() => router.navigate("/"))} style={styles.close}>
           <CloseIcon />
         </Pressable>
       </View>
 
       <Animated.View entering={FadeIn.duration(400)} style={styles.headline}>
         <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
-          {sp?.catalog_no ? `MY SPECIES BOOK · No.${sp.catalog_no}` : "MY OCEAN DIARY"}
+          {sp?.catalog_no ? `MY SPECIES BOOK · No.${sp.catalog_no}` : "MY MOLA LOG"}
         </Txt>
         <Txt accessibilityRole="header" size={22} weight="black" align="center">
           {!sp ? "사진을 기록해 두었어요" : isNew ? `도감의 ${got || 1}번째 친구가 생겼어요!` : `${sp.common_name_ko}를 또 만났어요!`}
@@ -155,7 +161,7 @@ export function DiscoverCollectedScreen() {
             {got} / {goal}
           </Txt>
         </View>
-        <Pressable accessibilityRole="link" onPress={() => router.navigate("/sea")} style={styles.seaLink}>
+        <Pressable accessibilityRole="link" onPress={() => leave(() => router.navigate("/sea"))} style={styles.seaLink}>
           <Txt size={14} weight="extraBold" style={{ flex: 1 }}>
             나의 바다에 새 친구가 헤엄쳐 들어왔어요
           </Txt>
@@ -167,24 +173,24 @@ export function DiscoverCollectedScreen() {
         {hasNext ? (
           <Pressable accessibilityRole="button" onPress={next} style={styles.primary}>
             <Txt size={16} weight="black" color={colors.white}>
-              다음 사진 보기 ({current + 2}/{selected.length})
+              다음 사진 보기 (남은 사진 {discoverStore.openCount()}장)
             </Txt>
           </Pressable>
         ) : log ? (
-          <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } })} style={styles.primary}>
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } }))} style={styles.primary}>
             <Txt size={16} weight="black" color={colors.white}>
               그림일기에 스티커로 붙이기
             </Txt>
           </Pressable>
         ) : (
-          <Pressable accessibilityRole="button" onPress={() => router.push("/log/new")} style={styles.primary}>
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.push("/log/new"))} style={styles.primary}>
             <Txt size={16} weight="black" color={colors.white}>
               이 날의 로그북 쓰기
             </Txt>
           </Pressable>
         )}
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <Pressable accessibilityRole="button" onPress={() => router.navigate("/dogam")} style={styles.secondary}>
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.navigate("/dogam"))} style={styles.secondary}>
             <Txt size={15} weight="bold">
               도감에서 보기
             </Txt>
@@ -192,7 +198,7 @@ export function DiscoverCollectedScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="카드 공유하기"
-            onPress={() => void Share.share({ message: `오션 다이어리에서 ${sp?.common_name_ko ?? "바닷속 친구"}를 만났어요! (${meta.date}${log ? ` ${log.point}` : ""})` })}
+            onPress={() => void Share.share({ message: `Mola에서 ${sp?.common_name_ko ?? "바닷속 친구"}를 만났어요! (${meta.date}${log ? ` ${log.point}` : ""})` })}
             style={styles.square}
           >
             <ShareIcon />

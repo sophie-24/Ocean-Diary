@@ -11,8 +11,11 @@ import { CloseIcon, InfoIcon, PlusIcon, SparkleIcon } from "../../components/ico
 import { Txt } from "../../components/ui/Txt";
 import { exifToIso, getClientConfig, keyFor, localDate, type PickedPhoto } from "../../api/discover";
 import { useDiveLogs } from "../../api/queries";
+import { useAuth } from "../../api/auth";
 import { colors } from "../../theme/tokens";
-import { discoverStore, useDiscover, type PhotoWork } from "./discoverStore";
+import { discoverStore, matchLog, useDiscover, type PhotoWork } from "./discoverStore";
+import { LogPickerSheet } from "./LogPickerSheet";
+import { keepPhoto } from "./photoKeep";
 
 const MAX_PICK = 10;
 const NO_DATE = "no-date";
@@ -27,8 +30,12 @@ const consentKey = (provider: string | null, version: string | null) => `ocean-d
 export function DiscoverSelectScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const { photos, selected } = useDiscover();
+  const { photos, selected, work, logChoice } = useDiscover();
+  const [pickerDate, setPickerDate] = useState<string | null | undefined>(undefined);
+  const open = discoverStore.openCount();
+  const savedCount = selected.filter((id) => work[id]?.saved).length;
   const { data: logData } = useDiveLogs();
+  const { userId } = useAuth();
   const config = useQuery({ queryKey: ["client-config"], queryFn: getClientConfig, staleTime: 5 * 60_000 });
   const [error, setError] = useState<string | null>(null);
   const [askConsent, setAskConsent] = useState(false);
@@ -42,15 +49,18 @@ export function DiscoverSelectScreen() {
     return [...byDate.entries()]
       .sort(([a], [b]) => (a === NO_DATE ? 1 : b === NO_DATE ? -1 : b.localeCompare(a)))
       .map(([k, items]) => {
-        const log = k === NO_DATE ? undefined : logData?.logs.find((l) => l.date === k);
+        const m = matchLog(items[0], logData?.logs, logChoice);
+        const log = m.log;
+        const many = m.sameDay.length > 1;
         return {
           id: k,
           title: k === NO_DATE ? "촬영 날짜를 모르는 사진" : `${dateTitle(k)}${log ? ` · ${log.region} ${log.point}` : ""}`,
-          diveLabel: log ? `로그 ${log.label}` : "연결할 로그 없음",
+          diveLabel: log ? `로그 ${log.label}${many ? ` · ${m.sameDay.length}개 중` : ""}` : k === NO_DATE ? "로그 고르기" : "연결 안 함",
+          attention: m.guessed,
           items,
         };
       });
-  }, [photos, logData]);
+  }, [photos, logData, logChoice]);
 
   const pick = async () => {
     setError(null);
@@ -73,7 +83,7 @@ export function DiscoverSelectScreen() {
     const added: PickedPhoto[] = res.assets
       .map((a) => ({
         id: a.assetId ?? a.uri,
-        uri: a.uri,
+        uri: keepPhoto(a.uri, a.assetId ?? a.uri),
         mimeType: a.mimeType ?? (a.uri.toLowerCase().endsWith(".png") ? "image/png" : "image/jpeg"),
         size: a.fileSize ?? 0,
         width: a.width,
@@ -87,8 +97,11 @@ export function DiscoverSelectScreen() {
 
   const start = () => {
     const work: Record<string, PhotoWork> = {};
-    for (const id of selected) work[id] = { intentKey: keyFor("upload"), identifyKey: keyFor("identify"), saveKey: keyFor("obs") };
-    discoverStore.set({ current: 0, pickedCandidate: 0, manual: null, work });
+    const prev = discoverStore.get().work;
+    for (const id of selected) work[id] = prev[id] ?? { intentKey: keyFor("upload"), identifyKey: keyFor("identify"), saveKey: keyFor("obs") };
+    const first = selected.findIndex((id) => !work[id].saved && !work[id].skipped);
+    if (first < 0) return;
+    discoverStore.set({ current: first, pickedCandidate: 0, manual: null, work, owner: userId ?? discoverStore.get().owner });
     router.push("/discover/analyzing");
   };
 
@@ -134,6 +147,24 @@ export function DiscoverSelectScreen() {
         </Txt>
       </View>
 
+      {open > 0 ? (
+        <View style={styles.resume}>
+          <View style={{ flex: 1 }}>
+            <Txt size={14} weight="extraBold" color={colors.white}>
+              하던 사진 {open}장이 남아 있어요
+            </Txt>
+            <Txt size={12} color="#C3D8F5">
+              {savedCount ? `${savedCount}장은 이미 도감에 저장했어요` : "올린 사진은 다시 올리지 않아요"}
+            </Txt>
+          </View>
+          <Pressable accessibilityRole="button" onPress={() => void analyse()} style={styles.resumeCta}>
+            <Txt size={13} weight="black">
+              이어서 하기
+            </Txt>
+          </Pressable>
+        </View>
+      ) : null}
+
       {photos.length === 0 ? (
         <View style={styles.empty}>
           <Critter kind="mandarin" width={150} height={94} />
@@ -162,11 +193,19 @@ export function DiscoverSelectScreen() {
                 <Txt size={14} weight="extraBold" style={{ flex: 1 }}>
                   {g.title}
                 </Txt>
-                <View style={styles.diveChip}>
-                  <Txt size={11} weight="bold" color={colors.ink2}>
+                <Pressable
+                  accessibilityRole="button"
+                  accessibilityLabel={`${g.diveLabel}, 연결할 로그 바꾸기`}
+                  disabled={!logData?.logs.length}
+                  onPress={() => setPickerDate(g.id === NO_DATE ? null : g.id)}
+                  hitSlop={6}
+                  style={[styles.diveChip, g.attention && styles.diveChipWarn]}
+                >
+                  <Txt size={11} weight="bold" color={g.attention ? "#8A5A00" : colors.ink2}>
                     {g.diveLabel}
+                    {logData?.logs.length ? " ›" : ""}
                   </Txt>
-                </View>
+                </Pressable>
               </View>
               <View style={styles.grid}>
                 {g.items.map((m) => (
@@ -191,7 +230,7 @@ export function DiscoverSelectScreen() {
             </View>
             <Pressable accessibilityRole="button" onPress={() => discoverStore.reset()} hitSlop={8} style={{ height: 44, justifyContent: "center" }}>
               <Txt size={13} weight="bold" color={colors.oceanBlue}>
-                모두 지우기
+                새로 시작
               </Txt>
             </Pressable>
           </View>
@@ -208,6 +247,28 @@ export function DiscoverSelectScreen() {
             </Txt>
           </Pressable>
         </View>
+      ) : null}
+
+      {pickerDate !== undefined && logData ? (
+        <LogPickerSheet
+          date={pickerDate}
+          logs={logData.logs}
+          selectedId={pickerDate ? (pickerDate in logChoice ? logChoice[pickerDate] : matchLog(photos.find((p) => p.takenAt && localDate(p.takenAt) === pickerDate), logData.logs, logChoice).log?.id) : undefined}
+          onPick={(id) => {
+            if (pickerDate) discoverStore.chooseLog(pickerDate, id);
+            else {
+              // Photos without a date: give them the chosen log's date so they link too.
+              const log = logData.logs.find((l) => l.id === id);
+              if (log) {
+                const noon = new Date(`${log.date}T12:00:00`).toISOString();
+                discoverStore.set({ photos: photos.map((p) => (p.takenAt ? p : { ...p, takenAt: noon })) });
+                discoverStore.chooseLog(log.date, log.id);
+              }
+            }
+            setPickerDate(undefined);
+          }}
+          onClose={() => setPickerDate(undefined)}
+        />
       ) : null}
 
       {askConsent ? (
@@ -277,6 +338,9 @@ const styles = StyleSheet.create({
   diveChip: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.lineStrong },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 2 },
   thumb: { height: 128, overflow: "hidden", backgroundColor: colors.track },
+  diveChipWarn: { backgroundColor: "#FFF4D6", borderColor: "#E9C46A" },
+  resume: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 18, backgroundColor: colors.navy },
+  resumeCta: { height: 40, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10, paddingHorizontal: 32, paddingBottom: 80 },
   scrim: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(9,25,56,0.45)", justifyContent: "flex-end" },
   consent: { gap: 14, padding: 20, backgroundColor: colors.white, borderTopLeftRadius: 26, borderTopRightRadius: 26 },
