@@ -111,23 +111,25 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
   return (
     <View style={styles.root} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
       <View style={stage}>
-        <View style={StyleSheet.absoluteFill}>{scene(look.rays)}</View>
+        <View style={styles.sceneBox}>{scene(look.rays)}</View>
         <OnStage.Provider value={onStage}>{children(api)}</OnStage.Provider>
         {particles.map((p, i) => (
           <Particle key={i} {...p} />
         ))}
       </View>
 
-      <View pointerEvents="none" style={StyleSheet.absoluteFill}>
-        <Svg width="100%" height="100%">
+      {/* Time-of-day tint. Numeric size and separate stop opacity: percent-sized SVGs and rgba() stops are unreliable on iOS. */}
+      <View pointerEvents="none" style={styles.fill}>
+        <Svg width={box.w} height={box.h}>
           <Defs>
             <LinearGradient id="tankTint" x1="0" y1="0" x2="0" y2="1">
-              <Stop offset="0" stopColor={look.tint[0]} />
-              <Stop offset="0.45" stopColor={look.tint[1]} />
-              <Stop offset="1" stopColor={look.tint[2]} />
+              {look.tint.map((c, i) => {
+                const [r, g, b, a] = c.match(/[\d.]+/g)!.map(Number);
+                return <Stop key={i} offset={[0, 0.45, 1][i]} stopColor={`rgb(${r},${g},${b})`} stopOpacity={a} />;
+              })}
             </LinearGradient>
           </Defs>
-          <Rect width="100%" height="100%" fill="url(#tankTint)" />
+          <Rect x={0} y={0} width={box.w} height={box.h} fill="url(#tankTint)" />
         </Svg>
       </View>
 
@@ -289,6 +291,8 @@ export const tankStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: "#0B2C66", overflow: "hidden" },
   roundOn: { backgroundColor: "rgba(255,255,255,0.92)" },
+  fill: { position: "absolute", left: 0, top: 0, right: 0, bottom: 0 },
+  sceneBox: { position: "absolute", left: 0, top: 0, width: 390, height: 844 },
   emptyWrap: { position: "absolute", left: 32, right: 32, top: "40%", alignItems: "center" },
   hudTop: { position: "absolute", left: 0, right: 0, top: 0, paddingHorizontal: 16, gap: 10 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
