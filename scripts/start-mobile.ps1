@@ -114,7 +114,7 @@ $previousMobileApiUrl = $env:EXPO_PUBLIC_API_URL
 $env:EXPO_PUBLIC_API_URL = $ApiUrl.TrimEnd('/')
 Push-Location $mobileRoot
 try {
-    npm run start -- --host lan
+    npm run start -- --lan
     if ($LASTEXITCODE -ne 0) {
         throw "Expo exited with code $LASTEXITCODE."
     }
