@@ -9,6 +9,8 @@ import { SPECIES_BY_NO } from "../../data/species";
 import { colors } from "../../theme/tokens";
 import { BaitBall } from "./BaitBall";
 import { OceanScene } from "./OceanScene";
+import { VideoScene } from "./VideoScene";
+import { oceanVideos } from "./sceneVideos";
 import { PlaceForeground } from "./PlaceForeground";
 import { SwimmingFish } from "./SwimmingFish";
 import { Dance, Peek } from "./TankParts";
@@ -59,7 +61,9 @@ export function PlaceTankScreen({ id }: { id: string }) {
       title={place.name}
       subtitle={(n) => `${range}다이빙 ${logs}회 · ${n}종`}
       emptyHint="이 바다에서 기록한 생물이 아직 없어요"
-      scene={(rays) => <OceanScene rays={rays} />}
+      scene={({ rays, phase }) => (
+        <VideoScene phase={phase} videos={oceanVideos} fallback={<OceanScene rays={rays} />} />
+      )}
       residents={residents}
       backHref="/sea/map"
       sound="scuba"

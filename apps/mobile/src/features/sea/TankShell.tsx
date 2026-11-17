@@ -57,7 +57,7 @@ type Props = {
   subtitle: (count: number) => string;
   eyebrow?: string;
   /** Called with light-shaft opacity for the current phase. */
-  scene: (rays: number) => ReactNode;
+  scene: (ctx: { rays: number; phase: Phase }) => ReactNode;
   residents: Partial<Record<CritterKind, Resident>>;
   /** Shown when nothing in this tank has been met yet. */
   emptyHint?: string;
@@ -111,7 +111,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
   return (
     <View style={styles.root} onLayout={(e) => setBox({ w: e.nativeEvent.layout.width, h: e.nativeEvent.layout.height })}>
       <View style={stage}>
-        <View style={styles.sceneBox}>{scene(look.rays)}</View>
+        <View style={styles.sceneBox}>{scene({ rays: look.rays, phase })}</View>
         <OnStage.Provider value={onStage}>{children(api)}</OnStage.Provider>
         {particles.map((p, i) => (
           <Particle key={i} {...p} />

@@ -3,6 +3,8 @@ import { Critter } from "../../components/Critter";
 import type { CritterKind } from "../../data/illustrations";
 import { SPECIES_BY_NO } from "../../data/species";
 import { ReefScene } from "./ReefScene";
+import { VideoScene } from "./VideoScene";
+import { reefVideos } from "./sceneVideos";
 import { SwimmingFish } from "./SwimmingFish";
 import { Dance, Peek } from "./TankParts";
 import { InTank } from "./stage";
@@ -31,7 +33,9 @@ export function AquariumScreen() {
     <TankShell
       title="나의 바다"
       subtitle={(n) => `산호초 수조 · ${n}종이 살고 있어요`}
-      scene={(rays) => <ReefScene rays={rays} />}
+      scene={({ rays, phase }) => (
+        <VideoScene phase={phase} videos={reefVideos} fallback={<ReefScene rays={rays} />} />
+      )}
       residents={residents}
       current="reef"
     >

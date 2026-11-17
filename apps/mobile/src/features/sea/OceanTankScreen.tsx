@@ -3,6 +3,8 @@ import { Critter } from "../../components/Critter";
 import type { CritterKind } from "../../data/illustrations";
 import { BaitBall } from "./BaitBall";
 import { OceanScene } from "./OceanScene";
+import { VideoScene } from "./VideoScene";
+import { oceanVideos } from "./sceneVideos";
 import { SwimmingFish } from "./SwimmingFish";
 import { InTank } from "./stage";
 import { TankShell, useResidents, type Cast } from "./TankShell";
@@ -15,7 +17,9 @@ export function OceanTankScreen() {
     <TankShell
       title="나의 바다"
       subtitle={(n) => `대양 수조 · ${n}종이 헤엄치고 있어요`}
-      scene={(rays) => <OceanScene rays={rays} />}
+      scene={({ rays, phase }) => (
+        <VideoScene phase={phase} videos={oceanVideos} fallback={<OceanScene rays={rays} />} />
+      )}
       residents={residents}
       current="ocean"
       sound="scuba"

@@ -11,6 +11,8 @@ import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { colors } from "../../theme/tokens";
 import { MacroScene } from "./MacroScene";
+import { VideoScene } from "./VideoScene";
+import { macroVideos } from "./sceneVideos";
 import { useOceanSound } from "./oceanSound";
 import { useCollection } from "../../api/queries";
 import { SPECIES } from "../../data/species";
@@ -128,7 +130,7 @@ export function MacroTankScreen() {
 
   const hint = missing.length ? missing[hintI % missing.length].hint ?? `${missing[hintI % missing.length].short}를 찾아보세요` : null;
   const cardData = card ? hidden.find((c) => c.kind === card.kind) : undefined;
-  const sceneMemo = useMemo(() => <MacroScene p="mcA" />, []);
+  const sceneMemo = useMemo(() => <VideoScene phase="day" videos={macroVideos} fallback={<MacroScene p="mcA" />} />, []);
   const lensScene = useMemo(() => <MacroScene p="mcL" />, []);
 
   return (
