@@ -12,6 +12,7 @@ from sqlalchemy.orm import Session, joinedload
 from app.auth import get_current_user_id
 from app.database import get_session
 from app.models import (
+    DiveLog,
     IdentificationCandidate,
     IdentificationJob,
     MediaAsset,
@@ -70,6 +71,7 @@ def _observation_response(observation: Observation) -> ObservationResponse:
         identified_by=observation.identified_by,
         observed_at=observation.observed_at,
         region_label=observation.region_label,
+        dive_log_id=observation.dive_log_id,
         created_at=observation.created_at,
         photo_url=_photo_url(observation.media_asset),
         species=(
@@ -97,6 +99,19 @@ def _load_observation(
     )
 
 
+def _require_owned_dive_log(session: Session, dive_log_id: UUID | None, user_id: UUID) -> None:
+    """A discovery may only be attached to one of the caller's own (non-deleted) dive logs."""
+    if dive_log_id is None:
+        return
+    exists = session.scalar(
+        select(DiveLog.id).where(
+            DiveLog.id == dive_log_id, DiveLog.user_id == user_id, DiveLog.deleted_at.is_(None)
+        )
+    )
+    if exists is None:
+        raise HTTPException(status_code=404, detail={"code": "DIVE_LOG_NOT_FOUND"})
+
+
 def _validate_idempotency_replay(
     previous: Observation,
     payload: ObservationCreateRequest,
@@ -109,6 +124,7 @@ def _validate_idempotency_replay(
         or previous.identification_job_id != payload.identification_job_id
         or previous.region_label != normalized_region
         or previous.observed_at != payload.observed_at
+        or previous.dive_log_id != payload.dive_log_id
         or previous.deleted_at is not None
     ):
         raise HTTPException(status_code=409, detail={"code": "IDEMPOTENCY_KEY_REUSED"})
@@ -237,6 +253,7 @@ def create_observation(
         payload.species_id,
         payload.identified_by,
     )
+    _require_owned_dive_log(session, payload.dive_log_id, user_id)
 
     observation = Observation(
         id=uuid4(),
@@ -246,6 +263,7 @@ def create_observation(
         identification_job_id=payload.identification_job_id,
         identified_by=payload.identified_by,
         region_label=normalized_region,
+        dive_log_id=payload.dive_log_id,
         observed_at=payload.observed_at,
         idempotency_key=idempotency_key,
         created_at=datetime.now(timezone.utc),
@@ -282,6 +300,7 @@ def list_observations(
     limit: int = Query(default=20, ge=1, le=50),
     cursor: str | None = None,
     unidentified_only: bool = Query(default=False),
+    species_id: UUID | None = None,
 ) -> ObservationListResponse:
     statement = (
         select(Observation)
@@ -293,6 +312,8 @@ def list_observations(
     )
     if unidentified_only:
         statement = statement.where(Observation.species_id.is_(None))
+    if species_id is not None:
+        statement = statement.where(Observation.species_id == species_id)
     if cursor:
         last_seen_at, last_id = _decode_cursor(cursor)
         statement = statement.where(tuple_(Observation.observed_at, Observation.id) < (last_seen_at, last_id))
@@ -381,6 +402,9 @@ def update_observation(
         )
     if payload.observed_at is not None:
         observation.observed_at = payload.observed_at
+    if "dive_log_id" in fields:
+        _require_owned_dive_log(session, payload.dive_log_id, user_id)
+        observation.dive_log_id = payload.dive_log_id
     observation.updated_at = datetime.now(timezone.utc)
     session.commit()
     updated = _load_observation(session, observation_id, user_id)

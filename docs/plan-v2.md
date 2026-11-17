@@ -76,6 +76,8 @@ v1(MVP)은 "사진 한 장 → AI 후보 확인 → 발견 저장"만 다뤘다.
 - 앱 아이콘·스플래시를 새 브랜드로 교체.
 - 개인정보 처리방침 URL, App Privacy 항목(사진, 이메일, 사용 데이터).
 
+실제 등록·운영 서버·EAS 빌드·TestFlight의 선행 조건과 클릭 순서는 `docs/ios-release-checklist.md`를 따른다. 현재 보고된 통합 검증은 로컬 API/worker/mock storage의 브라우저 확인이며, 실제 iPhone과 공개 AWS 운영 환경 검증은 완료로 간주하지 않는다.
+
 ## 6. AWS 배포 목표 구성
 
 - API·worker: ECR 이미지 → ECS Fargate (API는 ALB 뒤, worker는 별도 서비스).

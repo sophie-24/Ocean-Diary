@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -6,7 +6,9 @@ import { CameraIcon, CheckIcon, ChevronRight, InfoIcon } from "../../components/
 import { Txt } from "../../components/ui/Txt";
 import { colors } from "../../theme/tokens";
 import { ChipGroup, Field, KindToggle, MiniField, Section, Segmented } from "./formParts";
-import { logStore, nextLabel, useLogs, type LogKind } from "./logStore";
+import { nextLabel, type LogKind } from "./logStore";
+import { errorMessage } from "../../api/client";
+import { newIdempotencyKey, useCreateDiveLog, useDiveLogs, useDiveSites } from "../../api/queries";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const today = () => {
@@ -42,12 +44,19 @@ const pick = <T,>(src: Record<string, T>, keys: string[]) =>
 export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind }) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
-  const logs = useLogs();
+  const { data: logData } = useDiveLogs();
+  const { data: sites } = useDiveSites();
+  const logs = useMemo(() => logData?.logs ?? [], [logData]);
+  const create = useCreateDiveLog();
+  // One key per form: a retry after a lost response returns the same log instead of a duplicate.
+  const saveKey = useRef(newIdempotencyKey("log"));
   const [kind, setKind] = useState<LogKind>(initialKind);
   const [date, setDate] = useState(today());
   const [region, setRegion] = useState("");
   const [point, setPoint] = useState("");
   const [pointFocus, setPointFocus] = useState(false);
+  /** Famous site picked from the suggestions; saving stamps it in the 도감. */
+  const [site, setSite] = useState<{ id: string; name: string } | null>(null);
   const [buddy, setBuddy] = useState("");
   const [weather, setWeather] = useState<string[]>([]);
   const [dayNight, setDayNight] = useState<"day" | "night">("day");
@@ -89,46 +98,60 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
     return Array.from(seen.values()).slice(0, 3);
   }, [point, logs]);
 
-  const save = (thenDiary: boolean) => {
+  // 명소 (dive sites with a stamp) whose name matches what the diver is typing.
+  const siteSuggestions = useMemo(() => {
+    const q = point.trim().toLowerCase();
+    if (!q || site?.name === point.trim()) return [];
+    return (sites ?? []).filter((x) => x.name_ko.toLowerCase().includes(q) || x.name_en.toLowerCase().includes(q)).slice(0, 4);
+  }, [point, sites, site]);
+
+  const changePoint = (v: string) => {
+    setPoint(v);
+    if (site && v.trim() !== site.name) setSite(null);
+  };
+
+  const save = (thenDiary: boolean, draftOnly = false) => {
     setSubmitted(true);
-    if (requiredDone < 3) return;
+    if (requiredDone < 3 || create.isPending) return;
     const m = date.trim().match(DATE_RE)!;
     const iso = `${m[1]}-${pad(Number(m[2]))}-${pad(Number(m[3]))}`;
-    const summary =
-      kind === "scuba"
-        ? [num.maxDepth && `최대 ${num.maxDepth}m`, (num.bottom || bottomTime) && `${num.bottom || bottomTime}분`, num.waterTemp && `${num.waterTemp}°C`].filter(Boolean).join(" · ")
+    const details =
+      kind === "snorkel"
+        ? { when: snorkel.when, waterClarity: snorkel.vis, memo }
         : kind === "free"
-          ? [num.bestDepth && `최고 ${num.bestDepth}m`, num.dives && `${num.dives}회`, num.longest && `최장 ${num.longest}`].filter(Boolean).join(" · ")
-          : `${snorkel.when} · 시야 ${snorkel.vis === "맑음" ? "좋음" : snorkel.vis}`;
-    const log = logStore.add({
-      kind,
-      date: iso,
-      region: region.trim(),
-      point: point.trim(),
-      title: memo.trim().slice(0, 24) || `${point.trim()}에서`,
-      summary: summary || "기록 저장됨",
-      coverKind: kind === "snorkel" ? "boxfish" : kind === "free" ? "puffer" : "whitetip",
-      coverBg: kind === "snorkel" ? "#3C8AD0" : "#1B4F86",
-      stickers: [],
-      extraStickers: 0,
-      draft: thenDiary,
-      details:
-        kind === "snorkel"
-          ? { when: snorkel.when, waterClarity: snorkel.vis, memo }
-          : kind === "free"
-            ? { ...pick(num, ["bestDepth", "longest", "dives", "waterTemp", "vis", "weight", "eq"]), ...pick(chips, ["discipline", "freePlace", "freeSafety"]), weather, buddy, memo, condition }
-            : {
-                ...pick(num, ["surfTemp", "interval", "waterTemp", "timeIn", "barIn", "vis", "bottom", "avgDepth", "maxDepth", "timeOut", "barOut", "weight", "o2"]),
-                ...(bottomTime && !num.bottom ? { bottom: bottomTime } : {}),
-                ...pick(chips, ["safety", "weightType", "wave", "current", "tank", "gas", "suit", "suitAdd", "gear", "type"]),
-                weather,
-                dayNight,
-                buddy,
-                memo,
-              },
-    });
-    if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
-    else router.replace({ pathname: "/log/[id]", params: { id: log.id } });
+          ? { ...pick(num, ["bestDepth", "longest", "dives", "waterTemp", "vis", "weight", "eq"]), ...pick(chips, ["discipline", "freePlace", "freeSafety"]), weather, buddy, memo, condition }
+          : {
+              ...pick(num, ["surfTemp", "interval", "waterTemp", "timeIn", "barIn", "vis", "bottom", "avgDepth", "maxDepth", "timeOut", "barOut", "weight", "o2"]),
+              ...(bottomTime && !num.bottom ? { bottom: bottomTime } : {}),
+              ...pick(chips, ["safety", "weightType", "wave", "current", "tank", "gas", "suit", "suitAdd", "gear", "type"]),
+              weather,
+              dayNight,
+              buddy,
+              memo,
+            };
+    create.mutate(
+      {
+        key: saveKey.current,
+        body: {
+          kind,
+          dive_date: iso,
+          region_label: region.trim(),
+          point_label: point.trim(),
+          title: memo.trim().slice(0, 24) || null,
+          details,
+          site_id: site?.id ?? null,
+          is_draft: thenDiary || draftOnly,
+        },
+      },
+      {
+        onSuccess: (log) => {
+          saveKey.current = newIdempotencyKey("log");
+          if (draftOnly) router.replace("/log");
+          else if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
+          else router.replace({ pathname: "/log/[id]", params: { id: log.id } });
+        },
+      },
+    );
   };
 
   return (
@@ -147,7 +170,13 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
             {kind === "snorkel" ? "30초면 끝 · 그다음 그림일기" : "1단계 로그 · 2단계 그림일기"}
           </Txt>
         </View>
-        <Pressable accessibilityRole="button" style={[styles.headerBtn, { alignItems: "flex-end" }]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="임시저장하고 나중에 이어 쓰기"
+          disabled={create.isPending}
+          onPress={() => save(false, true)}
+          style={[styles.headerBtn, { alignItems: "flex-end" }]}
+        >
           <Txt size={14} weight="bold" color={colors.oceanBlue}>
             임시저장
           </Txt>
@@ -164,12 +193,12 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
 
           <Section title="기본 정보" note="* 3개만 필수">
             <View style={{ flexDirection: "row", gap: 12, alignItems: "flex-start" }}>
-              <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind)}`}>
+              <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind, logData?.counts)}`}>
                 <Txt size={9} weight="extraBold" color={colors.ink3}>
                   {kind === "snorkel" ? "snorkel" : "dive no."}
                 </Txt>
                 <Txt size={24} weight="black">
-                  {nextLabel(kind).replace("#", "")}
+                  {nextLabel(kind, logData?.counts).replace("#", "")}
                 </Txt>
               </View>
               <View style={{ flex: 1 }}>
@@ -197,15 +226,36 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                 label="포인트"
                 required
                 value={point}
-                onChangeText={setPoint}
+                onChangeText={changePoint}
                 onFocus={() => setPointFocus(true)}
                 onBlur={() => setTimeout(() => setPointFocus(false), 150)}
                 placeholder="예) 가토 섬"
                 error={submitted && !point.trim() ? "포인트 이름을 적어 주세요" : undefined}
-                hint="GPS 좌표는 저장하지 않아요. 이름만 남겨요."
+                hint={site ? "명소 스탬프가 도감에 찍혀요 · GPS 좌표는 저장하지 않아요" : "GPS 좌표는 저장하지 않아요. 이름만 남겨요."}
               />
-              {pointFocus && pointSuggestions.length > 0 ? (
+              {pointFocus && pointSuggestions.length + siteSuggestions.length > 0 ? (
                 <View style={styles.suggest} accessibilityRole="list">
+                  {siteSuggestions.map((x) => (
+                    <Pressable
+                      key={x.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={`명소 ${x.name_ko} 고르기`}
+                      onPress={() => {
+                        setPoint(x.name_ko);
+                        setSite({ id: x.id, name: x.name_ko });
+                        if (!region.trim()) setRegion(`${x.country_ko} · ${x.region_ko}`);
+                        setPointFocus(false);
+                      }}
+                      style={styles.suggestRow}
+                    >
+                      <Txt size={14} weight="bold">
+                        {x.name_ko}
+                      </Txt>
+                      <Txt size={12} color={colors.oceanBlue}>
+                        명소 스탬프 · {x.category_ko} · {x.country_ko} {x.region_ko}
+                      </Txt>
+                    </Pressable>
+                  ))}
                   {pointSuggestions.map((s) => (
                     <Pressable
                       key={`${s.region}${s.point}`}
@@ -387,6 +437,11 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
             선택 항목 {optionalFilled}개 입력
           </Txt>
         </View>
+        {create.isError ? (
+          <Txt size={12} weight="bold" color={colors.coral} accessibilityLiveRegion="assertive">
+            {errorMessage(create.error)} 같은 내용으로 다시 눌러도 기록이 두 번 생기지 않아요.
+          </Txt>
+        ) : null}
         <View style={{ flexDirection: "row", gap: 8 }}>
           <Pressable accessibilityRole="button" onPress={() => save(false)} style={styles.secondary}>
             <Txt size={14} weight="bold">
@@ -395,7 +450,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
           </Pressable>
           <Pressable accessibilityRole="button" onPress={() => save(true)} style={styles.primary}>
             <Txt size={15} weight="black" color={colors.white}>
-              저장하고 그림일기 쓰기
+              {create.isPending ? "저장 중…" : "저장하고 그림일기 쓰기"}
             </Txt>
             <ChevronRight color={colors.white} />
           </Pressable>

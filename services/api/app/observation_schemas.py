@@ -22,6 +22,7 @@ class ObservationCreateRequest(BaseModel):
     identified_by: IdentifiedBy
     observed_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     region_label: str | None = Field(default=None, max_length=100)
+    dive_log_id: UUID | None = None
 
     @field_validator("observed_at")
     @classmethod
@@ -44,6 +45,7 @@ class ObservationPatchRequest(BaseModel):
     identified_by: IdentifiedBy | None = None
     region_label: str | None = Field(default=None, max_length=100)
     observed_at: datetime | None = None
+    dive_log_id: UUID | None = None
 
     @model_validator(mode="after")
     def check_species_selection(self):
@@ -74,6 +76,7 @@ class ObservationResponse(BaseModel):
     identified_by: IdentifiedBy
     observed_at: datetime
     region_label: str | None
+    dive_log_id: UUID | None = None
     created_at: datetime
     photo_url: str
     species: SpeciesResponse | None

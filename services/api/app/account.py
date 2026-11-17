@@ -10,7 +10,7 @@ from uuid import UUID
 
 from app.auth import get_current_user_id_for_account_deletion, user_lifecycle_lock_key
 from app.database import get_session
-from app.models import AccountDeletionTombstone, IdentificationJob, MediaAsset, Observation
+from app.models import AccountDeletionTombstone, DiveLog, IdentificationJob, MediaAsset, Observation, SiteStamp
 from app.settings import settings
 from app.storage import storage_client
 
@@ -90,6 +90,8 @@ def finish_account_deletion(session: Session, user_id: UUID) -> None:
 
     # These operations are safe to repeat if a later Auth provider request fails.
     session.execute(delete(Observation).where(Observation.user_id == user_id))
+    session.execute(delete(SiteStamp).where(SiteStamp.user_id == user_id))
+    session.execute(delete(DiveLog).where(DiveLog.user_id == user_id))
     session.execute(delete(IdentificationJob).where(IdentificationJob.user_id == user_id))
     session.execute(delete(MediaAsset).where(MediaAsset.owner_user_id == user_id))
     session.commit()

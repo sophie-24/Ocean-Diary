@@ -20,12 +20,13 @@ import { Critter } from "../../components/Critter";
 import { ChevronRight, CloseIcon, GlobeIcon, ShareIcon } from "../../components/icons";
 import { NameTag } from "../../components/ui/NameTag";
 import { Txt } from "../../components/ui/Txt";
-import { SPECIES_BY_NO } from "../../data/species";
-import { MOCK_COLLECTION } from "../../mocks/collection";
-import { MOCK_RESULT } from "../../mocks/discover";
-import { MOCK_QUESTS } from "../../mocks/home";
+import { isCritterKind } from "../../data/illustrations";
+import { localDate } from "../../api/discover";
+import { useDiveLogs, useSummary } from "../../api/queries";
 import { colors } from "../../theme/tokens";
-import { useDiscover } from "./discoverStore";
+import { discoverStore, useDiscover } from "./discoverStore";
+
+const MILESTONES = [10, 20, 30, 50, 80, 120, 181];
 
 function Sparkle({ x, y, s, delay }: { x: number; y: number; s: number; delay: number }) {
   const v = useSharedValue(0.3);
@@ -46,12 +47,31 @@ function Sparkle({ x, y, s, delay }: { x: number; y: number; s: number; delay: n
 export function DiscoverCollectedScreen() {
   const router = useRouter();
   const reduced = useReducedMotion();
-  const { pickedCandidate } = useDiscover();
-  const cand = MOCK_RESULT.candidates[pickedCandidate] ?? MOCK_RESULT.candidates[0];
-  const s = SPECIES_BY_NO[cand.no];
-  const nth = MOCK_COLLECTION.length;
-  const saved = MOCK_RESULT.saved;
-  const q = MOCK_QUESTS.region;
+  const { selected, current, work } = useDiscover();
+  const photo = discoverStore.currentPhoto();
+  const saved = work[selected[current]]?.saved;
+  const sp = saved?.species ?? null;
+  const isNew = !!saved?.species_summary?.is_new_species_for_user;
+  const cand = { isNewForMe: isNew };
+  const { data: summary } = useSummary();
+  const { data: logData } = useDiveLogs();
+  const got = summary?.collected_species ?? 0;
+  const goal = MILESTONES.find((m) => m > got) ?? summary?.total_species ?? got;
+  const log = saved?.observation.dive_log_id ? logData?.logs.find((l) => l.id === saved.observation.dive_log_id) : undefined;
+  const day = photo?.takenAt ? localDate(photo.takenAt) : localDate(new Date().toISOString());
+  const meta = { date: day.replace(/-/g, "."), point: log?.point ?? "—", log: log ? `로그 ${log.label}` : "—" };
+  const nextIndex = discoverStore.nextOpen(current);
+  const hasNext = nextIndex >= 0;
+  /** Leaving the flow: drop the session once every photo is done, otherwise keep it to resume. */
+  const leave = (go: () => void) => {
+    go();
+    if (!hasNext) setTimeout(() => discoverStore.reset(), 400);
+  };
+  const art = sp?.art_key && isCritterKind(sp.art_key) ? sp.art_key : null;
+  const next = () => {
+    discoverStore.set({ current: nextIndex, pickedCandidate: 0, manual: null });
+    router.replace("/discover/analyzing");
+  };
 
   const stamp = useSharedValue(reduced ? 1 : 2.4);
   const stampOpacity = useSharedValue(reduced ? 1 : 0);
@@ -71,29 +91,35 @@ export function DiscoverCollectedScreen() {
       <Sparkle x={300} y={470} s={14} delay={1300} />
 
       <View style={styles.topRow}>
-        <Pressable accessibilityRole="button" accessibilityLabel="닫기" onPress={() => router.navigate("/")} style={styles.close}>
+        <Pressable accessibilityRole="button" accessibilityLabel="닫기" onPress={() => leave(() => router.navigate("/"))} style={styles.close}>
           <CloseIcon />
         </Pressable>
       </View>
 
       <Animated.View entering={FadeIn.duration(400)} style={styles.headline}>
         <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
-          MY SPECIES BOOK · No.{s.no}
+          {sp?.catalog_no ? `MY SPECIES BOOK · No.${sp.catalog_no}` : "MY MOLA LOG"}
         </Txt>
         <Txt accessibilityRole="header" size={22} weight="black" align="center">
-          {cand.isNewForMe ? `도감의 ${nth}번째 친구가 생겼어요!` : `${s.nameKo}를 또 만났어요!`}
+          {!sp ? "사진을 기록해 두었어요" : isNew ? `도감의 ${got || 1}번째 친구가 생겼어요!` : `${sp.common_name_ko}를 또 만났어요!`}
         </Txt>
       </Animated.View>
 
       <Animated.View entering={reduced ? undefined : FadeInDown.springify().damping(14).delay(150)} style={styles.card}>
-        <View style={styles.cardArt}>{s.art ? <Critter kind={s.art} width={290} height={138} /> : null}</View>
-        <NameTag ko={s.nameKo} en={`${s.nameEn} · ${s.sciName}`} size="md" filled style={{ marginTop: -20 }} />
+        <View style={styles.cardArt}>{art ? <Critter kind={art} width={290} height={138} /> : null}</View>
+        <NameTag
+          ko={sp?.common_name_ko ?? "이름 모를 친구"}
+          en={sp ? `${sp.common_name_en ?? ""}${sp.common_name_en ? " · " : ""}${sp.scientific_name}` : "나중에 도감에서 이름을 붙여 줄 수 있어요"}
+          size="md"
+          filled
+          style={{ marginTop: -20 }}
+        />
         <View style={styles.meta}>
           {(
             [
-              ["날짜", saved.date],
-              ["포인트", saved.point],
-              ["수심", saved.depth],
+              ["날짜", meta.date],
+              ["포인트", meta.point],
+              ["로그", meta.log],
             ] as const
           ).map(([k, v], i) => (
             <View key={k} style={[styles.metaCell, i === 1 && styles.metaMid]}>
@@ -125,17 +151,17 @@ export function DiscoverCollectedScreen() {
           </View>
           <View style={{ flex: 1 }}>
             <Txt size={14} weight="black">
-              {q.title}까지 {q.remaining}종!
+              도감 {goal}종까지 {Math.max(goal - got, 0)}종!
             </Txt>
             <View style={styles.qTrack}>
-              <View style={[styles.qFill, { width: `${(q.current / q.goal) * 100}%` }]} />
+              <View style={[styles.qFill, { width: `${Math.min(got / goal, 1) * 100}%` }]} />
             </View>
           </View>
           <Txt size={13} weight="black">
-            {q.current} / {q.goal}
+            {got} / {goal}
           </Txt>
         </View>
-        <Pressable accessibilityRole="link" onPress={() => router.navigate("/sea")} style={styles.seaLink}>
+        <Pressable accessibilityRole="link" onPress={() => leave(() => router.navigate("/sea"))} style={styles.seaLink}>
           <Txt size={14} weight="extraBold" style={{ flex: 1 }}>
             나의 바다에 새 친구가 헤엄쳐 들어왔어요
           </Txt>
@@ -144,13 +170,27 @@ export function DiscoverCollectedScreen() {
       </Animated.View>
 
       <View style={styles.bottom}>
-        <Pressable accessibilityRole="button" onPress={() => router.navigate("/log")} style={styles.primary}>
-          <Txt size={16} weight="black" color={colors.white}>
-            그림일기에 스티커로 붙이기
-          </Txt>
-        </Pressable>
+        {hasNext ? (
+          <Pressable accessibilityRole="button" onPress={next} style={styles.primary}>
+            <Txt size={16} weight="black" color={colors.white}>
+              다음 사진 보기 (남은 사진 {discoverStore.openCount()}장)
+            </Txt>
+          </Pressable>
+        ) : log ? (
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } }))} style={styles.primary}>
+            <Txt size={16} weight="black" color={colors.white}>
+              그림일기에 스티커로 붙이기
+            </Txt>
+          </Pressable>
+        ) : (
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.push("/log/new"))} style={styles.primary}>
+            <Txt size={16} weight="black" color={colors.white}>
+              이 날의 로그북 쓰기
+            </Txt>
+          </Pressable>
+        )}
         <View style={{ flexDirection: "row", gap: 10 }}>
-          <Pressable accessibilityRole="button" onPress={() => router.navigate("/dogam")} style={styles.secondary}>
+          <Pressable accessibilityRole="button" onPress={() => leave(() => router.navigate("/dogam"))} style={styles.secondary}>
             <Txt size={15} weight="bold">
               도감에서 보기
             </Txt>
@@ -158,7 +198,7 @@ export function DiscoverCollectedScreen() {
           <Pressable
             accessibilityRole="button"
             accessibilityLabel="카드 공유하기"
-            onPress={() => void Share.share({ message: `오션 다이어리에서 ${s.nameKo}를 만났어요! (${saved.date} ${saved.point})` })}
+            onPress={() => void Share.share({ message: `Mola에서 ${sp?.common_name_ko ?? "바닷속 친구"}를 만났어요! (${meta.date}${log ? ` ${log.point}` : ""})` })}
             style={styles.square}
           >
             <ShareIcon />

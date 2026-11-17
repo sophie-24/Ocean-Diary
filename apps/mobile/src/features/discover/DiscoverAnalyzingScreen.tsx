@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
@@ -13,38 +13,93 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import Svg, { Path, Rect } from "react-native-svg";
-import { Critter } from "../../components/Critter";
+import { Image } from "expo-image";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, ChevronLeft } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
-import { ANALYSIS_STEPS, MOCK_MEDIA_GROUPS } from "../../mocks/discover";
+import { discoverError, getClientConfig, identify, localDate, uploadPhoto } from "../../api/discover";
+import { errorMessage } from "../../api/client";
 import { colors } from "../../theme/tokens";
-import { useDiscover } from "./discoverStore";
+import { discoverStore, useDiscover } from "./discoverStore";
 
-const MOCK_DURATION_MS = 4200;
 const ACCENT = "#8EC5FF";
+const STEPS = ["사진 올리기", "생물 찾기", "도감 후보와 비교하기"];
 
 export function DiscoverAnalyzingScreen() {
   const router = useRouter();
+  const qc = useQueryClient();
   const reduced = useReducedMotion();
-  const { selected } = useDiscover();
-  const first = MOCK_MEDIA_GROUPS.flatMap((g) => g.items).find((m) => m.id === selected[0]) ?? MOCK_MEDIA_GROUPS[0].items[0];
+  const { selected, current } = useDiscover();
+  const photo = discoverStore.currentPhoto();
+  const id = selected[current];
   const [pct, setPct] = useState(0);
+  const [error, setError] = useState<string | null>(null);
+  const [attempt, setAttempt] = useState(0);
+  const cancelled = useRef(false);
 
-  // Mock progress until the identification-jobs API is wired up (phase 5).
   useEffect(() => {
-    const started = Date.now();
-    const t = setInterval(() => {
-      const p = Math.min(100, Math.round(((Date.now() - started) / MOCK_DURATION_MS) * 100));
-      setPct(p);
-      if (p >= 100) {
-        clearInterval(t);
-        router.replace("/discover/result");
-      }
-    }, 120);
-    return () => clearInterval(t);
-  }, [router]);
+    cancelled.current = false;
+    return () => {
+      cancelled.current = true;
+    };
+  }, []);
 
-  const step = pct < 30 ? 0 : pct < 80 ? 1 : 2;
+  useEffect(() => {
+    if (!photo || !id) {
+      router.replace("/discover");
+      return;
+    }
+    let alive = true;
+    let creep: ReturnType<typeof setInterval> | null = null;
+    const isCancelled = () => cancelled.current || !alive;
+    (async () => {
+      try {
+        setError(null);
+        const w = discoverStore.get().work[id];
+        let mediaId = w?.mediaId;
+        if (!mediaId) {
+          setPct(8);
+          const config = await qc.fetchQuery({ queryKey: ["client-config"], queryFn: getClientConfig, staleTime: 5 * 60_000 });
+          mediaId = await uploadPhoto(photo, config, w.intentKey);
+          discoverStore.patchWork(id, { mediaId });
+        }
+        if (isCancelled()) return;
+        setPct(35);
+        creep = setInterval(() => setPct((p) => Math.min(88, p + 2)), 400);
+        const job = await identify(mediaId, w.identifyKey, isCancelled);
+        if (creep) clearInterval(creep);
+        if (isCancelled()) return;
+        discoverStore.patchWork(id, { jobId: job.job_id, candidates: job.candidates });
+        setPct(100);
+        discoverStore.set({ pickedCandidate: 0, manual: null });
+        setTimeout(() => !isCancelled() && router.replace("/discover/result"), reduced ? 0 : 500);
+      } catch (e) {
+        if (creep) clearInterval(creep);
+        if (isCancelled()) return;
+        setError(discoverError(e) ?? errorMessage(e));
+      }
+    })();
+    return () => {
+      alive = false;
+      if (creep) clearInterval(creep);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, attempt]);
+
+  const nextIndex = discoverStore.nextOpen(current);
+  const skip = () => {
+    if (id) discoverStore.patchWork(id, { skipped: true });
+    if (nextIndex >= 0) {
+      discoverStore.set({ current: nextIndex });
+      setPct(0);
+      setAttempt((a) => a + 1);
+    } else {
+      router.replace("/discover");
+    }
+  };
+
+  const step = pct < 35 ? 0 : pct < 95 ? 1 : 2;
+  const taken = photo?.takenAt ? localDate(photo.takenAt).slice(5).replace("-", ".") : null;
 
   const scan = useSharedValue(0.06);
   const bob = useSharedValue(0);
@@ -68,23 +123,22 @@ export function DiscoverAnalyzingScreen() {
         </Pressable>
         <View style={styles.counter}>
           <Txt size={13} weight="bold" color={colors.white}>
-            {selected.length || 1}개 중 1번째
+            {selected.length || 1}개 중 {current + 1}번째
           </Txt>
         </View>
         <View style={styles.hit} />
       </View>
 
       <View style={styles.polaroid}>
-        <View style={[styles.photo, { backgroundColor: first.bg }]}>
-          <View style={styles.glare} />
-          <Critter kind={first.kind} width={204} height={96} style={{ position: "absolute", left: 8, top: 40 }} />
+        <View style={styles.photo}>
+          {photo ? <Image source={{ uri: photo.uri }} style={{ width: "100%", height: "100%" }} contentFit="cover" /> : null}
           <Animated.View style={[styles.scan, scanStyle]} />
           {(["tl", "tr", "bl", "br"] as const).map((c) => (
             <View key={c} style={[styles.corner, cornerStyle[c]]} />
           ))}
         </View>
         <Txt size={12} weight="bold" color={colors.ink2} style={{ marginTop: 8 }}>
-          11.02 모나드 숄 · {first.dur ? `영상 ${first.dur}` : "사진"}
+          {taken ? `${taken} · 사진` : "사진"}
         </Txt>
       </View>
 
@@ -101,15 +155,15 @@ export function DiscoverAnalyzingScreen() {
 
       <View style={styles.copy}>
         <Txt size={23} weight="black" color={colors.white} align="center" accessibilityRole="header">
-          AI가 바닷속 친구를 찾고 있어요…
+          {error ? "잠깐 문제가 생겼어요" : "AI가 바닷속 친구를 찾고 있어요…"}
         </Txt>
         <Txt size={14} color="#C3D8F5" align="center" style={{ marginTop: 6 }}>
-          {first.dur ? `영상 ${first.dur}을 장면별로 살펴보는 중` : "사진 속 생물을 살펴보는 중"}
+          {error ?? "사진 속 생물을 살펴보는 중"}
         </Txt>
       </View>
 
       <View style={styles.steps} accessibilityLiveRegion="polite">
-        {ANALYSIS_STEPS.map((label, i) => {
+        {STEPS.map((label, i) => {
           const done = i < step;
           const now = i === step;
           return (
@@ -131,11 +185,27 @@ export function DiscoverAnalyzingScreen() {
         </View>
       </View>
 
-      <Pressable accessibilityRole="button" onPress={() => router.navigate("/")} style={styles.later}>
-        <Txt size={15} weight="bold" color={colors.white}>
-          다 되면 알려주세요
-        </Txt>
-      </Pressable>
+      {error ? (
+        <View style={{ flexDirection: "row", gap: 10, marginHorizontal: 20, marginTop: "auto" }}>
+          <Pressable accessibilityRole="button" onPress={skip} style={[styles.later, { flex: 1, marginHorizontal: 0 }]}>
+            <Txt size={15} weight="bold" color={colors.white}>
+              {nextIndex >= 0 ? "이 사진 건너뛰기" : "이 사진 빼고 끝내기"}
+            </Txt>
+          </Pressable>
+          <Pressable
+            accessibilityRole="button"
+            onPress={() => {
+              setPct(0);
+              setAttempt((a) => a + 1);
+            }}
+            style={[styles.later, { flex: 1, marginHorizontal: 0, backgroundColor: colors.oceanBlue }]}
+          >
+            <Txt size={15} weight="extraBold" color={colors.white}>
+              다시 시도
+            </Txt>
+          </Pressable>
+        </View>
+      ) : null}
     </SafeAreaView>
   );
 }

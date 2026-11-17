@@ -1,4 +1,4 @@
-// Ocean Diary design tokens — mirrors the "필드 가이드" style board in the design canvas.
+// Mola design tokens — mirrors the "필드 가이드" style board in the design canvas.
 
 export const colors = {
   navy: "#16285A",

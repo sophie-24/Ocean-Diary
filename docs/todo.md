@@ -2,6 +2,8 @@
 
 한 번에 한 사용자 흐름씩 구현한다. 현재 완료된 것은 실행 가능한 기반이며, 아직 출시 가능한 앱은 아니다.
 
+> 2026-11-09 기준 active branch는 `feat/v2-ui`이고 v2의 5단계 API 연동 커밋 `7c1211c`가 HEAD다. 아래 체크박스 다수는 v1 구현 이력이며 v2 출시 준비의 현재 기준은 `docs/plan-v2.md`와 `docs/ios-release-checklist.md`다. Apple 등록, AWS 공개 운영 환경, 실제 iPhone/TestFlight 검증은 아직 끝나지 않았다.
+
 ## TODO
 
 - [x] 제품 범위·사용자 흐름·화면·초기 데이터/API 초안 작성

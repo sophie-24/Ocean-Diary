@@ -20,6 +20,8 @@ class SpeciesLabel:
     slug: str
     common_name_ko: str
     scientific_name: str
+    common_name_en: str | None = None
+    group_ko: str | None = None
 
 
 @dataclass(frozen=True)
@@ -55,6 +57,8 @@ def identify_with_configured_provider(
             "slug": item.slug,
             "common_name_ko": item.common_name_ko,
             "scientific_name": item.scientific_name,
+            **({"common_name_en": item.common_name_en} if item.common_name_en else {}),
+            **({"group": item.group_ko} if item.group_ko else {}),
         }
         for item in species_catalog
     ]
@@ -86,7 +90,7 @@ def identify_with_configured_provider(
         "max_output_tokens": 300,
         "instructions": (
             "Identify marine organisms in underwater photographs. Return only plausible matches from "
-            "the supplied Korean coastal species catalog. Do not guess when the subject is unclear, "
+            "the supplied marine species field-guide catalog. Do not guess when the subject is unclear, "
             "too small, obscured, or absent from the catalog. Order candidates by visual plausibility. "
             "Confidence bands are qualitative triage only, not calibrated probabilities. The diver must confirm."
         ),

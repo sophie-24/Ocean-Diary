@@ -346,7 +346,9 @@ def run_one_job() -> bool:
                 )
             )
             catalog = [
-                SpeciesLabel(row.slug, row.common_name_ko, row.scientific_name)
+                SpeciesLabel(
+                    row.slug, row.common_name_ko, row.scientific_name, row.common_name_en, row.group_ko
+                )
                 for row in catalog_rows
             ]
             predictions = identify_with_configured_provider(image_bytes, media.mime_type, catalog)
