@@ -1,10 +1,18 @@
 # OCEAN DIARY 개발 현황
 
-마지막 갱신: 2026-11-04 17:40 KST
+마지막 갱신: 2026-11-09 13:44 KST
 
 이 문서는 작업 단위가 끝날 때 현재 코드, 확인 결과, 다음 단계를 갱신합니다. 진행 중인 명령의 초 단위 화면을 스트리밍하지는 않으며, 작업 중간에도 이 채팅에 주요 변경과 검사 상태를 알립니다.
 
 ## 현재 단계
+
+### 2026-11-09 · iOS 출시 handoff
+
+- 저장소 확인: `feat/v2-ui` HEAD는 보고된 `7c1211c`이며 `origin/feat/v2-ui`보다 5개 커밋 앞서 있다. 기존 사용자 작업으로 `apps/mobile/tsconfig.json`이 수정돼 있고 `apps/mobile/.gitignore`가 새 파일이라 유지했다.
+- v2 계획의 남은 순서를 로컬 종단 흐름 확인 → Apple Developer Program 등록 → App Store Connect와 개인정보 자료 → 공개 운영 서버/EAS 설정 → TestFlight 실제 iPhone 확인으로 정리해 `docs/ios-release-checklist.md`를 만들고 README에 연결했다.
+- Apple Developer 개인/조직 계정 기준, 연회비, D‑U‑N‑S 요건, TestFlight 외부 검토, 개인정보 URL, 소셜 로그인 4.8 조건을 Apple 공식 문서에서 확인했다. Supabase Kakao/Google, Expo iOS build/submit 문서도 연결했다.
+- Kakao/Google은 아직 현재 구현에 들어 있지 않다. 현재 이메일 코드 로그인을 유지한다면 Apple 로그인은 당장 필수 작업으로 단정하지 않는다. 향후 Google/Kakao를 기본 로그인으로 추가할 때 4.8에 맞는 동등 로그인 옵션을 설계한다.
+- 이번 변경은 출시 문서와 README/TODO 갱신이다. 앱/API 코드, Apple 등록, AWS 배포, iPhone 빌드/실기기 동작은 실행하지 않았다.
 
 ### 2026-11-04 · v2 시작 (`feat/v2-ui` 브랜치)
 

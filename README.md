@@ -13,6 +13,7 @@ Monorepo for OCEAN DIARY. **v2 is in progress** (iOS first, then Android): five 
 ## Product documents
 
 - `docs/plan-v2.md`: v2 decisions, screen-to-route map, data model and delivery phases
+- `docs/ios-release-checklist.md`: verified Apple Developer enrollment, local validation, EAS/TestFlight, and release steps
 - `docs/feature-spec-v1.md`: MVP implementation baseline with screen behavior, states, data rules, privacy requirements, and completion criteria
 - `docs/api-contract-v1.md`: mobile/server request and response contract
 - `docs/progress.md`: latest development milestone, static checks, and release gates
@@ -92,7 +93,7 @@ By default, the `mock` provider returns no fabricated species. To enable OpenAI 
    npm start
    ```
 
-   For a physical phone, set `EXPO_PUBLIC_API_URL` in `apps/mobile/.env` and `S3_PUBLIC_ENDPOINT_URL` in the project root `.env` to the computer's LAN IPv4 address instead of `127.0.0.1`. Restart the API after changing its `.env` value. The storage value format is S3_PUBLIC_ENDPOINT_URL=http://<PC-LAN-IPv4>:9000; keep S3_ENDPOINT_URL=http://127.0.0.1:9000 so the API can reach MinIO locally.
+   For a physical phone, keep `EXPO_PUBLIC_API_URL=http://127.0.0.1:8765` and set `S3_PUBLIC_ENDPOINT_URL=auto` in the project-root `.env`; the app and API then follow whatever PC address the phone used. See "아이폰(Expo Go)으로 앱 실행하기" below.
 
 To view the current service screens in a desktop browser, run the preview on your Windows PC in a separate PowerShell window. A `localhost` URL from a Codex-managed process is private to that process and will not open in the desktop browser.
 
@@ -105,20 +106,115 @@ The helper uses `EXPO_PUBLIC_API_URL` from `apps/mobile/.env` (default `http://1
 
    To enable real email-code login, set `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_PUBLISHABLE_KEY` in `apps/mobile/.env`, and set the matching `SUPABASE_URL` in the project-root `.env`. In the Supabase email template, include the one-time code variable `{{ .Token }}`; the app verifies that code and stores the session for later launches. Set `SUPABASE_ACCESS_TOKEN_MAX_AGE_SECONDS` to the project's maximum JWT lifetime; longer-lived access tokens are rejected, and completed account-deletion tombstones are kept until that lifetime has passed. The mobile publishable/anon key is intended for client use; never put a service-role key in an `EXPO_PUBLIC_` variable. To support in-app account deletion, set the server-only `SUPABASE_SERVICE_ROLE_KEY` in the project-root `.env`. Without Supabase values, local development continues to use the fixed development token.
 
-For a shorter day-to-day launch, use a fourth PowerShell window at the project root:
+### 아이폰(Expo Go)으로 앱 실행하기 — 한국어 안내
+
+PC에서 서버를 켜고, 아이폰의 Expo Go로 앱을 여는 방법입니다. **핫스팟이나 Wi‑Fi가 바뀌어 IP가 달라져도 설정 파일을 고칠 필요가 없습니다.**
+
+- 앱은 개발 모드에서 API 주소의 `127.0.0.1`을, Expo Go가 이미 접속한 PC 주소로 자동으로 바꿉니다.
+- API는 `S3_PUBLIC_ENDPOINT_URL=auto`일 때, 폰이 접속한 PC 주소로 사진 업로드 URL을 만듭니다.
+
+#### 처음 한 번만 준비
+
+1. **설정 파일 확인:** 아래 두 값을 확인합니다. 예전에 IP를 직접 적어 두었다면 아래 값으로 되돌리세요.
+   - 프로젝트 루트 `.env`
+
+     ```env
+     S3_PUBLIC_ENDPOINT_URL=auto
+     S3_ENDPOINT_URL=http://127.0.0.1:9000
+     ```
+
+   - `apps/mobile/.env`
+
+     ```env
+     EXPO_PUBLIC_API_URL=http://127.0.0.1:8765
+     ```
+
+2. **패키지 설치:**
+
+   ```powershell
+   cd "C:\Users\20231\Ocean Diary\apps\mobile"
+   npm install
+   ```
+
+3. **Windows 방화벽:** 폰이 PC의 8081(Expo), 8765(API), 9000(사진 저장소) 포트에 들어올 수 있게 허용합니다. PowerShell을 **관리자 권한**으로 열고 한 번 실행하세요.
+
+   ```powershell
+   New-NetFirewallRule -DisplayName "Mola dev (Expo/API/MinIO)" -Direction Inbound -Protocol TCP -LocalPort 8081,8765,9000 -Action Allow -Profile Private,Public
+   ```
+
+   개발할 때만 쓰는 규칙입니다. 지우려면 `Remove-NetFirewallRule -DisplayName "Mola dev (Expo/API/MinIO)"`를 실행하세요.
+
+4. **Expo Go 설치:** 아이폰에 App Store에서 **Expo Go**를 설치합니다.
+
+#### 매번 실행하는 순서 (PowerShell 창 3개)
+
+PC와 아이폰은 **같은 네트워크**에 있어야 합니다. 같은 Wi‑Fi이거나, PC가 아이폰 핫스팟에 연결되어 있으면 됩니다. Docker Desktop을 먼저 켜 두세요.
 
 ```powershell
+# 창 1 — DB·사진 저장소(MinIO)·API
+cd "C:\Users\20231\Ocean Diary"
+.\scripts\start-api.ps1
+
+# 창 2 — AI 식별 worker
+cd "C:\Users\20231\Ocean Diary"
+.\scripts\start-worker.ps1
+
+# 창 3 — Expo (QR 코드가 나옵니다)
 cd "C:\Users\20231\Ocean Diary"
 .\scripts\start-mobile.ps1
 ```
 
-This helper checks `/v1/ready` before starting Expo on the local network and gives a focused message when the API or database migration is not ready. On a physical phone, set `S3_PUBLIC_ENDPOINT_URL` in the project-root `.env` to the PC's LAN IPv4 address and restart the API so signed photo-upload URLs are reachable from the phone. Then run `.\scripts\start-mobile.ps1 -ApiUrl "http://<PC-LAN-IPv4>:8765"`; the helper passes that same URL into the Expo app bundle. You can instead put the LAN URL in `apps/mobile/.env` and run the helper without an argument. It automatically replaces a loopback API default with the PC LAN IPv4 selected by Windows; use -ApiUrl to override the selected address.
+창 3에 QR 코드가 뜨면, 아이폰 **기본 카메라**로 QR을 찍습니다. 뜨는 알림을 누르면 Expo Go에서 앱이 열립니다.
 
-Native build identifiers are provisionally set to `com.oceandiary.app` on Android and iOS. Confirm that these identifiers are available and owned by the publisher before creating store listings; changing them after release creates a different installed app.
+#### IP가 바뀌었을 때 (핫스팟 재연결 등)
 
-The initial launcher icon and splash image are a provisional storybook fish-and-field-notebook mark at `apps/mobile/assets/icon.png`; Android uses a separate transparent adaptive foreground in `apps/mobile/assets/adaptive-icon.png` to stay inside launcher mask safe bounds. Replace or approve the mark with the final brand before store submission.
+- **창 3만** `Ctrl+C`로 끄고 `.\scripts\start-mobile.ps1`을 다시 실행한 뒤, 새 QR을 찍으면 됩니다.
+- API와 worker는 그대로 두세요. `.env`도 고칠 필요가 없습니다.
+- Expo Go의 '최근 항목'에는 예전 IP가 남아 있으니, 꼭 **새 QR**로 여세요.
 
-The main MVP code path is implemented through photo upload, asynchronous identification, candidate/manual selection, and private discovery storage. Real-device walkthroughs, production Supabase setup, biological review of the illustrations, and field evaluation of AI accuracy remain release gates; their current status is tracked in `docs/todo.md`.
+#### QR 주소가 엉뚱한 네트워크를 가리킬 때
+
+PC에 네트워크가 여러 개면 Expo가 다른 주소를 고를 수 있습니다. 랜선, 가상 어댑터(VPN·Docker·WSL), 핫스팟이 같이 있는 경우가 그렇습니다.
+
+1. 스크립트가 출력하는 `This PC's network addresses:` 목록이나 `ipconfig`에서, 폰과 같은 네트워크의 IPv4를 찾습니다. 아이폰 핫스팟이면 보통 `172.20.10.x`입니다.
+2. 그 주소를 지정해 다시 실행합니다.
+
+```powershell
+.\scripts\start-mobile.ps1 -HostIp 172.20.10.2
+```
+
+#### 연결이 안 될 때 확인
+
+```powershell
+# 1) PC에서 API가 살아 있는지
+Invoke-RestMethod "http://127.0.0.1:8765/v1/ready"
+
+# 2) PC의 네트워크 주소로도 열리는지 (172.20.10.2 자리에 위에서 찾은 IPv4)
+Invoke-RestMethod "http://172.20.10.2:8765/v1/ready"
+
+# 3) API가 모든 네트워크(0.0.0.0)에서 받고 있는지
+Get-NetTCPConnection -LocalPort 8765 -State Listen | Format-Table LocalAddress, LocalPort, OwningProcess
+```
+
+- **1번은 되는데 2번이 안 되면:** 방화벽(위 3번 준비 단계)을 확인하세요. 또는 Windows가 네트워크를 '공용'으로 막고 있을 수 있습니다.
+- **아이폰 Safari에서 확인:** `http://<PC 주소>:8765/v1/ready`를 열어 `"status":"ready"`가 나오면 폰↔PC 연결은 정상입니다.
+- **앱은 열리는데 사진 업로드만 실패하면:** 루트 `.env`의 `S3_PUBLIC_ENDPOINT_URL`이 `auto`인지 보고, API(창 1)를 다시 시작하세요.
+- **경고는 무시해도 됩니다:** Expo의 업데이트 안내나 `Response.blob()` 성능 경고는 연결 실패와 관계없습니다.
+
+#### 참고: 데스크톱 브라우저 미리보기
+
+```powershell
+cd "C:\Users\20231\Ocean Diary"
+.\scripts\start-mobile-preview.ps1
+```
+
+`http://localhost:8081`에서 같은 화면을 볼 수 있습니다. 레이아웃 확인용이고, 사진의 촬영일(EXIF) 같은 일부 기능은 실제 폰에서만 동작합니다.
+
+Native build identifiers are provisionally set to `com.molalog.app` on Android and iOS. Confirm that these identifiers are available and owned by the publisher before creating store listings; changing them after release creates a different installed app.
+
+The launcher icon, splash image and favicon use the approved Mola sunfish mark (`apps/mobile/assets/icon.png`, `splash-icon.png`, `favicon.png`); Android uses the transparent adaptive foreground `apps/mobile/assets/adaptive-icon.png` on the `#2F6FDB` background so it stays inside launcher mask safe bounds.
+
+The `feat/v2-ui` branch replaces the v1 screen tree with five tabs and API-backed discovery, logbook, diary, and sea screens. The latest recorded integration check used a local API/worker and mock object storage in a browser; no actual iPhone walkthrough or deployed AWS service has been confirmed. Local mock AI intentionally returns no candidates. See `docs/progress.md` and `docs/ios-release-checklist.md` for the remaining iOS release gates.
 
 ## Android build profiles
 
@@ -152,6 +248,17 @@ npx eas-cli build --platform android --profile production
 ```
 
 The `versionCode` is maintained locally; increment it in `app.json` before each Play Store release. Builds were not submitted to EAS because this requires uploading the project source and configuring an EAS account/API environment.
+
+## iOS TestFlight and App Store
+
+The app config has the provisional iOS bundle identifier `com.molalog.app`, and the `production` EAS profile can be used for an iOS store build after an Apple Developer Program membership is active and the bundle ID is available in that team. Configure the EAS project and deployed public HTTPS API/Supabase values first. Then build and upload from `apps/mobile`:
+
+```powershell
+npx eas-cli build --platform ios --profile production
+npx eas-cli submit --platform ios
+```
+
+The upload appears in App Store Connect after Apple processes it; it is not automatically released. Add it to a TestFlight group, test on a real iPhone, then complete privacy, review, and store metadata. The account enrollment choice, cost, D‑U‑N‑S requirements, TestFlight steps, and sign-in policy are in `docs/ios-release-checklist.md`.
 
 ## API tests
 
