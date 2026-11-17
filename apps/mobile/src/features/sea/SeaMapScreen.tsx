@@ -10,6 +10,8 @@ import { Critter } from "../../components/Critter";
 import { ChevronLeft, ChevronRight, CloseIcon, SearchIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { isCritterKind, type CritterKind } from "../../data/illustrations";
+import { CONTINENTS, COUNTRIES, type Continent, type CountryEntry, findCountry } from "../../data/countries";
+import { SITES } from "../../data/sites";
 import { usePlaces } from "../../api/queries";
 import { colors, fonts } from "../../theme/tokens";
 
@@ -100,6 +102,7 @@ export function SeaMapScreen() {
   const [sel, setSel] = useState<Region["k"] | null>(null);
   const [q, setQ] = useState("");
   const [focus, setFocus] = useState(false);
+  const [searchContinent, setSearchContinent] = useState<Continent | "all">("all");
   const raf = useRef<number | null>(null);
   const start = useRef<VB>(vb);
 
@@ -169,20 +172,43 @@ export function SeaMapScreen() {
   const visitedIds = useMemo(() => new Set(regions.map((r) => COUNTRY_ID[r.mode as Exclude<Mode, "world">])), [regions]);
   const visitedCountries = visitedIds.size;
   const region = regions.find((r) => r.k === sel);
-  const searchIndex = useMemo(() => {
-    const out: { label: string; sub: string; mode: Mode; sel?: Region["k"]; visited: boolean }[] = [];
-    for (const m of ["ph", "au"] as const) {
-      const rs = regions.filter((r) => r.mode === m);
-      const country = KNOWN.find((k) => k.mode === m)!.country;
-      out.push({ label: country, sub: rs.length ? `다녀왔어요 · 지역 ${rs.length}곳` : "아직 안 가봤어요", mode: m, visited: rs.length > 0 });
-      for (const k of KNOWN.filter((x) => x.mode === m)) {
-        const r = rs.find((x) => x.k === k.k);
-        out.push({ label: `${country} › ${k.area.split(" ")[0]} ${k.name}`, sub: r ? `다녀왔어요 · 생물 ${r.n}종` : "아직 안 가봤어요", mode: m, sel: r ? k.k : undefined, visited: !!r });
-      }
+  // How many unique species the diver has collected per country (keyed by ISO).
+  const collectedByIso = useMemo(() => {
+    const map = new Map<string, number>();
+    for (const r of regions) {
+      const iso = r.mode === "ph" ? "PH" : r.mode === "au" ? "AU" : null;
+      if (!iso) continue;
+      map.set(iso, (map.get(iso) ?? 0) + r.n);
     }
-    return out;
+    return map;
   }, [regions]);
-  const results = q.trim() ? searchIndex.filter((r) => r.label.includes(q.trim())).slice(0, 5) : [];
+
+  // Full country list filtered by continent chip + search text. Shown as an
+  // overlay below the search bar whenever the field is focused.
+  const countryResults = useMemo(() => {
+    const trimmed = q.trim().toLowerCase();
+    return COUNTRIES.filter(
+      (c) =>
+        (searchContinent === "all" || c.continent === searchContinent) &&
+        (!trimmed ||
+          c.nameKo.toLowerCase().includes(trimmed) ||
+          c.nameEn.toLowerCase().includes(trimmed) ||
+          c.iso === trimmed.toUpperCase()),
+    ).map((c) => ({
+      country: c,
+      collectedCount: collectedByIso.get(c.iso) ?? 0,
+      visited: collectedByIso.has(c.iso),
+    }));
+  }, [q, searchContinent, collectedByIso]);
+
+  const onPickCountry = (country: CountryEntry) => {
+    setQ("");
+    setFocus(false);
+    setSearchContinent("all");
+    if (country.iso === "PH") go("ph");
+    else if (country.iso === "AU") go("au");
+    else router.push({ pathname: "/sea/country/[iso]", params: { iso: country.iso } });
+  };
   const pins = mode === "world" ? [] : regions.filter((r) => r.mode === mode);
 
   return (
@@ -230,51 +256,105 @@ export function SeaMapScreen() {
           </Pressable>
         ) : null}
       </View>
-      {focus && results.length > 0 ? (
+      {focus ? (
         <View style={styles.results} accessibilityRole="list">
-          {results.map((r) => (
-            <Pressable
-              key={r.label}
-              accessibilityRole="button"
-              onPress={() => {
-                setQ(r.label.split(" › ").pop() ?? r.label);
-                go(r.mode, r.sel ?? null);
-              }}
-              style={styles.resultRow}
-            >
-              <View style={[styles.resultIcon, { backgroundColor: r.visited ? colors.navy : colors.track }]}>
-                <Txt size={11} weight="black" color={r.visited ? colors.white : colors.navy}>
-                  {r.label.includes("›") ? "지역" : "나라"}
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.chipRow}
+            keyboardShouldPersistTaps="handled"
+          >
+            {(["all", ...CONTINENTS] as const).map((c) => (
+              <Pressable
+                key={c}
+                accessibilityRole="button"
+                accessibilityState={{ selected: searchContinent === c }}
+                onPress={() => setSearchContinent(c)}
+                style={[styles.chip, searchContinent === c ? styles.chipOn : styles.chipOff]}
+              >
+                <Txt
+                  size={12}
+                  weight="extraBold"
+                  color={searchContinent === c ? colors.white : colors.navy}
+                >
+                  {c === "all" ? "전체" : c}
+                </Txt>
+              </Pressable>
+            ))}
+          </ScrollView>
+          <ScrollView style={{ maxHeight: 360 }} keyboardShouldPersistTaps="handled">
+            {countryResults.map((r) => (
+              <Pressable
+                key={r.country.iso}
+                accessibilityRole="button"
+                accessibilityLabel={`${r.country.nameKo}, ${
+                  r.visited ? `${r.collectedCount}종 수집` : "아직 안 가봤어요"
+                }`}
+                onPress={() => onPickCountry(r.country)}
+                style={styles.resultRow}
+              >
+                <View style={[styles.flagIcon, r.visited && styles.flagIconVisited]}>
+                  <Txt size={24} style={styles.flagText}>
+                    {r.country.flag}
+                  </Txt>
+                </View>
+                <View style={{ flex: 1 }}>
+                  <Txt size={14} weight="bold">
+                    {r.country.nameKo}
+                  </Txt>
+                  <Txt size={12} color={colors.ink2}>
+                    {r.country.continent}
+                    {r.visited ? ` · ${r.collectedCount}종 수집` : " · 아직 안 가봤어요"}
+                  </Txt>
+                </View>
+                <ChevronRight color={colors.ink2} />
+              </Pressable>
+            ))}
+            {countryResults.length === 0 ? (
+              <View style={{ paddingVertical: 24, alignItems: "center" }}>
+                <Txt size={13} color={colors.ink2}>
+                  찾는 나라가 없어요
                 </Txt>
               </View>
-              <View style={{ flex: 1 }}>
-                <Txt size={14} weight="bold">
-                  {r.label}
-                </Txt>
-                <Txt size={12} color={colors.ink2}>
-                  {r.sub}
-                </Txt>
-              </View>
-            </Pressable>
-          ))}
+            ) : null}
+          </ScrollView>
         </View>
       ) : null}
 
-      <View style={styles.presets}>
-        {(
-          [
-            ["world", "전체"],
-            ["ph", "필리핀"],
-            ["au", "호주"],
-          ] as [Mode, string][]
-        ).map(([m, label]) => (
-          <Pressable key={m} accessibilityRole="button" accessibilityState={{ selected: mode === m }} onPress={() => go(m)} style={[styles.preset, mode === m ? styles.presetOn : styles.presetOff]}>
-            <Txt size={13} weight="extraBold" color={mode === m ? colors.white : colors.navy}>
-              {label}
-            </Txt>
-          </Pressable>
-        ))}
-      </View>
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        contentContainerStyle={styles.presets}
+      >
+        {(["all", ...CONTINENTS] as const).map((c) => {
+          const active = c === "all" ? mode === "world" && !focus : searchContinent === c && focus;
+          const label = c === "all" ? "전체" : c;
+          return (
+            <Pressable
+              key={c}
+              accessibilityRole="button"
+              accessibilityState={{ selected: active }}
+              onPress={() => {
+                if (c === "all") {
+                  setFocus(false);
+                  setSearchContinent("all");
+                  go("world");
+                } else {
+                  // Opens the search overlay pre-filtered to that continent so the diver
+                  // sees every listed country instead of just two presets.
+                  setSearchContinent(c);
+                  setFocus(true);
+                }
+              }}
+              style={[styles.preset, active ? styles.presetOn : styles.presetOff]}
+            >
+              <Txt size={13} weight="extraBold" color={active ? colors.white : colors.navy}>
+                {label}
+              </Txt>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
 
       <GestureDetector gesture={gesture}>
         <View
@@ -334,14 +414,25 @@ export function SeaMapScreen() {
       {region ? (
         <Animated.View entering={FadeInDown.duration(220)} style={[styles.sheet, { paddingBottom: 16 + insets.bottom }]}>
           <View style={styles.sheetHead}>
-            <View style={{ flex: 1 }}>
+            <Pressable
+              accessibilityRole="button"
+              accessibilityLabel={`${region.mode === "ph" ? "필리핀" : "호주"} 전체 상세 보기`}
+              onPress={() => {
+                const iso = region.mode === "ph" ? "PH" : "AU";
+                router.push({ pathname: "/sea/country/[iso]", params: { iso } });
+              }}
+              style={{ flex: 1 }}
+            >
               <Txt size={20} weight="black">
                 {region.name}
               </Txt>
               <Txt size={12} color={colors.ink2}>
                 {region.meta} · 다이빙 {region.logs}회
               </Txt>
-            </View>
+              <Txt size={12} weight="bold" color={colors.oceanBlue} style={{ marginTop: 4 }}>
+                {region.mode === "ph" ? "필리핀" : "호주"} 전체 보기 →
+              </Txt>
+            </Pressable>
             <Pressable accessibilityRole="button" accessibilityLabel="닫기" onPress={() => setSel(null)} style={styles.hit}>
               <CloseIcon size={18} />
             </Pressable>
@@ -388,8 +479,15 @@ const styles = StyleSheet.create({
   search: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 10, marginHorizontal: 16, height: 46, paddingHorizontal: 14, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
   searchInput: { flex: 1, fontFamily: fonts.medium, fontSize: 14, color: colors.navy, paddingVertical: 0 },
   results: { position: "absolute", top: 160, left: 16, right: 16, zIndex: 10, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden", elevation: 6, shadowColor: "#1E468C", shadowOpacity: 0.15, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
+  chipRow: { gap: 6, paddingHorizontal: 10, paddingTop: 10, paddingBottom: 6 },
+  chip: { height: 30, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1.5, justifyContent: "center" },
+  chipOn: { backgroundColor: colors.navy, borderColor: colors.navy },
+  chipOff: { backgroundColor: colors.white, borderColor: colors.lineStrong },
   resultRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: "#EDF2F9" },
   resultIcon: { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  flagIcon: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: colors.mist, borderWidth: 1, borderColor: colors.line },
+  flagIconVisited: { backgroundColor: "#DFEBFC", borderColor: colors.oceanBlue },
+  flagText: { lineHeight: 30 },
   presets: { flexDirection: "row", gap: 6, marginTop: 10, paddingHorizontal: 16 },
   preset: { height: 34, paddingHorizontal: 14, borderRadius: 999, borderWidth: 1.5, justifyContent: "center" },
   presetOn: { backgroundColor: colors.navy, borderColor: colors.navy },
