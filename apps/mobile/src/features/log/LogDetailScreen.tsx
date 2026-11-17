@@ -1,4 +1,5 @@
-import { Pressable, ScrollView, StyleSheet, View } from "react-native";
+import { useState } from "react";
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Critter } from "../../components/Critter";
@@ -9,7 +10,8 @@ import { Manuscript } from "../diary/Manuscript";
 import { DRAW_W, DiaryCanvas } from "../diary/DiaryCanvas";
 import { useWindowDimensions } from "react-native";
 import { KIND_LABEL } from "./logStore";
-import { useDiveLog } from "../../api/queries";
+import { useDeleteDiveLog, useDiveLog } from "../../api/queries";
+import { errorMessage } from "../../api/client";
 import { StateView } from "../../components/ui/StateView";
 
 const DETAIL_LABELS: Record<string, string> = {
@@ -43,6 +45,25 @@ export function LogDetailScreen({ id }: { id: string }) {
   const { width } = useWindowDimensions();
   const drawScale = (width - 40 - 28) / DRAW_W;
   const goBack = () => (router.canGoBack() ? router.back() : router.navigate("/log"));
+  const remove = useDeleteDiveLog();
+  const [deleteError, setDeleteError] = useState<string | null>(null);
+  const doDelete = () =>
+    remove.mutate(id, {
+      onSuccess: () => router.replace("/log"),
+      onError: (e) => setDeleteError(errorMessage(e)),
+    });
+  const confirmDelete = () => {
+    const msg = "이 기록과 그림일기가 지워지고 되돌릴 수 없어요. 도감에 모은 생물은 그대로 남아요.";
+    if (Platform.OS === "web") {
+      // eslint-disable-next-line no-alert
+      if (globalThis.confirm?.(`기록을 삭제할까요?\n${msg}`)) doDelete();
+      return;
+    }
+    Alert.alert("기록을 삭제할까요?", msg, [
+      { text: "취소", style: "cancel" },
+      { text: "삭제", style: "destructive", onPress: doDelete },
+    ]);
+  };
 
   if (!log) {
     return (
@@ -149,6 +170,17 @@ export function LogDetailScreen({ id }: { id: string }) {
             </View>
           ))}
         </View>
+
+        <Pressable accessibilityRole="button" disabled={remove.isPending} onPress={confirmDelete} style={styles.deleteBtn}>
+          <Txt size={14} weight="bold" color={colors.coral}>
+            {remove.isPending ? "삭제하는 중…" : "이 기록 삭제"}
+          </Txt>
+        </Pressable>
+        {deleteError ? (
+          <Txt size={13} color={colors.coral} align="center">
+            {deleteError}
+          </Txt>
+        ) : null}
       </ScrollView>
     </SafeAreaView>
   );
@@ -157,6 +189,7 @@ export function LogDetailScreen({ id }: { id: string }) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 8 },
+  deleteBtn: { height: 48, borderRadius: 14, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   page: { padding: 14, borderRadius: 18, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", shadowColor: "#1E468C", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
   pageHead: { flexDirection: "row", justifyContent: "space-between", gap: 8, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: "#EADFC8", marginBottom: 10 },

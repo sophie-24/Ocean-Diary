@@ -8,7 +8,7 @@ import { colors } from "../../theme/tokens";
 import { ChipGroup, Field, KindToggle, MiniField, Section, Segmented } from "./formParts";
 import { nextLabel, type LogKind } from "./logStore";
 import { errorMessage } from "../../api/client";
-import { newIdempotencyKey, useCreateDiveLog, useDiveLogs } from "../../api/queries";
+import { newIdempotencyKey, useCreateDiveLog, useDiveLogs, useDiveSites } from "../../api/queries";
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const today = () => {
@@ -45,6 +45,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const { data: logData } = useDiveLogs();
+  const { data: sites } = useDiveSites();
   const logs = useMemo(() => logData?.logs ?? [], [logData]);
   const create = useCreateDiveLog();
   // One key per form: a retry after a lost response returns the same log instead of a duplicate.
@@ -54,6 +55,8 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
   const [region, setRegion] = useState("");
   const [point, setPoint] = useState("");
   const [pointFocus, setPointFocus] = useState(false);
+  /** Famous site picked from the suggestions; saving stamps it in the 도감. */
+  const [site, setSite] = useState<{ id: string; name: string } | null>(null);
   const [buddy, setBuddy] = useState("");
   const [weather, setWeather] = useState<string[]>([]);
   const [dayNight, setDayNight] = useState<"day" | "night">("day");
@@ -95,7 +98,19 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
     return Array.from(seen.values()).slice(0, 3);
   }, [point, logs]);
 
-  const save = (thenDiary: boolean) => {
+  // 명소 (dive sites with a stamp) whose name matches what the diver is typing.
+  const siteSuggestions = useMemo(() => {
+    const q = point.trim().toLowerCase();
+    if (!q || site?.name === point.trim()) return [];
+    return (sites ?? []).filter((x) => x.name_ko.toLowerCase().includes(q) || x.name_en.toLowerCase().includes(q)).slice(0, 4);
+  }, [point, sites, site]);
+
+  const changePoint = (v: string) => {
+    setPoint(v);
+    if (site && v.trim() !== site.name) setSite(null);
+  };
+
+  const save = (thenDiary: boolean, draftOnly = false) => {
     setSubmitted(true);
     if (requiredDone < 3 || create.isPending) return;
     const m = date.trim().match(DATE_RE)!;
@@ -124,13 +139,15 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
           point_label: point.trim(),
           title: memo.trim().slice(0, 24) || null,
           details,
-          is_draft: thenDiary,
+          site_id: site?.id ?? null,
+          is_draft: thenDiary || draftOnly,
         },
       },
       {
         onSuccess: (log) => {
           saveKey.current = newIdempotencyKey("log");
-          if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
+          if (draftOnly) router.replace("/log");
+          else if (thenDiary) router.replace({ pathname: "/diary/[logId]/write", params: { logId: log.id } });
           else router.replace({ pathname: "/log/[id]", params: { id: log.id } });
         },
       },
@@ -153,7 +170,13 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
             {kind === "snorkel" ? "30초면 끝 · 그다음 그림일기" : "1단계 로그 · 2단계 그림일기"}
           </Txt>
         </View>
-        <Pressable accessibilityRole="button" style={[styles.headerBtn, { alignItems: "flex-end" }]}>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="임시저장하고 나중에 이어 쓰기"
+          disabled={create.isPending}
+          onPress={() => save(false, true)}
+          style={[styles.headerBtn, { alignItems: "flex-end" }]}
+        >
           <Txt size={14} weight="bold" color={colors.oceanBlue}>
             임시저장
           </Txt>
@@ -203,15 +226,36 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                 label="포인트"
                 required
                 value={point}
-                onChangeText={setPoint}
+                onChangeText={changePoint}
                 onFocus={() => setPointFocus(true)}
                 onBlur={() => setTimeout(() => setPointFocus(false), 150)}
                 placeholder="예) 가토 섬"
                 error={submitted && !point.trim() ? "포인트 이름을 적어 주세요" : undefined}
-                hint="GPS 좌표는 저장하지 않아요. 이름만 남겨요."
+                hint={site ? "명소 스탬프가 도감에 찍혀요 · GPS 좌표는 저장하지 않아요" : "GPS 좌표는 저장하지 않아요. 이름만 남겨요."}
               />
-              {pointFocus && pointSuggestions.length > 0 ? (
+              {pointFocus && pointSuggestions.length + siteSuggestions.length > 0 ? (
                 <View style={styles.suggest} accessibilityRole="list">
+                  {siteSuggestions.map((x) => (
+                    <Pressable
+                      key={x.id}
+                      accessibilityRole="button"
+                      accessibilityLabel={`명소 ${x.name_ko} 고르기`}
+                      onPress={() => {
+                        setPoint(x.name_ko);
+                        setSite({ id: x.id, name: x.name_ko });
+                        if (!region.trim()) setRegion(`${x.country_ko} · ${x.region_ko}`);
+                        setPointFocus(false);
+                      }}
+                      style={styles.suggestRow}
+                    >
+                      <Txt size={14} weight="bold">
+                        {x.name_ko}
+                      </Txt>
+                      <Txt size={12} color={colors.oceanBlue}>
+                        명소 스탬프 · {x.category_ko} · {x.country_ko} {x.region_ko}
+                      </Txt>
+                    </Pressable>
+                  ))}
                   {pointSuggestions.map((s) => (
                     <Pressable
                       key={`${s.region}${s.point}`}
