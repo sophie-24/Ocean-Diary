@@ -1,5 +1,14 @@
 import { memo } from "react";
 import Svg, { Circle, Defs, Ellipse, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
+import { AmbientBubbles, CausticG, type BubbleSpec } from "./ambient";
+
+const REEF_BUBBLES: BubbleSpec[] = [
+  { x: 62, size: 2.6, duration: 9800, delay: 0, peakOpacity: 0.55, startY: 690, travel: 710 },
+  { x: 182, size: 2.2, duration: 11500, delay: 2600, peakOpacity: 0.5, startY: 714, travel: 720 },
+  { x: 306, size: 3.2, duration: 13200, delay: 5200, peakOpacity: 0.55, startY: 702, travel: 720 },
+  { x: 340, size: 1.8, duration: 10400, delay: 1300, peakOpacity: 0.45, startY: 724, travel: 730 },
+  { x: 128, size: 2, duration: 12600, delay: 7200, peakOpacity: 0.5, startY: 720, travel: 720 },
+];
 
 /** Static reef backdrop ported from the design canvas (산호초 수조). `rays` fades light shafts by time of day. */
 function ReefSceneBase({ rays = 1 }: { rays?: number }) {
@@ -22,11 +31,11 @@ function ReefSceneBase({ rays = 1 }: { rays?: number }) {
       </Defs>
       <Rect width="390" height="844" fill="url(#reefWater)"/>
       <Rect width="390" height="520" fill="url(#reefGlow)"/>
-      <G opacity={rays}>
-      <Path d="M40 0 L110 0 L232 650 L150 650 Z" fill="#FFFFFF" opacity=".07"/>
-      <Path d="M190 0 L236 0 L330 610 L272 610 Z" fill="#FFFFFF" opacity=".06"/>
-      <Path d="M300 0 L330 0 L390 430 L360 430 Z" fill="#FFFFFF" opacity=".05"/>
-      </G>
+      <CausticG base={rays}>
+      <Path d="M40 0 L110 0 L232 650 L150 650 Z" fill="#FFFFFF" opacity={0.07}/>
+      <Path d="M190 0 L236 0 L330 610 L272 610 Z" fill="#FFFFFF" opacity={0.06}/>
+      <Path d="M300 0 L330 0 L390 430 L360 430 Z" fill="#FFFFFF" opacity={0.05}/>
+      </CausticG>
       <Path d="M0 560 Q40 470 92 500 Q132 432 182 480 Q232 452 262 498 Q320 440 390 488 V700 H0 Z" fill="#163F80" opacity=".85"/>
       <Path d="M0 640 Q80 615 160 632 Q250 650 320 628 Q360 618 390 624 V844 H0 Z" fill="url(#reefSand)"/>
       
@@ -65,6 +74,7 @@ function ReefSceneBase({ rays = 1 }: { rays?: number }) {
       <G opacity=".9">
       <Path d="M372 844 Q380 790 366 744 Q358 716 370 690 M386 844 Q388 800 380 772" stroke="#1E6E5A" strokeWidth="8" strokeLinecap="round" fill="none"/>
       </G>
+      <AmbientBubbles bubbles={REEF_BUBBLES}/>
       </Svg>
   );
 }

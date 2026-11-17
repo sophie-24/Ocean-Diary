@@ -1,5 +1,22 @@
 import { memo } from "react";
 import Svg, { Circle, Defs, Ellipse, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
+import { AmbientBubbles, DustMote, type BubbleSpec } from "./ambient";
+
+// Close-up tank: a handful of small bubbles near the subjects.
+const MACRO_BUBBLES: BubbleSpec[] = [
+  { x: 118, size: 2.4, duration: 8800, delay: 0, peakOpacity: 0.55, startY: 580, travel: 560 },
+  { x: 236, size: 1.8, duration: 10200, delay: 1600, peakOpacity: 0.5, startY: 540, travel: 520 },
+  { x: 312, size: 2.6, duration: 11400, delay: 3800, peakOpacity: 0.55, startY: 540, travel: 520 },
+  { x: 78, size: 1.6, duration: 9400, delay: 2400, peakOpacity: 0.45, startY: 500, travel: 480 },
+];
+
+// A few floating specks in the upper water column.
+const MACRO_MOTES: Array<{ x: number; y: number; r: number; delay: number; amp: number }> = [
+  { x: 140, y: 220, r: 0.9, delay: 0, amp: 6 },
+  { x: 260, y: 280, r: 1.0, delay: 1400, amp: 8 },
+  { x: 60, y: 300, r: 0.8, delay: 2600, amp: 5 },
+  { x: 340, y: 240, r: 1.0, delay: 800, amp: 7 },
+];
 
 /** Macro tank backdrop (sea fan, crinoid, sponge, rubble) on a 390×844 stage. `p` keeps gradient ids unique per copy. */
 function MacroSceneBase({ p = "mc" }: { p?: string }) {
@@ -280,6 +297,10 @@ function MacroSceneBase({ p = "mc" }: { p?: string }) {
     <Path d="M150 600 Q146 580 152 562 M158 602 Q160 584 156 566 M240 610 Q236 590 244 574 M248 612 Q252 592 248 578"/>
     </G>
     <Ellipse cx="174" cy="618" rx="14" ry="5" fill="#2A3A3A"/>
+    {MACRO_MOTES.map((m, i) => (
+      <DustMote key={i} x={m.x} y={m.y} r={m.r} amplitude={m.amp} duration={6400 + i * 300} delay={m.delay} color="#D8E6D2" opacity={0.45}/>
+    ))}
+    <AmbientBubbles bubbles={MACRO_BUBBLES}/>
     </Svg>
   );
 }

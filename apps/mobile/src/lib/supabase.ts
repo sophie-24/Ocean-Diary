@@ -26,6 +26,8 @@ export const supabase = supabaseEnabled
         storage: Platform.OS === "web" ? webSessionStorage : supabaseSecureStorage,
         autoRefreshToken: true,
         persistSession: true,
+        // OAuth returns the `code` to our deep link; we exchange it for a session ourselves.
+        flowType: "pkce",
         detectSessionInUrl: false,
       },
     })

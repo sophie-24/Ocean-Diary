@@ -3,6 +3,7 @@ import type { Session } from "@supabase/supabase-js";
 import { supabase, supabaseEnabled } from "../lib/supabase";
 import { DEV_AUTH_TOKEN, configureApiAuth } from "./client";
 import { discoverStore } from "../features/discover/discoverStore";
+import { signInWithProvider, type OAuthProvider, type OAuthResult } from "../features/auth/oauth";
 
 type AuthState = {
   /** True while the stored session is being restored at launch. */
@@ -15,6 +16,7 @@ type AuthState = {
   usingDevToken: boolean;
   sendCode: (email: string) => Promise<void>;
   verifyCode: (email: string, code: string) => Promise<void>;
+  signInWith: (provider: OAuthProvider) => Promise<OAuthResult>;
   signOut: () => Promise<void>;
 };
 
@@ -67,6 +69,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase.auth.verifyOtp({ email, token: code, type: "email" });
         if (error) throw error;
         setSession(data.session);
+      },
+      async signInWith(provider) {
+        const result = await signInWithProvider(provider);
+        if (result.kind === "success") setSession(result.session);
+        return result;
       },
       async signOut() {
         if (supabase) await supabase.auth.signOut();
