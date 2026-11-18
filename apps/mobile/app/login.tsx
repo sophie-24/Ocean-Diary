@@ -1,13 +1,17 @@
 import { useEffect, useState } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Critter } from "../src/components/Critter";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
 import { Txt } from "../src/components/ui/Txt";
 import { useAuth } from "../src/api/auth";
 import { colors } from "../src/theme/tokens";
 import { coolDownOAuthBrowser, warmUpOAuthBrowser } from "../src/features/auth/oauth";
 
+const MOLA_LOGO = require("../assets/icon.png");
+
 export default function LoginScreen() {
+  const router = useRouter();
   const { signInWith } = useAuth();
   const [oauthBusy, setOauthBusy] = useState<null | "google">(null);
   const [error, setError] = useState<string | null>(null);
@@ -37,7 +41,12 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.root}>
       <View style={styles.body}>
         <View style={styles.hero}>
-          <Critter kind="whale" width={280} height={120} />
+          <Image
+            source={MOLA_LOGO}
+            style={styles.logo}
+            contentFit="contain"
+            accessibilityIgnoresInvertColors
+          />
           <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue} style={{ marginTop: 16 }}>
             MOLA
           </Txt>
@@ -78,6 +87,23 @@ export default function LoginScreen() {
               {error}
             </Txt>
           ) : null}
+
+          {/* Legal + sign-up notice. Supabase OAuth auto-creates the account on first
+              login, so we tell the diver up-front and link the privacy policy they're
+              agreeing to by continuing. */}
+          <Txt size={11} color={colors.ink2} align="center" style={styles.legal}>
+            처음이면 자동으로 가입돼요. 계속하면{" "}
+            <Txt
+              size={11}
+              weight="bold"
+              color={colors.oceanBlue}
+              onPress={() => router.push("/legal/privacy")}
+            >
+              개인정보 처리방침
+            </Txt>
+            에 동의하는 것으로 간주돼요.{"\n"}
+            계정은 로그인 후 '내 계정'에서 언제든 탈퇴할 수 있어요.
+          </Txt>
         </View>
       </View>
     </SafeAreaView>
@@ -88,8 +114,10 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   body: { flex: 1, justifyContent: "center", paddingHorizontal: 24, gap: 48 },
   hero: { alignItems: "center" },
+  logo: { width: 120, height: 120, borderRadius: 24 },
   buttons: { gap: 12 },
   social: { height: 54, borderRadius: 16, alignItems: "center", justifyContent: "center" },
   kakaoDisabled: { backgroundColor: "#E5E7EB", borderWidth: 1, borderColor: colors.lineStrong, opacity: 0.85 },
   google: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.lineStrong },
+  legal: { marginTop: 20, paddingHorizontal: 8, lineHeight: 18 },
 });

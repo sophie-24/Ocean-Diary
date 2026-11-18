@@ -6,7 +6,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown, runOnJS, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { GestureDetector, usePanGesture } from "react-native-gesture-handler";
 import { Critter } from "../../components/Critter";
-import { ChevronLeft, CloseIcon, SearchIcon } from "../../components/icons";
+import { CloseIcon, SearchIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { colors } from "../../theme/tokens";
@@ -14,6 +14,7 @@ import { MacroScene } from "./MacroScene";
 import { VideoScene } from "./VideoScene";
 import { macroVideos } from "./sceneVideos";
 import { useOceanSound } from "./oceanSound";
+import { TANKS } from "./TankShell";
 import { useCollection } from "../../api/queries";
 import { SPECIES } from "../../data/species";
 
@@ -176,9 +177,6 @@ export function MacroTankScreen() {
 
       <View style={[styles.top, { paddingTop: insets.top + 8 }]} pointerEvents="box-none">
         <View style={{ flexDirection: "row", gap: 10, alignItems: "flex-start" }} pointerEvents="box-none">
-          <Pressable accessibilityRole="button" accessibilityLabel="수조로 돌아가기" onPress={() => (router.canGoBack() ? router.back() : router.navigate("/sea"))} style={[styles.glass, styles.round]}>
-            <ChevronLeft color={colors.white} />
-          </Pressable>
           <View style={styles.glass}>
             <Txt accessibilityRole="header" size={19} weight="black" color={colors.white}>
               마크로 수조
@@ -238,7 +236,7 @@ export function MacroTankScreen() {
         </Animated.View>
       ) : null}
 
-      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.tray, { bottom: 16 + insets.bottom }]} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} style={[styles.tray, { bottom: 86 + insets.bottom }]} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>
         {hidden.map((c) => {
           const f = found.has(c.kind);
           return (
@@ -253,6 +251,32 @@ export function MacroTankScreen() {
               <Critter kind={c.kind} width={46} height={34} ghost={!f} />
               <Txt size={10} weight="extraBold" color={f ? colors.white : "#8FA6C8"}>
                 {f ? c.short : "???"}
+              </Txt>
+            </Pressable>
+          );
+        })}
+      </ScrollView>
+
+      <ScrollView
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        style={[styles.switcher, { bottom: 16 + insets.bottom }]}
+        contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}
+      >
+        {TANKS.map((t) => {
+          const on = t.key === "macro";
+          return (
+            <Pressable
+              key={t.key}
+              disabled={on || t.locked || !t.href}
+              onPress={() => t.href && router.replace(t.href)}
+              accessibilityRole="button"
+              accessibilityState={{ selected: on, disabled: !!t.locked }}
+              accessibilityLabel={`${t.name}${on ? ", 지금 보는 중" : ""}`}
+              style={[styles.switcherChip, on ? styles.switcherOn : styles.switcherOff]}
+            >
+              <Txt size={13} weight={on ? "black" : "extraBold"} color={on ? colors.navy : colors.white}>
+                {t.name}
               </Txt>
             </Pressable>
           );
@@ -284,4 +308,8 @@ const styles = StyleSheet.create({
   slot: { width: 66, height: 62, borderRadius: 16, alignItems: "center", justifyContent: "center", gap: 3 },
   slotOn: { backgroundColor: "rgba(255,255,255,0.16)", borderWidth: 1, borderColor: "rgba(169,210,255,0.35)" },
   slotOff: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1.5, borderStyle: "dashed", borderColor: "rgba(169,210,255,0.35)" },
+  switcher: { position: "absolute", left: 0, right: 0, flexGrow: 0 },
+  switcherChip: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, alignItems: "center" },
+  switcherOn: { backgroundColor: "rgba(255,255,255,0.92)" },
+  switcherOff: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
 });

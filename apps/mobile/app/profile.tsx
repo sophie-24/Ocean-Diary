@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Alert, Linking, Platform, Pressable, StyleSheet, View } from "react-native";
+import { Alert, Platform, Pressable, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { useQueryClient } from "@tanstack/react-query";
@@ -9,8 +9,6 @@ import { api, errorMessage } from "../src/api/client";
 import { useAuth } from "../src/api/auth";
 import { useSummary } from "../src/api/queries";
 import { colors } from "../src/theme/tokens";
-
-const PRIVACY_URL = process.env.EXPO_PUBLIC_PRIVACY_URL;
 
 /** 내 계정: sign out and in-app account deletion (required by App Store guideline 5.1.1(v)). */
 export default function ProfileScreen() {
@@ -77,13 +75,16 @@ export default function ProfileScreen() {
         ) : null}
       </View>
 
-      {PRIVACY_URL ? (
-        <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(PRIVACY_URL)} style={styles.row}>
-          <Txt size={15} weight="bold">
-            개인정보 처리방침
-          </Txt>
-        </Pressable>
-      ) : null}
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="개인정보 처리방침 보기"
+        onPress={() => router.push("/legal/privacy")}
+        style={styles.row}
+      >
+        <Txt size={15} weight="bold">
+          개인정보 처리방침
+        </Txt>
+      </Pressable>
 
       {!usingDevToken ? (
         <Pressable accessibilityRole="button" disabled={busy} onPress={() => void leave()} style={styles.row}>

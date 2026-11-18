@@ -17,7 +17,7 @@ const SOURCES: Record<OceanTrack, number> = {
 
 const KEY = "mola:sea-sound";
 const VOLUME = 0.6;
-const FADE_MS = 1200;
+const FADE_MS = 500;
 
 let enabled = false;
 let loaded = false;
@@ -33,7 +33,7 @@ void AsyncStorage.getItem(KEY)
   .catch(() => undefined);
 
 export const oceanSound = {
-  get: () => enabled,
+  get: () => enabled && loaded,
   toggle() {
     enabled = !enabled;
     void AsyncStorage.setItem(KEY, enabled ? "on" : "off").catch(() => undefined);

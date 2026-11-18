@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Svg, { Circle, Defs, Ellipse, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
-import { AmbientBubbles, DustMote, type BubbleSpec } from "./ambient";
+import { AmbientBubbles, AmbientSilhouettes, DustMote, type BubbleSpec } from "./ambient";
 
 // Close-up tank: a handful of small bubbles near the subjects.
 const MACRO_BUBBLES: BubbleSpec[] = [
@@ -300,6 +300,7 @@ function MacroSceneBase({ p = "mc" }: { p?: string }) {
     {MACRO_MOTES.map((m, i) => (
       <DustMote key={i} x={m.x} y={m.y} r={m.r} amplitude={m.amp} duration={6400 + i * 300} delay={m.delay} color="#D8E6D2" opacity={0.45}/>
     ))}
+    <AmbientSilhouettes scheme="macro"/>
     <AmbientBubbles bubbles={MACRO_BUBBLES}/>
     </Svg>
   );

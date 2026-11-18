@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Svg, { Circle, Defs, Ellipse, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
-import { AmbientBubbles, CausticG, type BubbleSpec } from "./ambient";
+import { AmbientBubbles, AmbientSilhouettes, CausticG, type BubbleSpec } from "./ambient";
 
 const REEF_BUBBLES: BubbleSpec[] = [
   { x: 62, size: 2.6, duration: 9800, delay: 0, peakOpacity: 0.55, startY: 690, travel: 710 },
@@ -74,6 +74,7 @@ function ReefSceneBase({ rays = 1 }: { rays?: number }) {
       <G opacity=".9">
       <Path d="M372 844 Q380 790 366 744 Q358 716 370 690 M386 844 Q388 800 380 772" stroke="#1E6E5A" strokeWidth="8" strokeLinecap="round" fill="none"/>
       </G>
+      <AmbientSilhouettes scheme="reef"/>
       <AmbientBubbles bubbles={REEF_BUBBLES}/>
       </Svg>
   );

@@ -43,8 +43,8 @@ export function useResidents(cast: Cast, only?: Set<string>) {
 export type TankKey = "reef" | "ocean" | "macro" | "deep";
 
 export const TANKS: { key: TankKey; name: string; count: string; href?: Href; locked?: boolean }[] = [
-  { key: "reef", name: "산호초 수조", count: "산호초 친구들", href: "/sea" },
   { key: "ocean", name: "대양 수조", count: "큰 바다 친구들", href: "/sea/tank/ocean" },
+  { key: "reef", name: "산호초 수조", count: "산호초 친구들", href: "/sea/tank/reef" },
   { key: "macro", name: "마크로 수조", count: "돋보기로 찾기", href: "/sea/tank/macro" },
   { key: "deep", name: "심해 수조", count: "곧 열려요", locked: true },
 ];

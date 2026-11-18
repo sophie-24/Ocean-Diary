@@ -1,6 +1,6 @@
 import { memo } from "react";
 import Svg, { Defs, Ellipse, G, LinearGradient, Path, RadialGradient, Rect, Stop } from "react-native-svg";
-import { AmbientBubbles, CausticG, DustMote, type BubbleSpec } from "./ambient";
+import { AmbientBubbles, AmbientSilhouettes, CausticG, DustMote, type BubbleSpec } from "./ambient";
 
 // Fewer, bigger bubbles for an open-water feel.
 const OCEAN_BUBBLES: BubbleSpec[] = [
@@ -49,6 +49,7 @@ function OceanSceneBase({ rays = 1 }: { rays?: number }) {
       {OCEAN_MOTES.map((m, i) => (
         <DustMote key={i} x={m.x} y={m.y} r={m.r} amplitude={m.amp} duration={7200 + i * 400} delay={m.delay} opacity={0.35} />
       ))}
+      <AmbientSilhouettes scheme="ocean"/>
       <AmbientBubbles bubbles={OCEAN_BUBBLES}/>
       </Svg>
   );
