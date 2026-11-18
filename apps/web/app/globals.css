@@ -1,0 +1,52 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Mola 랜딩 베이스.
+ *   • --font-body: Pretendard Variable (한+영 통일)
+ *   • --font-diary: Gaegu (손글씨)
+ *
+ * display/body 구분 없이 Pretendard 하나로. weight로만 계층 표현.
+ */
+
+:root {
+  --font-body: var(--font-pretendard), -apple-system, BlinkMacSystemFont,
+    system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo",
+    "Noto Sans KR", "Malgun Gothic", sans-serif;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: #f4f8fc;
+  color: #16285a;
+  font-family: var(--font-body);
+  font-feature-settings: "ss01", "ss02";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.55;
+  letter-spacing: -0.005em;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-body);
+  font-weight: 900;
+  letter-spacing: -0.025em;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+::selection {
+  background: #2f6fdb;
+  color: #ffffff;
+}

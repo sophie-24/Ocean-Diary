@@ -1,0 +1,26 @@
+{
+  "name": "@mola/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "today.mola.app — '오늘의 다이빙' 추천 + 물멍 + 그림일기 체험 미니앱. Threads/IG 유입을 앱 다운로드까지 이어주는 로그인·설치 없는 웹 체험.",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.0",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.5.0",
+    "tailwindcss": "^3.4.17",
+    "typescript": "^5.7.0"
+  }
+}

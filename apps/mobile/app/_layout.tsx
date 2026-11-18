@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { Stack, useRouter, useSegments } from "expo-router";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider, useAuth } from "../src/api/auth";
+import { OnboardingOverlay } from "../src/features/onboarding/OnboardingOverlay";
 import { ApiError } from "../src/api/client";
 import * as SplashScreen from "expo-splash-screen";
 import { StatusBar } from "expo-status-bar";
@@ -86,6 +87,7 @@ export default function RootLayout() {
         <Stack.Screen name="sea/tank/macro" options={{ animation: "fade" }} />
         <Stack.Screen name="sea/place/[id]" options={{ animation: "fade" }} />
       </Stack>
+      <OnboardingOverlay />
       </AuthProvider>
       </QueryClientProvider>
     </GestureHandlerRootView>

@@ -7,6 +7,7 @@ import { ChevronLeft } from "../src/components/icons";
 import { Txt } from "../src/components/ui/Txt";
 import { api, errorMessage } from "../src/api/client";
 import { useAuth } from "../src/api/auth";
+import { onboardingStore } from "../src/features/onboarding/onboardingStore";
 import { useSummary } from "../src/api/queries";
 import { colors } from "../src/theme/tokens";
 
@@ -74,6 +75,17 @@ export default function ProfileScreen() {
           </Txt>
         ) : null}
       </View>
+
+      <Pressable
+        accessibilityRole="button"
+        accessibilityLabel="앱 소개 다시 보기"
+        onPress={() => onboardingStore.openManual()}
+        style={styles.row}
+      >
+        <Txt size={15} weight="bold">
+          앱 소개 다시 보기
+        </Txt>
+      </Pressable>
 
       <Pressable
         accessibilityRole="button"

@@ -1,7 +1,9 @@
 import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { colors } from "../theme/tokens";
 
-type P = { size?: number; color?: string; strokeWidth?: number };
+export type IconProps = { size?: number; color?: string; strokeWidth?: number };
+// Internal alias kept so existing icon signatures below don't need to be touched.
+type P = IconProps;
 
 const base = (color: string, strokeWidth: number) => ({
   fill: "none",
