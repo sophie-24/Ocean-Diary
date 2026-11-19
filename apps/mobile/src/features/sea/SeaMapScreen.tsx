@@ -13,6 +13,7 @@ import { isCritterKind, type CritterKind } from "../../data/illustrations";
 import { CONTINENTS, COUNTRIES, type Continent, type CountryEntry, findCountry } from "../../data/countries";
 import { SITES } from "../../data/sites";
 import { usePlaces } from "../../api/queries";
+import { MapBookTabs, type MapBookTab } from "../dogam/MapBookTabs";
 import { colors, fonts } from "../../theme/tokens";
 
 type Mode = "world" | "ph" | "au";
@@ -91,7 +92,9 @@ const fit = (vb: VB, aspect: number): VB => {
   return [cx - nw / 2, cy - nh / 2, nw, nh];
 };
 
-export function SeaMapScreen() {
+type SeaMapScreenProps = { mapBookTab?: { active: MapBookTab; onChange: (tab: MapBookTab) => void } };
+
+export function SeaMapScreen({ mapBookTab }: SeaMapScreenProps = {}) {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const regions = useRegions();
@@ -214,15 +217,19 @@ export function SeaMapScreen() {
   return (
     <SafeAreaView edges={["top"]} style={styles.root}>
       <View style={styles.header}>
-        <Pressable accessibilityRole="button" accessibilityLabel="수족관으로 돌아가기" onPress={() => (router.canGoBack() ? router.back() : router.navigate("/sea"))} style={styles.hit}>
-          <ChevronLeft />
-        </Pressable>
+        {mapBookTab ? (
+          <MapBookTabs active={mapBookTab.active} onChange={mapBookTab.onChange} />
+        ) : (
+          <Pressable accessibilityRole="button" accessibilityLabel="뒤로" onPress={() => (router.canGoBack() ? router.back() : router.navigate("/(tabs)/dogam"))} style={styles.hit}>
+            <ChevronLeft />
+          </Pressable>
+        )}
         <View style={{ flex: 1 }}>
           <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
-            MY OCEAN MAP
+            {mapBookTab ? "MY SPECIES BOOK" : "MY OCEAN MAP"}
           </Txt>
           <Txt accessibilityRole="header" size={22} weight="black">
-            나의 바다 지도
+            {mapBookTab ? "도감" : "나의 바다 지도"}
           </Txt>
         </View>
         <View style={styles.stat}>

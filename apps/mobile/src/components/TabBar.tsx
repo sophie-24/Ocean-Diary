@@ -113,15 +113,23 @@ export function TabBar({ state, navigateToTab, insets }: BottomTabBarProps) {
           );
         }
 
+        const dim = tab === "sea";
         return (
           <Pressable
             key={route.key}
             onPress={onPress}
             accessibilityRole="tab"
             accessibilityState={{ selected: focused }}
-            accessibilityLabel={meta.a11y}
-            style={styles.item}
+            accessibilityLabel={meta.a11y + (dim ? " · 준비 중" : "")}
+            style={[styles.item, dim && { opacity: 0.55 }]}
           >
+            {dim ? (
+              <View style={styles.badge} pointerEvents="none">
+                <Txt size={8} weight="black" color={colors.navy}>
+                  준비 중
+                </Txt>
+              </View>
+            ) : null}
             <View style={[styles.pill, { backgroundColor: pillBg }]}>
               <TabIcon tab={tab} color={fg} />
             </View>
@@ -146,6 +154,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 6,
   },
   item: { flex: 1, alignItems: "center", justifyContent: "flex-end", gap: 2, minHeight: 48 },
+  badge: {
+    position: "absolute",
+    top: -2,
+    paddingHorizontal: 6,
+    paddingVertical: 1,
+    borderRadius: 999,
+    backgroundColor: colors.sunny,
+    zIndex: 2,
+    shadowColor: "#16285A",
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 2 },
+  },
   pill: { width: 44, height: 30, borderRadius: 15, alignItems: "center", justifyContent: "center" },
   fab: {
     width: 58,

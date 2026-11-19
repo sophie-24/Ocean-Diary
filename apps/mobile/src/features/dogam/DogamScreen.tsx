@@ -11,6 +11,7 @@ import { SITES, SITE_CATEGORIES, type SiteEntry } from "../../data/sites";
 import { useCollection, useSiteStamps } from "../../api/queries";
 import { StateView } from "../../components/ui/StateView";
 import { colors } from "../../theme/tokens";
+import { MapBookTabs, type MapBookTab } from "./MapBookTabs";
 import { SpeciesCard } from "./SpeciesCard";
 import { SiteStampCard } from "./SiteStampCard";
 
@@ -18,7 +19,9 @@ type Book = "species" | "sites";
 const ALL = "전체";
 const MILESTONE_STEP = 10;
 
-export function DogamScreen() {
+type DogamScreenProps = { mapBookTab?: { active: MapBookTab; onChange: (tab: MapBookTab) => void } };
+
+export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
   const router = useRouter();
   const [book, setBook] = useState<Book>("species");
   const [group, setGroup] = useState(ALL);
@@ -61,6 +64,11 @@ export function DogamScreen() {
 
   const header = (
     <View>
+      {mapBookTab ? (
+        <View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 10 }}>
+          <MapBookTabs active={mapBookTab.active} onChange={mapBookTab.onChange} />
+        </View>
+      ) : null}
       <ScreenHeader
         eyebrow={book === "species" ? "MY SPECIES BOOK" : "MY DIVE PASSPORT"}
         title="나의 도감"
@@ -76,6 +84,27 @@ export function DogamScreen() {
         }
       />
 
+      {mapBookTab ? (
+        <Pressable
+          // `/discover/autogen` is a new route — expo-router typed routes regenerate
+          // on the next `pnpm expo start`. Cast narrows the gap until then.
+          onPress={() => router.navigate("/discover/autogen" as never)}
+          accessibilityRole="button"
+          accessibilityLabel="자동 생성 1건 검증 대기 · 관리자가 일주일 안에 확인해요"
+          style={styles.pendingBanner}
+        >
+          <View style={styles.pendingBadge}>
+            <Txt size={14}>✨</Txt>
+          </View>
+          <View style={{ flex: 1 }}>
+            <Txt size={12} color={colors.navy}>
+              <Txt weight="extraBold" color={colors.navy}>자동 생성 1건 검증 대기</Txt>
+              {" · 관리자가 일주일 안에 확인해요"}
+            </Txt>
+          </View>
+          <Txt size={12} color="#8B6A14" weight="extraBold">›</Txt>
+        </Pressable>
+      ) : null}
       <View accessibilityRole="tablist" style={styles.segment}>
         {(
           [
@@ -219,6 +248,26 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   list: { paddingTop: 12, paddingBottom: 32, gap: 10 },
   columns: { gap: 10, paddingHorizontal: 20 },
+  pendingBanner: {
+    marginHorizontal: 20,
+    marginTop: 10,
+    padding: 12,
+    borderRadius: 14,
+    backgroundColor: "#FFF8E0",
+    borderWidth: 1,
+    borderColor: "#F3DE95",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  pendingBadge: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: colors.sunny,
+    alignItems: "center",
+    justifyContent: "center",
+  },
   segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 14, backgroundColor: colors.track },
   segItem: { flex: 1, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: colors.white, shadowColor: "#1E468C", shadowOpacity: 0.12, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 1 },

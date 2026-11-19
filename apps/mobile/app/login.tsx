@@ -13,7 +13,7 @@ const MOLA_LOGO = require("../assets/icon.png");
 export default function LoginScreen() {
   const router = useRouter();
   const { signInWith } = useAuth();
-  const [oauthBusy, setOauthBusy] = useState<null | "google">(null);
+  const [oauthBusy, setOauthBusy] = useState<null | "google" | "kakao">(null);
   const [error, setError] = useState<string | null>(null);
 
   // Pre-warm the auth tab so the first social login opens instantly.
@@ -22,7 +22,7 @@ export default function LoginScreen() {
     return () => coolDownOAuthBrowser();
   }, []);
 
-  const signInSocial = async (provider: "google") => {
+  const signInSocial = async (provider: "google" | "kakao") => {
     if (oauthBusy) return;
     setOauthBusy(provider);
     setError(null);
@@ -56,17 +56,17 @@ export default function LoginScreen() {
         </View>
 
         <View style={styles.buttons}>
-          {/* Kakao: disabled until the Kakao app clears biz-app review; without it
-              Supabase forces `account_email` and Kakao rejects every request. */}
+          {/* Kakao: scopes are limited to profile_nickname + profile_image in oauth.ts
+              (no account_email), so this doesn't need biz-app review to work. */}
           <Pressable
             accessibilityRole="button"
-            accessibilityLabel="카카오로 계속하기, 준비 중이에요"
-            accessibilityState={{ disabled: true }}
-            disabled
-            style={[styles.social, styles.kakaoDisabled]}
+            accessibilityLabel="카카오로 계속하기"
+            disabled={!!oauthBusy}
+            onPress={() => signInSocial("kakao")}
+            style={[styles.social, styles.kakao, oauthBusy && { opacity: 0.6 }]}
           >
-            <Txt size={16} weight="extraBold" color={colors.ink2}>
-              카카오로 계속하기 (준비 중)
+            <Txt size={16} weight="extraBold" color="#191600">
+              {oauthBusy === "kakao" ? "카카오로 이동 중…" : "카카오로 계속하기"}
             </Txt>
           </Pressable>
 
@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
   logo: { width: 120, height: 120, borderRadius: 24 },
   buttons: { gap: 12 },
   social: { height: 54, borderRadius: 16, alignItems: "center", justifyContent: "center" },
-  kakaoDisabled: { backgroundColor: "#E5E7EB", borderWidth: 1, borderColor: colors.lineStrong, opacity: 0.85 },
+  kakao: { backgroundColor: "#FEE500" },
   google: { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.lineStrong },
   legal: { marginTop: 20, paddingHorizontal: 8, lineHeight: 18 },
 });
