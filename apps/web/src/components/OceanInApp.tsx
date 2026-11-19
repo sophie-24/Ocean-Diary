@@ -5,6 +5,11 @@ import { Critter } from "@/components/Critter";
  * 폰 스크린 안의 Mola "대양 수조" (Sea-Ocean) 화면.
  * 설계서의 Sea-Ocean.dc.html 느낌을 단순화 — 심해 톤에 큰 유영 생물
  * 서너 마리가 slow drift.
+ *
+ * 변경점 (2026-11-19): drift 애니메이션을 Sea-Place의 odCruise 공식으로
+ * 통일. 반환 지점에서 생물이 중간 90°를 거쳐 돌아보기 때문에 2D 좌우반전
+ * 느낌이 사라지고, perspective + scale 변화로 "가까이 왔다 멀어지는"
+ * 3D-ish 결까지 살아요.
  */
 
 export function OceanInApp() {
@@ -21,13 +26,29 @@ export function OceanInApp() {
         fontFamily: "var(--font-body)",
       }}
     >
-      {/* light rays */}
+      {/* Sea-Place 아트보드의 odCruise 공식. --dx = travel distance (음수 = R→L). */}
       <style>{`
-        @keyframes oiDrift{from{transform:translateX(-80px) scale(.95)}to{transform:translateX(420px) scale(1.05)}}
-        @keyframes oiDrift2{from{transform:translateX(420px) scaleX(-1) scale(.95)}to{transform:translateX(-80px) scaleX(-1) scale(1.05)}}
-        @keyframes oiBob{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-        @keyframes oiRays{0%,100%{opacity:.4}50%{opacity:.75}}
-        @keyframes oiBubble{0%{transform:translateY(0) scale(.5);opacity:0}15%{opacity:.8}100%{transform:translateY(-640px) scale(1.3);opacity:0}}
+        @keyframes odCruise {
+          0%   { transform: perspective(800px) translate3d(0px,-6px,0) rotateZ(0deg) scale(.88) rotateY(180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
+          40%  { transform: perspective(800px) translate3d(calc(var(--dx) * .94),-8px,0) rotateZ(0deg) scale(.88) rotateY(180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
+          46%  { transform: perspective(800px) translate3d(calc(var(--dx) * 1.06),0px,0) rotateZ(-7deg) scale(.97) rotateY(90deg); filter: brightness(.7) drop-shadow(0 9px 6px rgba(0,10,30,.2)); }
+          52%  { transform: perspective(800px) translate3d(var(--dx),8px,0) rotateZ(0deg) scale(1.06) rotateY(0deg); filter: brightness(1.05) drop-shadow(0 14px 8px rgba(0,10,30,.3)); }
+          89%  { transform: perspective(800px) translate3d(calc(var(--dx) * .06),8px,0) rotateZ(0deg) scale(1.06) rotateY(0deg); filter: brightness(1.05) drop-shadow(0 14px 8px rgba(0,10,30,.3)); }
+          95%  { transform: perspective(800px) translate3d(calc(var(--dx) * -.06),0px,0) rotateZ(7deg) scale(.97) rotateY(-90deg); filter: brightness(.7) drop-shadow(0 9px 6px rgba(0,10,30,.2)); }
+          100% { transform: perspective(800px) translate3d(0px,-6px,0) rotateZ(0deg) scale(.88) rotateY(-180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
+        }
+        @keyframes oiRays { 0%,100% { opacity:.4 } 50% { opacity:.75 } }
+        @keyframes oiBob  { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-6px) } }
+        @keyframes oiBubble {
+          0%   { transform: translateY(0) scale(.5); opacity: 0; }
+          15%  { opacity: .8; }
+          100% { transform: translateY(-640px) scale(1.3); opacity: 0; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          [style*="odCruise"], [style*="oiRays"], [style*="oiBob"], [style*="oiBubble"] {
+            animation: none !important;
+          }
+        }
       `}</style>
 
       {/* ambient rays */}
@@ -44,14 +65,7 @@ export function OceanInApp() {
       />
 
       {/* HUD top */}
-      <div
-        style={{
-          padding: "0 16px",
-          display: "flex",
-          alignItems: "center",
-          gap: 10,
-        }}
-      >
+      <div style={{ padding: "0 16px", display: "flex", alignItems: "center", gap: 10 }}>
         <div
           style={{
             flex: 1,
@@ -62,14 +76,7 @@ export function OceanInApp() {
             border: "1px solid rgba(169,210,255,0.22)",
           }}
         >
-          <div
-            style={{
-              fontSize: 10,
-              fontWeight: 800,
-              letterSpacing: "0.1em",
-              color: "#8EC5FF",
-            }}
-          >
+          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", color: "#8EC5FF" }}>
             나의 바다
           </div>
           <div style={{ fontSize: 15, fontWeight: 900, marginTop: 2 }}>대양 수조</div>
@@ -80,16 +87,16 @@ export function OceanInApp() {
         <TankSwitcher active="ocean" />
       </div>
 
-      {/* Drifting critters */}
+      {/* Drifting critters — odCruise 공식. --dx 로 방향·거리 설정. */}
       <div
         aria-label="whale shark"
         style={{
           position: "absolute",
           top: 190,
-          width: 260,
-          animation: "oiDrift 42s linear infinite",
+          left: -40,
+          animation: "odCruise 42s ease-in-out infinite",
           opacity: 0.88,
-          filter: "drop-shadow(0 8px 10px rgba(0,10,30,0.25))",
+          ["--dx" as never]: "470px",
         }}
       >
         <div style={{ animation: "oiBob 5s ease-in-out infinite" }}>
@@ -102,11 +109,10 @@ export function OceanInApp() {
         style={{
           position: "absolute",
           top: 390,
-          width: 200,
-          animation: "oiDrift2 32s linear infinite",
-          animationDelay: "-10s",
+          left: 230,
+          animation: "odCruise 32s ease-in-out -8s infinite",
           opacity: 0.95,
-          filter: "drop-shadow(0 6px 8px rgba(0,10,30,0.3))",
+          ["--dx" as never]: "-360px",
         }}
       >
         <div style={{ animation: "oiBob 4.5s ease-in-out infinite" }}>
@@ -119,10 +125,10 @@ export function OceanInApp() {
         style={{
           position: "absolute",
           top: 540,
-          width: 180,
-          animation: "oiDrift 36s linear infinite",
-          animationDelay: "-18s",
+          left: -30,
+          animation: "odCruise 36s ease-in-out -14s infinite",
           opacity: 0.85,
+          ["--dx" as never]: "430px",
         }}
       >
         <div style={{ animation: "oiBob 4s ease-in-out infinite" }}>
@@ -192,7 +198,6 @@ export function OceanInApp() {
         </button>
       </div>
 
-      {/* TabBar dark */}
       <DarkTabBar active="sea" />
     </div>
   );

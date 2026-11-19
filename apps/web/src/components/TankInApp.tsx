@@ -8,13 +8,13 @@ import { colors } from "@/theme/tokens";
 /**
  * 폰 스크린 안의 Mola 네이티브 "나의 바다 · 수조" 화면.
  *
- * 변경점 (2026-11-18): 생물 18마리로 늘림 + 깊이별로 3개 레이어
- * (전경/중경/배경)에 분산해서 "수조에 꽉 찬" 느낌. 각 레이어마다 다른
- * 속도·크기·투명도로 패럴랙스. 네이티브 앱의 OceanScene/ReefScene을
- * 웹에서 재현하기 위한 축약판.
+ * 변경점 (2026-11-19): drift 애니메이션을 Sea-Place 아트보드의 `odCruise`
+ * 공식(perspective + rotateY)으로 통일. 반환 지점에서 생물이 중간 90°로
+ * 납작해지며 돌아보기 때문에 2D 좌우반전 느낌이 사라지고, perspective +
+ * scale 변화로 "가까이 왔다 멀어지는" 3D-ish 결까지 살아요.
  *
  * 수조에 올릴 생물 라인업은 Mola 네이티브 앱의 수채 Critter 32종 중
- * 크기 변주와 톤 밸런스를 보고 큐레이션.
+ * 크기 변주와 톤 밸런스를 보고 큐레이션 (18마리, 3개 depth 레이어).
  */
 
 type TankCritter = {
@@ -53,12 +53,18 @@ const CRITTERS: TankCritter[] = [
   { kind: "lionfish",    y: 20, duration: 38, delay: 20, reverse: true,  size: 42, layer: "front" },
   { kind: "boxfish",     y: 65, duration: 30, delay: 5,  reverse: false, size: 34, layer: "front" },
   { kind: "moray",       y: 90, duration: 44, delay: 9,  reverse: true,  size: 38, layer: "front" },
-  { kind: "pikachu",     y: 42, duration: 26, delay: 24, reverse: false, size: 30, layer: "front" },
+  { kind: "ghostpipe",   y: 42, duration: 26, delay: 24, reverse: false, size: 30, layer: "front" },
   { kind: "seabunny",    y: 78, duration: 34, delay: 17, reverse: false, size: 28, layer: "front" },
   { kind: "harlequin",   y: 10, duration: 36, delay: 11, reverse: true,  size: 32, layer: "front" },
 ];
 
 const LAYER_OPACITY = { back: 0.35, mid: 0.6, front: 0.9 } as const;
+
+// Phone screen interior width is 390px. Start just off-screen + travel a bit
+// past the opposite edge so the critters enter and exit cleanly.
+const START_LEFT_LTR = -60;
+const START_LEFT_RTL = 360;
+const TRAVEL_DX = 440;
 
 export function TankInApp() {
   const [playing, setPlaying] = useState(false);
@@ -126,28 +132,34 @@ export function TankInApp() {
 
       {/* 수조 본체 — 떠다니는 생물 */}
       <div style={{ flex: 1, position: "relative" }}>
-        {CRITTERS.map((c, i) => (
-          <div
-            key={`${c.kind}-${i}`}
-            style={{
-              position: "absolute",
-              top: `${c.y}%`,
-              left: 0,
-              right: 0,
-              opacity: LAYER_OPACITY[c.layer],
-              pointerEvents: "none",
-            }}
-          >
+        {CRITTERS.map((c, i) => {
+          const startLeft = c.reverse ? START_LEFT_RTL : START_LEFT_LTR;
+          const dx = c.reverse ? -TRAVEL_DX : TRAVEL_DX;
+          return (
             <div
+              key={`${c.kind}-${i}`}
               style={{
-                animation: `tank-drift-${c.reverse ? "r" : "l"} ${c.duration}s linear ${c.delay}s infinite`,
-                display: "inline-block",
+                position: "absolute",
+                top: `${c.y}%`,
+                left: startLeft,
+                opacity: LAYER_OPACITY[c.layer],
+                pointerEvents: "none",
               }}
             >
-              <Critter kind={c.kind} size={c.size} />
+              <div
+                style={{
+                  animation: `odCruise ${c.duration}s ease-in-out ${c.delay}s infinite`,
+                  display: "inline-block",
+                  // CSS variable — odCruise uses translate3d(var(--dx), …).
+                  // Negative dx makes the fish travel right-to-left.
+                  ["--dx" as never]: `${dx}px`,
+                }}
+              >
+                <Critter kind={c.kind} size={c.size} />
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* 하단 수조 switcher + 소리 토글 */}
@@ -203,15 +215,21 @@ export function TankInApp() {
       <audio ref={audioRef} src="/sounds/scuba.m4a" loop preload="auto" />
 
       <style>{`
-        @keyframes tank-drift-l {
-          0%   { transform: translateX(-20%) translateY(0); }
-          50%  { transform: translateX(110%) translateY(-8px); }
-          100% { transform: translateX(-20%) translateY(0); }
+        /* Sea-Place 아트보드의 odCruise 공식 — perspective + rotateY 로
+           반환 지점에서 중간 90°를 지나며 "돌아보는" 3D 효과.
+           --dx 변수로 각 생물마다 travel distance·방향을 설정. */
+        @keyframes odCruise {
+          0%   { transform: perspective(800px) translate3d(0px,-6px,0) rotateZ(0deg) scale(.88) rotateY(180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
+          40%  { transform: perspective(800px) translate3d(calc(var(--dx) * .94),-8px,0) rotateZ(0deg) scale(.88) rotateY(180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
+          46%  { transform: perspective(800px) translate3d(calc(var(--dx) * 1.06),0px,0) rotateZ(-7deg) scale(.97) rotateY(90deg); filter: brightness(.7) drop-shadow(0 9px 6px rgba(0,10,30,.2)); }
+          52%  { transform: perspective(800px) translate3d(var(--dx),8px,0) rotateZ(0deg) scale(1.06) rotateY(0deg); filter: brightness(1.05) drop-shadow(0 14px 8px rgba(0,10,30,.3)); }
+          89%  { transform: perspective(800px) translate3d(calc(var(--dx) * .06),8px,0) rotateZ(0deg) scale(1.06) rotateY(0deg); filter: brightness(1.05) drop-shadow(0 14px 8px rgba(0,10,30,.3)); }
+          95%  { transform: perspective(800px) translate3d(calc(var(--dx) * -.06),0px,0) rotateZ(7deg) scale(.97) rotateY(-90deg); filter: brightness(.7) drop-shadow(0 9px 6px rgba(0,10,30,.2)); }
+          100% { transform: perspective(800px) translate3d(0px,-6px,0) rotateZ(0deg) scale(.88) rotateY(-180deg); filter: brightness(.88) drop-shadow(0 6px 4px rgba(0,10,30,.14)); }
         }
-        @keyframes tank-drift-r {
-          0%   { transform: translateX(110%) translateY(0); }
-          50%  { transform: translateX(-20%) translateY(6px); }
-          100% { transform: translateX(110%) translateY(0); }
+        @media (prefers-reduced-motion: reduce) {
+          /* 멀미/움직임 민감 사용자를 위해 완전히 정지 */
+          [style*="odCruise"] { animation: none !important; }
         }
       `}</style>
     </div>
