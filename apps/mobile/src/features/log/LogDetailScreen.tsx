@@ -156,7 +156,7 @@ export function LogDetailScreen({ id }: { id: string }) {
           <Txt accessibilityRole="header" size={16} weight="black" style={{ marginBottom: 8 }}>
             {KIND_LABEL[log.kind]} 기록
           </Txt>
-          <Txt size={14} weight="bold" color="#34466E">
+          <Txt size={14} weight="bold" color={colors.ink2}>
             {log.summary}
           </Txt>
           {rows.map(([k, v]) => (
@@ -189,16 +189,16 @@ export function LogDetailScreen({ id }: { id: string }) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 8 },
-  deleteBtn: { height: 48, borderRadius: 14, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  deleteBtn: { height: 48, borderRadius: 10, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  page: { padding: 14, borderRadius: 18, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", shadowColor: "#1E468C", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
+  page: { padding: 14, borderRadius: 12, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", shadowColor: "#1C1C1E", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
   pageHead: { flexDirection: "row", justifyContent: "space-between", gap: 8, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: "#EADFC8", marginBottom: 10 },
-  drawFrame: { borderWidth: 2, borderColor: "#3B4C86", borderRadius: 4, overflow: "hidden" },
+  drawFrame: { borderWidth: 2, borderColor: colors.ink2, borderRadius: 4, overflow: "hidden" },
   drawing: { height: 190, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: "hidden" },
   glare: { position: "absolute", left: -20, top: -40, width: 70, height: 280, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "20deg" }] },
   stickerRow: { position: "absolute", left: 8, bottom: 6, flexDirection: "row", gap: 4 },
-  primary: { flex: 1, height: 50, borderRadius: 16, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
-  secondary: { flex: 1, height: 50, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  card: { padding: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, gap: 4 },
+  primary: { flex: 1, height: 50, borderRadius: 10, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  secondary: { flex: 1, height: 50, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  card: { padding: 16, borderRadius: 12, backgroundColor: colors.white, gap: 4 },
   dl: { flexDirection: "row", gap: 8, paddingVertical: 4 },
 });

@@ -99,7 +99,7 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
             </Txt>
             {facts?.iucn ? (
               <View style={styles.iucn}>
-                <Txt size={12} weight="bold" color="#A8382A">
+                <Txt size={12} weight="bold" color={colors.coral}>
                   {facts.iucn}
                 </Txt>
               </View>
@@ -148,17 +148,17 @@ export function SpeciesDetailScreen({ no }: { no: string }) {
                 ))}
               </View>
               <View style={[styles.section, styles.didYouKnow]}>
-                <Txt accessibilityRole="header" size={16} weight="black" color="#1F4FA8" style={{ marginBottom: 6 }}>
+                <Txt accessibilityRole="header" size={16} weight="black" color={colors.oceanBlue} style={{ marginBottom: 6 }}>
                   알고 있었나요?
                 </Txt>
-                <Txt size={14} color="#34466E" style={{ lineHeight: 23 }}>
+                <Txt size={14} color={colors.ink2} style={{ lineHeight: 23 }}>
                   {facts.didYouKnow}
                 </Txt>
               </View>
               {facts.manner ? (
                 <View style={styles.manner}>
                   <InfoIcon />
-                  <Txt size={13} color="#34466E" style={{ flex: 1, lineHeight: 20 }}>
+                  <Txt size={13} color={colors.ink2} style={{ flex: 1, lineHeight: 20 }}>
                     <Txt size={13} weight="bold">
                       관찰 매너
                     </Txt>{" "}
@@ -279,27 +279,27 @@ const styles = StyleSheet.create({
   backBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center" },
   heroArt: { position: "absolute", left: 0, right: 0, top: 112, alignItems: "center" },
   heroTag: { position: "absolute", top: 270 },
-  noArt: { width: 300, height: 150, borderRadius: 20, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center" },
+  noArt: { width: 300, height: 150, borderRadius: 12, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center" },
   body: { paddingTop: 18, paddingHorizontal: 20, gap: 16 },
   sciRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: 8 },
-  iucn: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, backgroundColor: "#FDECEA" },
-  stats: { flexDirection: "row", paddingVertical: 14, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  iucn: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, backgroundColor: "#FEE2E2" },
+  stats: { flexDirection: "row", paddingVertical: 14, borderRadius: 12, backgroundColor: colors.white },
   stat: { flex: 1, alignItems: "center", justifyContent: "center" },
-  statDivider: { borderLeftWidth: 1, borderLeftColor: "#E6EEF8" },
-  notYet: { padding: 16, gap: 4, borderRadius: 20, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.ghostLine, backgroundColor: colors.ghostBg },
-  section: { paddingVertical: 16, paddingHorizontal: 18, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  statDivider: { borderLeftWidth: 1, borderLeftColor: colors.line },
+  notYet: { padding: 16, gap: 4, borderRadius: 12, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.ghostLine, backgroundColor: colors.ghostBg },
+  section: { paddingVertical: 16, paddingHorizontal: 18, borderRadius: 12, backgroundColor: colors.white },
   dlRow: { flexDirection: "row", gap: 12, paddingVertical: 5 },
-  didYouKnow: { backgroundColor: "#EAF3FC", borderWidth: 0 },
-  manner: { flexDirection: "row", gap: 10, alignItems: "flex-start", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 16, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  didYouKnow: { backgroundColor: colors.ghostBg },
+  manner: { flexDirection: "row", gap: 10, alignItems: "flex-start", paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.white },
   sectionHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" },
   tlRow: { flexDirection: "row", gap: 8 },
   tlRail: { width: 28, alignItems: "center" },
   tlDot: { width: 14, height: 14, marginTop: 22, borderRadius: 7, borderWidth: 3, borderColor: colors.mist, shadowOpacity: 1, shadowRadius: 0, shadowOffset: { width: 0, height: 0 } },
-  tlLine: { flex: 1, width: 2, marginTop: 4, backgroundColor: "#D3E2F3" },
-  tlCard: { flex: 1, flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 12, padding: 12, borderRadius: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, ...shadow.card },
+  tlLine: { flex: 1, width: 2, marginTop: 4, backgroundColor: colors.line },
+  tlCard: { flex: 1, flexDirection: "row", alignItems: "center", gap: 12, marginBottom: 12, padding: 12, borderRadius: 12, backgroundColor: colors.white, ...shadow.card },
   tlPhoto: { width: 68, height: 68, borderRadius: 12, alignItems: "center", justifyContent: "center", overflow: "hidden" },
   first: { paddingHorizontal: 6, paddingVertical: 1, borderRadius: 6, backgroundColor: colors.coral },
-  badgeBox: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 4, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 18, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
+  badgeBox: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 4, paddingVertical: 14, paddingHorizontal: 16, borderRadius: 12, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
   badgeTrack: { height: 6, borderRadius: 3, marginTop: 8, backgroundColor: "#F3DE95", overflow: "hidden" },
   badgeFill: { height: 6, borderRadius: 3, backgroundColor: colors.navy },
 });

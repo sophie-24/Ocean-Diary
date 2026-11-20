@@ -234,7 +234,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
           </Pressable>
           <NameTag ko={s.nameKo} en={s.nameEn} size="md" filled />
           <Txt size={13} color={colors.darkInkSoft} style={{ marginTop: 4 }}>
-            처음 만난 날{r.isNew ? " · NEW" : ""}
+            처음 만난 날{r.isNew ? " · 신규" : ""}
           </Txt>
           <Txt size={15} weight="extraBold" color={colors.white}>
             {r.date}
@@ -285,7 +285,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
 }
 
 export const tankStyles = StyleSheet.create({
-  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 16 },
+  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 12 },
 });
 
 const styles = StyleSheet.create({
@@ -296,21 +296,21 @@ const styles = StyleSheet.create({
   emptyWrap: { position: "absolute", left: 32, right: 32, top: "40%", alignItems: "center" },
   hudTop: { position: "absolute", left: 0, right: 0, top: 0, paddingHorizontal: 16, gap: 10 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
-  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 18, paddingVertical: 10, paddingHorizontal: 14 },
-  round44: { width: 44, height: 44, borderRadius: 22, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
-  toggle: { flexDirection: "row", paddingVertical: 3, paddingHorizontal: 3, borderRadius: 14 },
+  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14 },
+  round44: { width: 44, height: 44, borderRadius: 12, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
+  toggle: { flexDirection: "row", paddingVertical: 3, paddingHorizontal: 3, borderRadius: 10 },
   toggleOn: { height: 36, paddingHorizontal: 12, borderRadius: 11, backgroundColor: colors.white, justifyContent: "center" },
   toggleOff: { height: 36, paddingHorizontal: 12, borderRadius: 11, justifyContent: "center" },
-  chip: { flexDirection: "row", alignItems: "center", gap: 9, maxWidth: 250, paddingVertical: 8, paddingLeft: 9, paddingRight: 12, borderRadius: 16 },
-  dot: { width: 28, height: 28, borderRadius: 14 },
-  round: { width: 48, height: 40, borderRadius: 20, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
+  chip: { flexDirection: "row", alignItems: "center", gap: 9, maxWidth: 250, paddingVertical: 8, paddingLeft: 9, paddingRight: 12, borderRadius: 12 },
+  dot: { width: 28, height: 28, borderRadius: 10 },
+  round: { width: 48, height: 40, borderRadius: 12, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
   exitView: { position: "absolute", alignSelf: "center", borderRadius: 999, paddingVertical: 9 },
-  plaque: { position: "absolute", left: 16, right: 16, alignItems: "center", gap: 6, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14, borderRadius: 22, backgroundColor: "rgba(6,20,50,0.85)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
-  plaqueClose: { position: "absolute", right: 8, top: 8, width: 36, height: 36, borderRadius: 18, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" },
+  plaque: { position: "absolute", left: 16, right: 16, alignItems: "center", gap: 6, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14, borderRadius: 12, backgroundColor: "rgba(6,20,50,0.85)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
+  plaqueClose: { position: "absolute", right: 8, top: 8, width: 36, height: 36, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" },
   plaqueCount: { height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: "rgba(169,210,255,0.16)", justifyContent: "center" },
   plaqueCta: { flex: 1, height: 40, borderRadius: 12, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
   tanks: { position: "absolute", left: 0, right: 0, bottom: 12, flexGrow: 0 },
-  tank: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16 },
+  tank: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12 },
   tankOn: { backgroundColor: "rgba(255,255,255,0.92)" },
   tankOff: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
   tankLocked: { borderWidth: 1.5, borderStyle: "dashed", borderColor: "rgba(169,210,255,0.45)" },

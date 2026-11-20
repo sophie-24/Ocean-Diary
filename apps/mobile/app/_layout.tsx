@@ -12,8 +12,6 @@ import {
   NotoSansKR_400Regular,
   NotoSansKR_500Medium,
   NotoSansKR_700Bold,
-  NotoSansKR_800ExtraBold,
-  NotoSansKR_900Black,
 } from "@expo-google-fonts/noto-sans-kr";
 import { Gaegu_400Regular, Gaegu_700Bold } from "@expo-google-fonts/gaegu";
 import { GamjaFlower_400Regular } from "@expo-google-fonts/gamja-flower";
@@ -50,8 +48,6 @@ export default function RootLayout() {
     NotoSansKR_400Regular,
     NotoSansKR_500Medium,
     NotoSansKR_700Bold,
-    NotoSansKR_800ExtraBold,
-    NotoSansKR_900Black,
     Gaegu_400Regular,
     Gaegu_700Bold,
     GamjaFlower_400Regular,

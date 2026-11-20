@@ -124,5 +124,5 @@ export function PlaceTankScreen({ id }: { id: string }) {
 
 const styles = StyleSheet.create({
   strip: { position: "absolute", left: 0, right: 0, bottom: 20, flexGrow: 0 },
-  friend: { width: 76, height: 64, borderRadius: 16, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
+  friend: { width: 76, height: 64, borderRadius: 12, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
 });

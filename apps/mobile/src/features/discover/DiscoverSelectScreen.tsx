@@ -141,8 +141,8 @@ export function DiscoverSelectScreen() {
       </View>
 
       <View style={styles.hint}>
-        <InfoIcon color="#1F4FA8" size={16} />
-        <Txt size={13} color="#1F4FA8" style={{ flex: 1 }}>
+        <InfoIcon color={colors.oceanBlue} size={16} />
+        <Txt size={13} color={colors.oceanBlue} style={{ flex: 1 }}>
           촬영 날짜가 같은 다이빙 로그에 자동으로 연결해요
         </Txt>
       </View>
@@ -153,7 +153,7 @@ export function DiscoverSelectScreen() {
             <Txt size={14} weight="extraBold" color={colors.white}>
               하던 사진 {open}장이 남아 있어요
             </Txt>
-            <Txt size={12} color="#C3D8F5">
+            <Txt size={12} color={colors.ghostLine}
               {savedCount ? `${savedCount}장은 이미 도감에 저장했어요` : "올린 사진은 다시 올리지 않아요"}
             </Txt>
           </View>
@@ -277,7 +277,7 @@ export function DiscoverSelectScreen() {
             <Txt accessibilityRole="header" size={18} weight="black">
               사진 분석 안내
             </Txt>
-            <Txt size={14} color="#34466E" style={{ lineHeight: 22 }}>
+            <Txt size={14} color={colors.ink2} style={{ lineHeight: 22 }}>
               고른 사진은 생물 이름을 찾기 위해 외부 AI 서비스({config.data?.external_ai_provider})로 보내져요. 분석에만 쓰이고, 사진과 기록은 내 계정에서
               언제든 지울 수 있어요.
             </Txt>
@@ -330,21 +330,21 @@ const styles = StyleSheet.create({
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   album: { flexDirection: "row", alignItems: "center", gap: 4, height: 44 },
-  segment: { flexDirection: "row", marginTop: 8, marginHorizontal: 20, padding: 4, borderRadius: 14, backgroundColor: colors.track },
+  segment: { flexDirection: "row", marginTop: 8, marginHorizontal: 20, padding: 4, borderRadius: 10, backgroundColor: colors.track },
   segItem: { flex: 1, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: colors.white },
-  hint: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12, marginHorizontal: 20, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 14, backgroundColor: colors.sky },
+  hint: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12, marginHorizontal: 20, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.sky },
   groupHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingTop: 16, paddingBottom: 8, paddingHorizontal: 20 },
   diveChip: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.lineStrong },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 2 },
   thumb: { height: 128, overflow: "hidden", backgroundColor: colors.track },
   diveChipWarn: { backgroundColor: "#FFF4D6", borderColor: "#E9C46A" },
-  resume: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 18, backgroundColor: colors.navy },
+  resume: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.navy },
   resumeCta: { height: 40, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10, paddingHorizontal: 32, paddingBottom: 80 },
   scrim: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, backgroundColor: "rgba(9,25,56,0.45)", justifyContent: "flex-end" },
-  consent: { gap: 14, padding: 20, backgroundColor: colors.white, borderTopLeftRadius: 26, borderTopRightRadius: 26 },
-  consentNo: { width: 96, height: 54, borderRadius: 18, borderWidth: 1.5, borderColor: colors.lineStrong, alignItems: "center", justifyContent: "center" },
+  consent: { gap: 14, padding: 20, backgroundColor: colors.white, borderTopLeftRadius: 12, borderTopRightRadius: 12 },
+  consentNo: { width: 96, height: 54, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, alignItems: "center", justifyContent: "center" },
   glare: { position: "absolute", left: -20, top: -30, width: 70, height: 190, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "22deg" }] },
   dur: { position: "absolute", left: 6, bottom: 6, flexDirection: "row", alignItems: "center", gap: 3, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: "rgba(15,32,50,0.72)" },
   ring: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderWidth: 4, borderColor: colors.oceanBlue, backgroundColor: "rgba(47,111,219,0.14)" },
@@ -360,14 +360,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     gap: 12,
     backgroundColor: colors.white,
-    borderTopLeftRadius: 26,
-    borderTopRightRadius: 26,
-    shadowColor: "#1E468C",
+    borderTopLeftRadius: 12,
+    borderTopRightRadius: 12,
+    shadowColor: "#1C1C1E",
     shadowOpacity: 0.1,
     shadowRadius: 24,
     shadowOffset: { width: 0, height: -8 },
     elevation: 10,
   },
   sheetRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  cta: { height: 54, borderRadius: 18, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
+  cta: { height: 54, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },
 });

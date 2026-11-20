@@ -55,5 +55,5 @@ export function StateView({
 
 const styles = StyleSheet.create({
   box: { paddingVertical: 40, paddingHorizontal: 24, alignItems: "center", gap: 12 },
-  retry: { height: 44, paddingHorizontal: 18, borderRadius: 14, backgroundColor: colors.oceanBlue, justifyContent: "center" },
+  retry: { height: 44, paddingHorizontal: 18, borderRadius: 10, backgroundColor: colors.oceanBlue, justifyContent: "center" },
 });

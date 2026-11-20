@@ -124,6 +124,6 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   header: { flexDirection: "row", alignItems: "center", gap: 4, paddingHorizontal: 8, paddingVertical: 8 },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  card: { marginHorizontal: 20, marginTop: 8, padding: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, gap: 2 },
-  row: { marginHorizontal: 20, marginTop: 12, paddingVertical: 16, paddingHorizontal: 16, borderRadius: 16, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  card: { marginHorizontal: 20, marginTop: 8, padding: 16, borderRadius: 12, backgroundColor: colors.white, gap: 2 },
+  row: { marginHorizontal: 20, marginTop: 12, paddingVertical: 16, paddingHorizontal: 16, borderRadius: 12, backgroundColor: colors.white },
 });

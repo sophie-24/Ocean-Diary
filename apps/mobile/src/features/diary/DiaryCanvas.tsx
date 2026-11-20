@@ -49,7 +49,7 @@ const styles = StyleSheet.create({
   // White die-cut edge around "my species" stickers so they read like the crayon set.
   critter: {
     padding: 6,
-    shadowColor: "#14285A",
+    shadowColor: "#1C1C1E",
     shadowOpacity: 0.22,
     shadowRadius: 3,
     shadowOffset: { width: 0, height: 2 },

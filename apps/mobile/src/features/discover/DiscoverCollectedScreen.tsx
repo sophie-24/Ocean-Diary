@@ -135,7 +135,7 @@ export function DiscoverCollectedScreen() {
         {cand.isNewForMe ? (
           <Animated.View style={[styles.stamp, stampStyle]} accessibilityLabel="새로운 만남 도장">
             <Txt size={20} weight="black" color={colors.coral} tracking={0.06}>
-              NEW
+              신규
             </Txt>
             <Txt size={15} weight="black" color={colors.coral}>
               ENCOUNTER!
@@ -210,7 +210,7 @@ export function DiscoverCollectedScreen() {
 }
 
 const styles = StyleSheet.create({
-  root: { flex: 1, backgroundColor: "#EAF3FC" },
+  root: { flex: 1, backgroundColor: "#F0F4FA" },
   topRow: { paddingHorizontal: 12 },
   close: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   headline: { marginTop: 4, alignItems: "center", paddingHorizontal: 20, gap: 4 },
@@ -220,29 +220,22 @@ const styles = StyleSheet.create({
     paddingTop: 14,
     paddingHorizontal: 14,
     paddingBottom: 18,
-    borderRadius: 26,
+    borderRadius: 12,
     backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.line,
-    shadowColor: "#1E468C",
-    shadowOpacity: 0.16,
-    shadowRadius: 40,
-    shadowOffset: { width: 0, height: 18 },
-    elevation: 8,
   },
-  cardArt: { height: 200, borderRadius: 18, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center", overflow: "hidden" },
+  cardArt: { height: 200, borderRadius: 12, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center", overflow: "hidden" },
   meta: { flexDirection: "row", marginTop: 14 },
   metaCell: { flex: 1, alignItems: "center" },
-  metaMid: { borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#E6EEF8" },
+  metaMid: { borderLeftWidth: 1, borderRightWidth: 1, borderColor: "#E5E5EA" },
   stamp: { position: "absolute", right: -14, top: 104, paddingHorizontal: 12, paddingVertical: 8, borderWidth: 3, borderColor: colors.coral, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.85)", alignItems: "center" },
   extras: { marginTop: 18, marginHorizontal: 20, gap: 8 },
-  quest: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 18, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
-  questBadge: { width: 40, height: 40, borderRadius: 20, borderWidth: 2, borderStyle: "dashed", borderColor: colors.navy, backgroundColor: colors.sunny, alignItems: "center", justifyContent: "center" },
+  quest: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
+  questBadge: { width: 40, height: 40, borderRadius: 12, borderWidth: 2, borderStyle: "dashed", borderColor: colors.navy, backgroundColor: colors.sunny, alignItems: "center", justifyContent: "center" },
   qTrack: { height: 6, borderRadius: 3, marginTop: 6, backgroundColor: "#F3DE95", overflow: "hidden" },
   qFill: { height: 6, borderRadius: 3, backgroundColor: colors.navy },
-  seaLink: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  seaLink: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.white },
   bottom: { marginTop: "auto", marginHorizontal: 20, marginBottom: 16, gap: 10 },
-  primary: { height: 54, borderRadius: 18, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
-  secondary: { flex: 1, height: 50, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  square: { width: 50, height: 50, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  primary: { height: 54, borderRadius: 12, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  secondary: { flex: 1, height: 50, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  square: { width: 50, height: 50, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
 });

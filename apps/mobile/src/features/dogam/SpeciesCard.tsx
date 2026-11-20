@@ -90,8 +90,8 @@ function SpeciesCardBase({ species, collected, isNew, onPress }: Props) {
 export const SpeciesCard = memo(SpeciesCardBase);
 
 const styles = StyleSheet.create({
-  card: { flex: 1, alignItems: "center", gap: 8, paddingTop: 26, paddingBottom: 12, paddingHorizontal: 8, borderRadius: 22 },
-  gotCard: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  card: { flex: 1, alignItems: "center", gap: 8, paddingTop: 26, paddingBottom: 12, paddingHorizontal: 8, borderRadius: 12 },
+  gotCard: { backgroundColor: colors.white },
   ghostCard: { backgroundColor: colors.ghostBg, borderWidth: 1.5, borderColor: colors.ghostLine, borderStyle: "dashed" },
   no: { position: "absolute", left: 12, top: 10 },
   newBadge: { position: "absolute", right: 10, top: 8, paddingHorizontal: 7, paddingVertical: 1, borderRadius: 999, backgroundColor: colors.coral },
@@ -105,6 +105,6 @@ const styles = StyleSheet.create({
     borderColor: colors.pillLine,
   },
   ghostTag: { borderStyle: "dashed", borderColor: colors.ghostLine, backgroundColor: colors.white, paddingHorizontal: 14 },
-  noArt: { width: ART_W, height: ART_H, borderRadius: 14, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center", gap: 4 },
+  noArt: { width: ART_W, height: ART_H, borderRadius: 10, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center", gap: 4 },
   noArtGhost: { width: ART_W, height: ART_H, alignItems: "center", justifyContent: "center" },
 });

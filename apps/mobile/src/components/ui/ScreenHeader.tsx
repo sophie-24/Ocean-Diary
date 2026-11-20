@@ -5,7 +5,7 @@ import { colors } from "../../theme/tokens";
 
 type Props = { eyebrow: string; title: string; actions?: ReactNode; tone?: "light" | "dark" };
 
-/** Eyebrow (blue caps) + large title, as used on 홈/도감/로그북 headers in the canvas. */
+/** Eyebrow label + large title. v3: eyebrow uses size/weight/color hierarchy, not uppercase overlines. */
 export function ScreenHeader({ eyebrow, title, actions, tone = "light" }: Props) {
   const dark = tone === "dark";
   return (
@@ -37,7 +37,7 @@ const styles = StyleSheet.create({
   round: {
     width: 44,
     height: 44,
-    borderRadius: 22,
+    borderRadius: 12,
     borderWidth: 1,
     borderColor: colors.line,
     backgroundColor: colors.white,

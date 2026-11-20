@@ -105,7 +105,7 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }} accessibilityLabel="글감 추천">
             {PROMPTS.map((p) => (
               <Pressable key={p} accessibilityRole="button" onPress={() => addPrompt(p)} style={styles.prompt}>
-                <Txt size={13} weight="bold" color="#1F4FA8">
+                <Txt size={13} weight="bold" color="#2563EB">
                   + {p}
                 </Txt>
               </Pressable>
@@ -130,7 +130,7 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
                   띄어쓰기·맞춤법만 살짝 다듬기
                 </Txt>
               </View>
-              <Txt size={12} weight="bold" color={len > 450 ? "#A8382A" : colors.ink2} accessibilityLiveRegion="polite">
+              <Txt size={12} weight="bold" color={len > 450 ? "#DC2626" : colors.ink2} accessibilityLiveRegion="polite">
                 {len} / {DIARY_MAX}
               </Txt>
             </View>
@@ -190,12 +190,12 @@ const styles = StyleSheet.create({
   metaRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   metaChip: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
   prompt: { height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: colors.sky, justifyContent: "center" },
-  paper: { borderRadius: 20, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", padding: 14, gap: 8 },
+  paper: { borderRadius: 12, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", padding: 14, gap: 8 },
   textarea: { minHeight: 220, fontFamily: fonts.diary, fontSize: 20, lineHeight: 30, color: "#2B2B2B" },
   paperFoot: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  preview: { gap: 10, padding: 12, borderRadius: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  preview: { gap: 10, padding: 12, borderRadius: 12, backgroundColor: colors.white },
   footerError: { position: "absolute", left: 16, right: 16, top: -22 },
   footer: { position: "absolute", left: 0, right: 0, bottom: 0, flexDirection: "row", gap: 8, paddingTop: 12, paddingHorizontal: 16, backgroundColor: "rgba(255,255,255,0.97)", borderTopWidth: 1, borderTopColor: colors.line },
-  secondary: { width: 112, height: 52, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  primary: { flex: 1, height: 52, borderRadius: 16, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  secondary: { width: 112, height: 52, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  primary: { flex: 1, height: 52, borderRadius: 12, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

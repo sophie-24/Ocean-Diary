@@ -51,8 +51,8 @@ function SiteStampCardBase({ site }: { site: SiteEntry }) {
 export const SiteStampCard = memo(SiteStampCardBase);
 
 const styles = StyleSheet.create({
-  card: { flex: 1, paddingVertical: 14, paddingHorizontal: 10, borderRadius: 22 },
-  got: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  card: { flex: 1, paddingVertical: 14, paddingHorizontal: 10, borderRadius: 12 },
+  got: { backgroundColor: colors.white },
   ghost: { backgroundColor: colors.ghostBg, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.ghostLine },
   stampWrap: { width: STAMP, height: STAMP, alignSelf: "center", marginTop: 2 },
   stamp: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: STAMP / 2, overflow: "hidden" },

@@ -252,7 +252,7 @@ export function SeaMapScreen({ mapBookTab }: SeaMapScreenProps = {}) {
           }}
           onFocus={() => setFocus(true)}
           placeholder="나라나 지역 찾기 (예: 필리핀, 말라파스쿠아)"
-          placeholderTextColor="#8C9AB5"
+          placeholderTextColor={colors.ink3}
           accessibilityLabel="나라나 지역 검색"
           style={styles.searchInput}
           returnKeyType="search"
@@ -482,17 +482,17 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   header: { flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 12 },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  stat: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center" },
-  search: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 10, marginHorizontal: 16, height: 46, paddingHorizontal: 14, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
+  stat: { paddingVertical: 6, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center" },
+  search: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 10, marginHorizontal: 16, height: 46, paddingHorizontal: 14, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
   searchInput: { flex: 1, fontFamily: fonts.medium, fontSize: 14, color: colors.navy, paddingVertical: 0 },
-  results: { position: "absolute", top: 160, left: 16, right: 16, zIndex: 10, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden", elevation: 6, shadowColor: "#1E468C", shadowOpacity: 0.15, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
+  results: { position: "absolute", top: 160, left: 16, right: 16, zIndex: 10, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden", elevation: 6, shadowColor: "#1C1C1E", shadowOpacity: 0.15, shadowRadius: 16, shadowOffset: { width: 0, height: 8 } },
   chipRow: { gap: 6, paddingHorizontal: 10, paddingTop: 10, paddingBottom: 6 },
   chip: { height: 30, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1.5, justifyContent: "center" },
   chipOn: { backgroundColor: colors.navy, borderColor: colors.navy },
   chipOff: { backgroundColor: colors.white, borderColor: colors.lineStrong },
-  resultRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: "#EDF2F9" },
+  resultRow: { flexDirection: "row", alignItems: "center", gap: 10, paddingVertical: 10, paddingHorizontal: 12, borderBottomWidth: 1, borderBottomColor: colors.line },
   resultIcon: { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
-  flagIcon: { width: 44, height: 44, borderRadius: 22, alignItems: "center", justifyContent: "center", backgroundColor: colors.mist, borderWidth: 1, borderColor: colors.line },
+  flagIcon: { width: 44, height: 44, borderRadius: 12, alignItems: "center", justifyContent: "center", backgroundColor: colors.mist, borderWidth: 1, borderColor: colors.line },
   flagIconVisited: { backgroundColor: "#DFEBFC", borderColor: colors.oceanBlue },
   flagText: { lineHeight: 30 },
   presets: { flexDirection: "row", gap: 6, marginTop: 10, paddingHorizontal: 16 },
@@ -503,12 +503,12 @@ const styles = StyleSheet.create({
   badge: { position: "absolute", height: 28, paddingLeft: 6, paddingRight: 10, borderRadius: 999, backgroundColor: "rgba(255,255,255,0.95)", flexDirection: "row", alignItems: "center", gap: 5 },
   badgeDot: { width: 10, height: 10, borderRadius: 5, backgroundColor: colors.oceanBlue },
   pin: { position: "absolute", flexDirection: "row", alignItems: "center", gap: 4 },
-  pinDot: { width: 32, height: 32, borderRadius: 16, borderWidth: 3, borderColor: colors.white, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  pinDot: { width: 32, height: 32, borderRadius: 12, borderWidth: 3, borderColor: colors.white, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
   pinDotOn: { backgroundColor: colors.navy, transform: [{ scale: 1.15 }] },
   pinTag: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.92)" },
-  sheet: { position: "absolute", left: 0, right: 0, bottom: 0, paddingTop: 14, paddingHorizontal: 20, gap: 10, backgroundColor: colors.white, borderTopLeftRadius: 24, borderTopRightRadius: 24, shadowColor: "#1E468C", shadowOpacity: 0.15, shadowRadius: 24, shadowOffset: { width: 0, height: -8 }, elevation: 10 },
+  sheet: { position: "absolute", left: 0, right: 0, bottom: 0, paddingTop: 14, paddingHorizontal: 20, gap: 10, backgroundColor: colors.white, borderTopLeftRadius: 12, borderTopRightRadius: 12, shadowColor: "#1C1C1E", shadowOpacity: 0.15, shadowRadius: 24, shadowOffset: { width: 0, height: -8 }, elevation: 10 },
   sheetHead: { flexDirection: "row", alignItems: "flex-start" },
   kindChip: { width: 68, height: 46, borderRadius: 12, backgroundColor: colors.mist, alignItems: "center", justifyContent: "center" },
-  secondary: { width: 110, height: 48, borderRadius: 14, borderWidth: 1.5, borderColor: colors.lineStrong, alignItems: "center", justifyContent: "center" },
-  primary: { flex: 1, height: 48, borderRadius: 14, backgroundColor: colors.navy, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  secondary: { width: 110, height: 48, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, alignItems: "center", justifyContent: "center" },
+  primary: { flex: 1, height: 48, borderRadius: 10, backgroundColor: colors.navy, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

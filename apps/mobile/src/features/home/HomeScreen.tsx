@@ -121,7 +121,7 @@ export function HomeScreen() {
             <Txt size={14} weight="extraBold" color={colors.white}>
               {pending ? `식별하던 사진 ${pending}장이 남아 있어요` : "다이빙 사진 속 친구를 찾아볼까요?"}
             </Txt>
-            <Txt size={12} color="#C3D8F5">
+            <Txt size={12} color="#B0C4DE">
               {pending ? "멈춘 곳부터 이어서 할 수 있어요" : "사진을 고르면 AI가 생물 이름을 알려줘요"}
             </Txt>
           </View>
@@ -159,7 +159,7 @@ export function HomeScreen() {
                 </View>
                 {facts?.iucn ? (
                   <View style={styles.iucnChip}>
-                    <Txt size={12} weight="bold" color="#A8382A">
+                    <Txt size={12} weight="bold" color={colors.coral}>
                       {facts.iucn}
                     </Txt>
                   </View>
@@ -167,7 +167,7 @@ export function HomeScreen() {
               </View>
               {facts ? (
                 <>
-                  <Txt size={15} color="#34466E" style={{ lineHeight: 25 }}>
+                  <Txt size={15} color={colors.ink2} style={{ lineHeight: 25 }}>
                     {facts.didYouKnow}
                   </Txt>
                   <View style={styles.factGrid}>
@@ -176,7 +176,7 @@ export function HomeScreen() {
                   </View>
                 </>
               ) : (
-                <Txt size={15} color="#34466E" style={{ lineHeight: 25 }}>
+                <Txt size={15} color={colors.ink2} style={{ lineHeight: 25 }}>
                   {friend.group} 친구예요. 다음 다이빙에서 만나 보세요!
                 </Txt>
               )}
@@ -227,8 +227,8 @@ export function HomeScreen() {
                 style={styles.recentCard}
               >
                 <View style={[styles.recentBadge, { backgroundColor: r.firstTime ? colors.coral : colors.sky }]}>
-                  <Txt size={11} weight="extraBold" color={r.firstTime ? colors.white : "#1F4FA8"}>
-                    {r.firstTime ? "NEW · 첫 만남" : `${r.round}번째 만남`}
+                  <Txt size={11} weight="extraBold" color={r.firstTime ? colors.white : colors.oceanBlue}>
+                    {r.firstTime ? "신규 · 첫 만남" : `${r.round}번째 만남`}
                   </Txt>
                 </View>
                 <Critter kind={r.kind} width={148} height={76} />
@@ -261,9 +261,9 @@ export function HomeScreen() {
             <Txt size={16} weight="black">
               도감 {goal}종 채우기
             </Txt>
-            <Txt size={13} color="#34466E">
+            <Txt size={13} color={colors.ink2}>
               새로운 생물을{" "}
-              <Txt size={13} weight="bold" color="#34466E">
+              <Txt size={13} weight="bold" color={colors.ink2}>
                 {Math.max(goal - got, 0)}종
               </Txt>{" "}
               더 발견하면 배지를 받아요!
@@ -326,40 +326,40 @@ const styles = StyleSheet.create({
   row8: { flexDirection: "row", alignItems: "center", gap: 8 },
   wrapRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
   spaceBetween: { flexDirection: "row", justifyContent: "space-between", alignItems: "baseline" },
-  iconBtn: { width: 44, height: 44, borderRadius: 22, borderWidth: 1, borderColor: colors.line, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  iconBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   badgeDot: { position: "absolute", top: 10, right: 11, width: 10, height: 10, borderRadius: 5, backgroundColor: colors.coral, borderWidth: 2, borderColor: colors.white },
   avatar: { width: 44, height: 44, borderRadius: 22, borderWidth: 2, borderColor: colors.pillLine, backgroundColor: colors.sky, alignItems: "center", justifyContent: "center" },
-  card: { marginHorizontal: 20, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  card: { marginHorizontal: 20, borderRadius: 12, backgroundColor: colors.white },
   progressCard: { marginTop: 16, paddingVertical: 14, paddingHorizontal: 16, gap: 10 },
   track: { height: 8, borderRadius: 4, backgroundColor: colors.track, overflow: "hidden" },
   fill: { height: 8, borderRadius: 4, backgroundColor: colors.oceanBlue },
-  banner: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 20, backgroundColor: colors.navy },
+  banner: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.navy },
   photoStack: { width: 66, height: 50 },
   photo: { position: "absolute", width: 44, height: 44, borderRadius: 10, borderWidth: 2, borderColor: colors.navy },
   photoTop: { left: 22, top: 0, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  bannerCta: { height: 36, paddingHorizontal: 12, borderRadius: 12, backgroundColor: colors.white, justifyContent: "center" },
-  friend: { marginTop: 16, marginHorizontal: 20, borderRadius: 28, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden" },
-  friendArt: { height: 214, backgroundColor: "#EAF3FC", overflow: "hidden" },
+  bannerCta: { height: 36, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.white, justifyContent: "center" },
+  friend: { marginTop: 16, marginHorizontal: 20, borderRadius: 12, backgroundColor: colors.white, overflow: "hidden" },
+  friendArt: { height: 214, backgroundColor: colors.ghostBg, overflow: "hidden" },
   friendPill: { position: "absolute", left: 14, top: 14, flexDirection: "row", alignItems: "center", gap: 6, paddingVertical: 6, paddingHorizontal: 12, borderRadius: 999, backgroundColor: colors.navy },
   friendTag: { position: "absolute", bottom: 12 },
   friendBody: { paddingTop: 16, paddingHorizontal: 20, paddingBottom: 20, gap: 12 },
-  dashedChip: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, borderWidth: 1.5, borderStyle: "dashed", borderColor: "#9BB2D1" },
-  iucnChip: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, backgroundColor: "#FDECEA" },
+  dashedChip: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.ink3 },
+  iucnChip: { paddingVertical: 3, paddingHorizontal: 9, borderRadius: 999, backgroundColor: "#FEE2E2" },
   factGrid: { flexDirection: "row", gap: 8 },
-  fact: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 14, backgroundColor: colors.mist },
-  primaryBtn: { flex: 1, height: 50, borderRadius: 16, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
-  squareBtn: { width: 50, height: 50, borderRadius: 16, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  fact: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.ghostBg },
+  primaryBtn: { flex: 1, height: 50, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  squareBtn: { width: 50, height: 50, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   sectionHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", paddingHorizontal: 20, marginTop: 28 },
   recentRow: { gap: 12, paddingHorizontal: 20, paddingTop: 14, paddingBottom: 6 },
-  recentCard: { width: 168, paddingTop: 14, paddingHorizontal: 10, paddingBottom: 12, borderRadius: 22, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center", gap: 8 },
+  recentCard: { width: 168, paddingTop: 14, paddingHorizontal: 10, paddingBottom: 12, borderRadius: 12, backgroundColor: colors.white, alignItems: "center", gap: 8 },
   recentBadge: { alignSelf: "flex-start", paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999 },
-  quest: { flexDirection: "row", alignItems: "center", gap: 14, marginTop: 12, marginHorizontal: 20, padding: 16, borderRadius: 22, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
+  quest: { flexDirection: "row", alignItems: "center", gap: 14, marginTop: 12, marginHorizontal: 20, padding: 16, borderRadius: 12, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
   questBadge: { width: 64, height: 64, borderRadius: 32, borderWidth: 2, borderStyle: "dashed", borderColor: colors.navy, backgroundColor: colors.sunny, alignItems: "center", justifyContent: "center" },
-  regular: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 10, marginHorizontal: 20, paddingVertical: 10, paddingLeft: 10, paddingRight: 16, borderRadius: 20, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  regular: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 10, marginHorizontal: 20, paddingVertical: 10, paddingLeft: 10, paddingRight: 16, borderRadius: 12, backgroundColor: colors.white },
   pip: { width: 10, height: 10, borderRadius: 5 },
   pipOn: { backgroundColor: colors.oceanBlue },
   pipOff: { borderWidth: 2, borderColor: colors.ghostLine },
-  community: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 14, paddingLeft: 16, paddingRight: 12, borderRadius: 22, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  community: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 14, paddingLeft: 16, paddingRight: 12, borderRadius: 12, backgroundColor: colors.white },
   commAvatar: { width: 40, height: 40, borderRadius: 20, backgroundColor: colors.sky, alignItems: "center", justifyContent: "center" },
-  commThumb: { width: 72, height: 56, borderRadius: 14, backgroundColor: colors.ghostBg, alignItems: "center", justifyContent: "center" },
+  commThumb: { width: 72, height: 56, borderRadius: 10, backgroundColor: colors.ghostBg, alignItems: "center", justifyContent: "center" },
 });

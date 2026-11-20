@@ -245,7 +245,7 @@ const styles = StyleSheet.create({
   card: {
     marginBottom: 24,
     padding: 24,
-    borderRadius: 24,
+    borderRadius: 12,
     backgroundColor: colors.white,
     alignItems: "center",
     gap: 10,
@@ -266,7 +266,7 @@ const styles = StyleSheet.create({
   dotOn: { width: 22, backgroundColor: colors.oceanBlue },
   dotOff: { width: 8, backgroundColor: colors.line },
   footer: { flexDirection: "row", gap: 10, marginTop: 20, alignSelf: "stretch" },
-  btn: { flex: 1, paddingVertical: 14, borderRadius: 16, alignItems: "center" },
+  btn: { flex: 1, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
   btnPrimary: { backgroundColor: colors.oceanBlue },
   btnGhost: { backgroundColor: colors.mist, borderWidth: 1, borderColor: colors.line },
   btnSpacer: { backgroundColor: "transparent" },

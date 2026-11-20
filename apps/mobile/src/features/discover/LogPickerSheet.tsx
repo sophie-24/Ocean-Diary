@@ -101,9 +101,9 @@ export function LogPickerSheet({ date, logs, selectedId, onPick, onClose }: Prop
 
 const styles = StyleSheet.create({
   scrim: { flex: 1, backgroundColor: "rgba(9,25,56,0.45)" },
-  sheet: { paddingTop: 10, paddingHorizontal: 20, backgroundColor: colors.mist, borderTopLeftRadius: 26, borderTopRightRadius: 26 },
+  sheet: { paddingTop: 10, paddingHorizontal: 20, backgroundColor: colors.mist, borderTopLeftRadius: 12, borderTopRightRadius: 12 },
   grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.lineStrong, marginBottom: 12 },
-  row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 56, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
-  rowOn: { borderColor: colors.oceanBlue, backgroundColor: "#EAF3FC" },
+  row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 56, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
+  rowOn: { borderColor: colors.oceanBlue, backgroundColor: "#F0F4FA" },
   label: { minWidth: 44, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 8, backgroundColor: colors.sky, alignItems: "center" },
 });

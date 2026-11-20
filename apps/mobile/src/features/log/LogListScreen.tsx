@@ -15,7 +15,7 @@ type Filter = "all" | LogKind;
 
 const TYPE_BADGE: Record<LogKind, { text: string; bg: string; fg: string; border?: string }> = {
   scuba: { text: "SCUBA", bg: colors.navy, fg: colors.white },
-  free: { text: "FREE", bg: colors.white, fg: "#1F4FA8", border: colors.oceanBlue },
+  free: { text: "FREE", bg: colors.white, fg: colors.oceanBlue, border: colors.oceanBlue },
   snorkel: { text: "SNORKEL", bg: "#FFF4D1", fg: "#8A5A00", border: colors.sunny },
 };
 
@@ -151,10 +151,10 @@ function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: 
           </View>
         </View>
         <View style={styles.postmark}>
-          <Txt size={10} weight="black" color="#1F4FA8">
+          <Txt size={10} weight="black" color={colors.oceanBlue}>
             {MONTHS[Number(m) - 1]}
           </Txt>
-          <Txt size={13} weight="black" color="#1F4FA8" style={{ lineHeight: 14 }}>
+          <Txt size={13} weight="black" color={colors.oceanBlue} style={{ lineHeight: 14 }}>
             {d}
           </Txt>
         </View>
@@ -183,7 +183,7 @@ function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: 
         <Txt size={12} color={colors.ink2}>
           {log.region} · {log.point}
         </Txt>
-        <Txt size={12} weight="medium" color="#34466E" style={{ fontVariant: ["tabular-nums"] }}>
+        <Txt size={12} weight="medium" color={colors.ink2} style={{ fontVariant: ["tabular-nums"] }}>
           {log.summary}
         </Txt>
         {log.stickers.length > 0 ? (
@@ -207,16 +207,16 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   addBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
   stats: { flexDirection: "row", gap: 8, marginTop: 14, marginHorizontal: 20 },
-  stat: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
-  segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 14, backgroundColor: colors.track },
+  stat: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, backgroundColor: colors.white },
+  segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 10, backgroundColor: colors.track },
   segItem: { flex: 1, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: colors.white },
   month: { marginTop: 20, marginBottom: 10, marginHorizontal: 20 },
-  card: { flexDirection: "row", alignItems: "center", gap: 14, marginHorizontal: 20, padding: 12, borderRadius: 22, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
-  stampFrame: { width: 86, height: 104, padding: 5, backgroundColor: "#EAF3FC", borderWidth: 4, borderStyle: "dotted", borderColor: colors.white, shadowColor: "#1E468C", shadowOpacity: 0.16, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
+  card: { flexDirection: "row", alignItems: "center", gap: 14, marginHorizontal: 20, padding: 12, borderRadius: 12, backgroundColor: colors.white },
+  stampFrame: { width: 86, height: 104, padding: 5, backgroundColor: colors.ghostBg, borderWidth: 4, borderStyle: "dotted", borderColor: colors.white, shadowColor: "#1C1C1E", shadowOpacity: 0.16, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
   stampInner: { flex: 1, alignItems: "center", justifyContent: "center", overflow: "hidden" },
   glare: { position: "absolute", left: -10, top: -20, width: 26, height: 140, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "20deg" }] },
-  postmark: { position: "absolute", right: -14, top: -10, width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: "#1F4FA8", backgroundColor: "rgba(255,255,255,0.85)", alignItems: "center", justifyContent: "center", transform: [{ rotate: "-12deg" }] },
+  postmark: { position: "absolute", right: -14, top: -10, width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: colors.oceanBlue, backgroundColor: "rgba(255,255,255,0.85)", alignItems: "center", justifyContent: "center", transform: [{ rotate: "-12deg" }] },
   row6: { flexDirection: "row", alignItems: "center", gap: 6 },
   badge: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 6, borderWidth: 1.5 },
   draft: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 999, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },

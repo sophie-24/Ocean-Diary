@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   cta: {
     height: 52,
     paddingHorizontal: 28,
-    borderRadius: 16,
+    borderRadius: 12,
     backgroundColor: colors.oceanBlue,
     alignItems: "center",
     justifyContent: "center",

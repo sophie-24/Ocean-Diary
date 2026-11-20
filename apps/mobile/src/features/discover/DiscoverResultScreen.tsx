@@ -186,7 +186,7 @@ export function DiscoverResultScreen() {
                         {band.label}
                       </Txt>
                     </View>
-                    <Txt size={12} color={mark ? colors.ink2 : "#A8382A"}>
+                    <Txt size={12} color={mark ? colors.ink2 : "#DC2626"}>
                       {note}
                     </Txt>
                   </View>
@@ -223,7 +223,7 @@ export function DiscoverResultScreen() {
                   value={q}
                   onChangeText={setQ}
                   placeholder="생물 이름 (예: 만다린피쉬)"
-                  placeholderTextColor="#8C9AB5"
+                  placeholderTextColor={colors.ink3}
                   accessibilityLabel="생물 이름으로 찾기"
                   autoFocus={candidates.length > 0}
                   style={styles.searchInput}
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
   box: { position: "absolute", left: 16, right: 18, top: 120, height: 176, borderWidth: 2.5, borderColor: colors.sunny, borderRadius: 10 },
   boxLabel: { position: "absolute", left: 16, bottom: 44, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, backgroundColor: colors.sunny },
   topBar: { position: "absolute", left: 0, right: 0, top: 0, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 },
-  glassBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(9,25,56,0.45)", alignItems: "center", justifyContent: "center" },
+  glassBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(9,25,56,0.45)", alignItems: "center", justifyContent: "center" },
   glassPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: "rgba(9,25,56,0.45)" },
   scrubber: { position: "absolute", left: 20, right: 20, top: 334, gap: 6 },
   scrubLabels: { flexDirection: "row", justifyContent: "space-between" },
@@ -313,24 +313,24 @@ const styles = StyleSheet.create({
   scrubTrack: { height: 6, borderRadius: 3, backgroundColor: "rgba(255,255,255,0.3)" },
   scrubHit: { position: "absolute", height: 6, borderRadius: 3, backgroundColor: colors.sunny },
   knob: { position: "absolute", top: -5, width: 16, height: 16, marginLeft: -8, borderRadius: 8, backgroundColor: colors.white },
-  sheet: { flex: 1, marginTop: -28, paddingTop: 10, paddingHorizontal: 20, backgroundColor: colors.mist, borderTopLeftRadius: 28, borderTopRightRadius: 28 },
+  sheet: { flex: 1, marginTop: -28, paddingTop: 10, paddingHorizontal: 20, backgroundColor: colors.mist, borderTopLeftRadius: 12, borderTopRightRadius: 12 },
   grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.lineStrong },
   ctxRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
-  cand: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderRadius: 20, borderWidth: 2 },
-  candOn: { backgroundColor: "#EAF3FC", borderColor: colors.oceanBlue },
+  cand: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderRadius: 12, borderWidth: 2 },
+  candOn: { backgroundColor: "#F0F4FA", borderColor: colors.oceanBlue },
   candOff: { backgroundColor: colors.white, borderColor: colors.line },
-  candArt: { width: 76, height: 60, borderRadius: 14, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center", justifyContent: "center" },
+  candArt: { width: 76, height: 60, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center", justifyContent: "center" },
   track: { flex: 1, height: 6, borderRadius: 3, backgroundColor: colors.track, overflow: "hidden" },
   fill: { height: 6, borderRadius: 3 },
   radio: { width: 22, height: 22, borderRadius: 11, backgroundColor: colors.white },
   radioOn: { borderWidth: 7, borderColor: colors.oceanBlue },
   radioOff: { borderWidth: 2, borderColor: "#A9BEDD" },
   manual: { alignSelf: "center", height: 44, justifyContent: "center", marginTop: 4 },
-  searchBox: { marginTop: 12, padding: 12, borderRadius: 18, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, gap: 4 },
+  searchBox: { marginTop: 12, padding: 12, borderRadius: 12, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, gap: 4 },
   searchRow: { flexDirection: "row", alignItems: "center", gap: 8, height: 44, paddingHorizontal: 10, borderRadius: 12, backgroundColor: colors.mist },
   searchInput: { flex: 1, fontFamily: fonts.regular, fontSize: 15, color: colors.navy },
   searchItem: { paddingVertical: 10, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: colors.line },
   actions: { flexDirection: "row", gap: 10, paddingTop: 8 },
-  noBtn: { width: 110, height: 54, borderRadius: 18, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  yesBtn: { flex: 1, height: 54, borderRadius: 18, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  noBtn: { width: 110, height: 54, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  yesBtn: { flex: 1, height: 54, borderRadius: 12, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

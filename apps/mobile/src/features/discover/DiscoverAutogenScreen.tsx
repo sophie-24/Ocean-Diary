@@ -90,7 +90,7 @@ function Hero() {
         </View>
       </View>
       <View style={styles.heroNote}>
-        <Txt size={12} color="#1F4FA8" style={{ lineHeight: 18 }}>
+        <Txt size={12} color="#2563EB" style={{ lineHeight: 18 }}>
           우리 도감에 아직 없는 친구예요. Mola가 <Txt weight="black" color={colors.navy}>수채화 화풍</Txt>으로 일러스트를 그리고 있어요.
         </Txt>
       </View>
@@ -213,7 +213,7 @@ const styles = StyleSheet.create({
   back: {
     width: 36,
     height: 36,
-    borderRadius: 18,
+    borderRadius: 12,
     backgroundColor: colors.white,
     borderWidth: 1,
     borderColor: colors.line,
@@ -223,16 +223,14 @@ const styles = StyleSheet.create({
   hero: {
     marginHorizontal: 20,
     padding: 18,
-    borderRadius: 22,
+    borderRadius: 12,
     backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.lineStrong,
   },
   heroRow: { flexDirection: "row", gap: 14, alignItems: "flex-start" },
   userPhoto: {
     width: 76,
     height: 76,
-    borderRadius: 14,
+    borderRadius: 10,
     backgroundColor: colors.navy,
     alignItems: "center",
     justifyContent: "center",
@@ -254,15 +252,13 @@ const styles = StyleSheet.create({
   card: {
     marginHorizontal: 20,
     padding: 16,
-    borderRadius: 22,
+    borderRadius: 12,
     backgroundColor: colors.white,
-    borderWidth: 1,
-    borderColor: colors.line,
   },
   cardTitle: { flexDirection: "row", alignItems: "center", gap: 6, marginBottom: 10, flexWrap: "wrap" },
   shimmerBox: {
     height: 160,
-    borderRadius: 14,
+    borderRadius: 10,
     backgroundColor: colors.ghostBg,
     alignItems: "center",
     justifyContent: "center",
@@ -286,7 +282,7 @@ const styles = StyleSheet.create({
   notice: {
     marginHorizontal: 20,
     padding: 12,
-    borderRadius: 14,
+    borderRadius: 10,
     backgroundColor: "#FFF8E0",
     borderWidth: 1,
     borderColor: "#F3DE95",
@@ -303,7 +299,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   ctaRow: { flexDirection: "row", gap: 10, marginHorizontal: 20, marginTop: 4 },
-  cta: { height: 50, borderRadius: 14, alignItems: "center", justifyContent: "center" },
+  cta: { height: 50, borderRadius: 10, alignItems: "center", justifyContent: "center" },
   ctaGhost: { flex: 0.4, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.lineStrong },
   ctaPrimary: { flex: 0.6, backgroundColor: colors.oceanBlue },
 });
