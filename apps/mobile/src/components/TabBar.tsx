@@ -5,14 +5,17 @@ import * as Haptics from "expo-haptics";
 import { Txt } from "./ui/Txt";
 import { colors, shadow } from "../theme/tokens";
 
-export type TabKey = "index" | "dogam" | "discover" | "log" | "sea";
+// v4: 나의 바다 탭 숨김 — 배포 후 재활성화 예정
+// export type TabKey = "index" | "dogam" | "discover" | "log" | "sea";
+export type TabKey = "index" | "dogam" | "discover" | "log";
 
 const TABS: Record<TabKey, { label: string; a11y: string }> = {
   index: { label: "홈", a11y: "홈" },
   dogam: { label: "도감", a11y: "도감" },
   discover: { label: "발견", a11y: "발견 · 사진이나 영상 올리기" },
   log: { label: "로그북", a11y: "로그북" },
-  sea: { label: "나의 바다", a11y: "나의 바다" },
+  // v4: 나의 바다 탭 숨김
+  // sea: { label: "나의 바다", a11y: "나의 바다" },
 };
 
 function TabIcon({ tab, color }: { tab: TabKey; color: string }) {
@@ -47,21 +50,24 @@ function TabIcon({ tab, color }: { tab: TabKey; color: string }) {
           <Path d="M12 8.5 H16 M12 12 H16" {...common} />
         </Svg>
       );
-    case "sea":
-      return (
-        <Svg width={22} height={22} viewBox="0 0 24 24">
-          <Path d="M12 3 C8.7 3 6.5 5.4 6.5 8.4 C6.5 12.3 12 16.5 12 16.5 C12 16.5 17.5 12.3 17.5 8.4 C17.5 5.4 15.3 3 12 3 Z" {...common} />
-          <Circle cx={12} cy={8.5} r={2} {...common} />
-          <Path d="M3 20.5 Q6 18.5 9 20.5 T15 20.5 T21 20.5" {...common} />
-        </Svg>
-      );
+    // v4: 나의 바다 탭 숨김
+    // case "sea":
+    //   return (
+    //     <Svg width={22} height={22} viewBox="0 0 24 24">
+    //       <Path d="M12 3 C8.7 3 6.5 5.4 6.5 8.4 C6.5 12.3 12 16.5 12 16.5 C12 16.5 17.5 12.3 17.5 8.4 C17.5 5.4 15.3 3 12 3 Z" {...common} />
+    //       <Circle cx={12} cy={8.5} r={2} {...common} />
+    //       <Path d="M3 20.5 Q6 18.5 9 20.5 T15 20.5 T21 20.5" {...common} />
+    //     </Svg>
+    //   );
   }
 }
 
-/** Five-tab bar from the design canvas: 홈 · 도감 · (발견) · 로그북 · 나의 바다. Dark on the aquarium tab. */
+/** Four-tab bar: 홈 · 도감 · (발견) · 로그북. v4: 나의 바다 탭 숨김 — 배포 후 재활성화 예정 */
 export function TabBar({ state, navigateToTab, insets }: BottomTabBarProps) {
   const activeName = state.routes[state.index]?.name;
-  const dark = activeName === "sea";
+  // v4: 나의 바다 탭 숨김 — dark mode bar 비활성화
+  // const dark = activeName === "sea";
+  const dark = false;
   // The 발견 picker is a full-screen task with its own bottom sheet, like the design.
   if (activeName === "discover") return null;
   const bar = dark

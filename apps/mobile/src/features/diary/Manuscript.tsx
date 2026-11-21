@@ -4,7 +4,8 @@ import { Txt } from "../../components/ui/Txt";
 import { fonts } from "../../theme/tokens";
 
 const COLS = 12;
-const INK = "#E9A3A3";
+const INK = "#9EC3F0";
+const LINE = 1.5;
 
 /**
  * 원고지 (Korean manuscript grid). Each character takes one cell; a newline jumps to the next row.
@@ -26,7 +27,7 @@ function ManuscriptBase({ text, rows = 6, cell = 26 }: { text: string; rows?: nu
 
   return (
     <View
-      style={[styles.grid, { width: cell * COLS + 2 }]}
+      style={[styles.grid, { width: cell * COLS + LINE }]}
       accessible
       accessibilityLabel={`원고지: ${text.slice(0, 200)}`}
     >
@@ -34,7 +35,7 @@ function ManuscriptBase({ text, rows = 6, cell = 26 }: { text: string; rows?: nu
         <View key={r} style={[styles.row, { height: cell }]}>
           {shown.slice(r * COLS, r * COLS + COLS).map((c, i) => (
             <View key={i} style={[styles.cell, { width: cell, height: cell }]}>
-              <Txt size={cell * 0.66} color="#2B2B2B" style={{ fontFamily: fonts.diary, lineHeight: cell }}>
+              <Txt size={cell * 0.68} color="#24346A" style={{ fontFamily: fonts.diary, lineHeight: cell }}>
                 {c}
               </Txt>
             </View>
@@ -51,7 +52,7 @@ export const Manuscript = memo(ManuscriptBase);
 export const manuscriptPages = (len: number) => (len <= 72 ? 1 : 1 + Math.ceil((len - 72) / 216));
 
 const styles = StyleSheet.create({
-  grid: { borderWidth: 1, borderColor: INK, backgroundColor: "#FFFDF7" },
+  grid: { borderTopWidth: LINE, borderLeftWidth: LINE, borderColor: INK },
   row: { flexDirection: "row" },
-  cell: { borderRightWidth: StyleSheet.hairlineWidth, borderBottomWidth: StyleSheet.hairlineWidth, borderColor: INK, alignItems: "center", justifyContent: "center" },
+  cell: { borderRightWidth: LINE, borderBottomWidth: LINE, borderColor: INK, alignItems: "center", justifyContent: "center" },
 });

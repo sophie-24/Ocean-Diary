@@ -1,49 +1,38 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Alert, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Critter } from "../../components/Critter";
-import { ChevronLeft } from "../../components/icons";
+import { CheckIcon, ChevronLeft } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
-import { colors, fonts } from "../../theme/tokens";
-import { Manuscript } from "../diary/Manuscript";
-import { DRAW_W, DiaryCanvas } from "../diary/DiaryCanvas";
-import { useWindowDimensions } from "react-native";
-import { KIND_LABEL } from "./logStore";
+import { SPECIES } from "../../data/species";
+import { colors } from "../../theme/tokens";
+import type { DiveLog } from "./logStore";
 import { useDeleteDiveLog, useDiveLog } from "../../api/queries";
 import { errorMessage } from "../../api/client";
 import { StateView } from "../../components/ui/StateView";
 
-const DETAIL_LABELS: Record<string, string> = {
-  maxDepth: "최대 수심 (m)",
-  avgDepth: "평균 수심 (m)",
-  bottom: "잠수 시간 (분)",
-  waterTemp: "수온 (°C)",
-  surfTemp: "수면 온도 (°C)",
-  vis: "시야 (m)",
-  timeIn: "입수",
-  timeOut: "출수",
-  barIn: "입수 잔압 (bar)",
-  barOut: "출수 잔압 (bar)",
-  weight: "웨이트 (kg)",
-  bestDepth: "최고 수심 (m)",
-  longest: "최장 잠수",
-  dives: "다이브 (회)",
-  buddy: "버디",
-  weather: "날씨",
-  when: "시간대",
-  waterClarity: "물빛",
-  discipline: "종목",
-  gear: "장비",
-  type: "다이빙 종류",
-  memo: "메모",
+const SPECIES_NAME: Record<string, string> = {};
+SPECIES.forEach((sp) => {
+  if (sp.art && !SPECIES_NAME[sp.art]) SPECIES_NAME[sp.art] = sp.nameKo;
+});
+
+const formatDate = (iso: string) => {
+  const d = new Date(`${iso}T00:00:00`);
+  return Number.isNaN(d.getTime()) ? iso : `${d.getFullYear()}년 ${d.getMonth() + 1}월 ${d.getDate()}일 (${"일월화수목금토"[d.getDay()]})`;
 };
+
+/** Reads one detail value as display text (arrays are joined with commas). */
+const detail = (log: DiveLog, key: string) => {
+  const v = log.details[key];
+  const s = Array.isArray(v) ? v.join(", ") : v === undefined || v === null || v === "" || v === false ? "" : String(v);
+  return s || undefined;
+};
+const join = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(", ");
 
 export function LogDetailScreen({ id }: { id: string }) {
   const router = useRouter();
   const { data: log, isLoading, error, refetch } = useDiveLog(id);
-  const { width } = useWindowDimensions();
-  const drawScale = (width - 40 - 28) / DRAW_W;
   const goBack = () => (router.canGoBack() ? router.back() : router.navigate("/log"));
   const remove = useDeleteDiveLog();
   const [deleteError, setDeleteError] = useState<string | null>(null);
@@ -73,13 +62,15 @@ export function LogDetailScreen({ id }: { id: string }) {
     );
   }
 
-  const rows = Object.entries(DETAIL_LABELS)
-    .map(([k, label]) => {
-      const v = log.details[k];
-      const s = Array.isArray(v) ? v.join(", ") : v === undefined || v === "" ? "" : String(v);
-      return s ? ([label, s] as const) : null;
-    })
-    .filter((r): r is readonly [string, string] => !!r);
+  const d = (k: string) => detail(log, k);
+  const num = (k: string, unit: string) => (d(k) ? `${d(k)}${unit}` : undefined);
+  const eyebrow = log.kind === "scuba" ? `${log.label.replace("#", "")}번째 다이빙` : log.kind === "free" ? `세션 ${log.label}` : `스노클링 ${log.label}`;
+  const typeChip = log.kind === "scuba" ? d("type") : log.kind === "free" ? d("freePlace") : undefined;
+  const dateLine = join(formatDate(log.date), log.kind === "free" ? num("bottom", "분") : undefined);
+  const dayChip = join(d("weather"), log.kind === "scuba" ? (log.details.dayNight === "night" ? "밤" : "낮") : d("when"));
+  const disciplines = Array.isArray(log.details.discipline) ? (log.details.discipline as string[]) : [];
+  const safety = Array.isArray(log.details.freeSafety) ? (log.details.freeSafety as string[]) : [];
+  const condition = typeof log.details.condition === "number" ? log.details.condition : 0;
 
   return (
     <SafeAreaView edges={["top"]} style={styles.root}>
@@ -87,89 +78,208 @@ export function LogDetailScreen({ id }: { id: string }) {
         <Pressable accessibilityRole="button" accessibilityLabel="로그북 목록으로" onPress={goBack} style={styles.hit}>
           <ChevronLeft />
         </Pressable>
-        <Txt size={13} weight="extraBold" color={colors.ink3}>
-          {log.label} · {KIND_LABEL[log.kind]}
-        </Txt>
-        <View style={styles.hit} />
-      </View>
-      <ScrollView contentContainerStyle={{ padding: 20, gap: 16, paddingBottom: 48 }}>
-        {/* Picture-diary page */}
-        <View style={styles.page}>
-          <View style={styles.pageHead}>
-            <Txt size={16} style={{ fontFamily: fonts.diaryBold }} numberOfLines={1}>
-              {log.date.replace(/-/g, ".")}
+        <View accessibilityRole="tablist" accessibilityLabel="로그 보기" style={styles.tabs}>
+          <Pressable
+            accessibilityRole="tab"
+            accessibilityState={{ selected: false }}
+            onPress={() => router.replace({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } })}
+            style={styles.tab}
+          >
+            <Txt size={13} weight="bold" color={colors.ink2}>
+              그림일기
             </Txt>
-            <Txt size={16} style={{ fontFamily: fonts.diaryBold, flexShrink: 1 }} numberOfLines={1}>
-              {log.region} · {log.point}
+          </Pressable>
+          <View accessibilityRole="tab" accessibilityState={{ selected: true }} style={[styles.tab, styles.tabOn]}>
+            <Txt size={13} weight="black">
+              다이빙 기록
             </Txt>
           </View>
-          {log.layout && log.layout.length > 0 ? (
-            <View style={styles.drawFrame}>
-              <DiaryCanvas layout={log.layout} scale={drawScale} />
+        </View>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel="그림일기 글 고치기"
+          onPress={() => router.push({ pathname: "/diary/[logId]/write", params: { logId: log.id } })}
+          style={[styles.hit, { width: 52, alignItems: "flex-end" }]}
+        >
+          <Txt size={15} weight="black" color={colors.oceanBlue}>
+            편집
+          </Txt>
+        </Pressable>
+      </View>
+
+      <ScrollView contentContainerStyle={styles.content}>
+        <View style={{ paddingHorizontal: 2, paddingTop: 4 }}>
+          <View style={styles.row8}>
+            <Txt size={13} weight="black" color={colors.oceanBlue}>
+              {eyebrow}
+            </Txt>
+            {typeChip ? (
+              <View style={styles.typeChip}>
+                <Txt size={11} weight="bold" color={colors.oceanBlue}>
+                  {typeChip}
+                </Txt>
+              </View>
+            ) : null}
+            {log.draft ? (
+              <View style={[styles.typeChip, { backgroundColor: "#FFF7DC" }]}>
+                <Txt size={11} weight="bold" color="#6B5310">
+                  작성 중
+                </Txt>
+              </View>
+            ) : null}
+          </View>
+          <Txt accessibilityRole="header" size={22} weight="black" tracking={-0.02} style={{ marginTop: 4, lineHeight: 29 }}>
+            {join(log.region, log.point)}
+          </Txt>
+          <Txt size={13} color={colors.ink2} style={{ marginTop: 2 }}>
+            {dateLine}
+          </Txt>
+          <View style={styles.chips}>
+            {dayChip ? <Chip text={dayChip} /> : null}
+            {d("buddy") ? <Chip text={`버디 ${d("buddy")}`} /> : null}
+            {log.kind === "free"
+              ? disciplines.map((x, i) => <Chip key={x} text={x} solid={i === 0} outline={i > 0} />)
+              : null}
+          </View>
+        </View>
+
+        {log.kind === "free" ? (
+          <View style={styles.statStrip}>
+            <Stat label="최고 수심" value={d("bestDepth")} unit="m" />
+            <Stat label="최장 잠수" value={d("longest")} />
+            <Stat label="다이브" value={d("dives")} unit="회" />
+          </View>
+        ) : null}
+
+        {log.kind === "scuba" ? (
+          <Card
+            title="수면, 수중 기록"
+            right={d("surfTemp") || d("interval") ? `수면 ${join(num("surfTemp", "°C"), d("interval") ? `휴식 ${d("interval")}` : undefined)}` : undefined}
+          >
+            <View style={styles.cells}>
+              <Cell label="최대 수심" value={d("maxDepth")} unit="m" />
+              <Cell label="평균 수심" value={d("avgDepth")} unit="m" />
+              <Cell label="잠수 시간" value={d("bottom")} unit="분" />
+              <Cell label="수중 온도" value={d("waterTemp")} unit="°C" />
+              <Cell label="시야" value={d("vis")} unit="m" />
+              <Cell label="입수" value={d("timeIn")} />
+              <Cell label="출수" value={d("timeOut")} />
+              <Cell label="입수 잔압" value={d("barIn")} unit="bar" />
+              <Cell label="출수 잔압" value={d("barOut")} unit="bar" />
+              {d("safety") ? (
+                <View style={styles.cell}>
+                  <Txt size={11} weight="bold" color={colors.ink2}>
+                    안전정지
+                  </Txt>
+                  <View style={styles.row4}>
+                    <CheckIcon size={14} color={colors.success} />
+                    <Txt size={14} weight="black" color={colors.success}>
+                      {d("safety")}
+                    </Txt>
+                  </View>
+                </View>
+              ) : null}
+            </View>
+          </Card>
+        ) : null}
+
+        {log.kind === "scuba" ? (
+          <>
+            <Rows title="환경" rows={[["파도", d("wave")], ["조류", d("current")], ["종류", d("type")]]} />
+            <Rows
+              title="기체, 탱크"
+              rows={[
+                ["기체", join(d("gas"), d("o2") ? `${d("o2")}%` : undefined)],
+                ["탱크", d("tank")],
+              ]}
+              gauge={d("barIn") && d("barOut") ? { from: Number(d("barIn")), to: Number(d("barOut")) } : undefined}
+            />
+            <Rows
+              title="장비"
+              rows={[
+                ["웨이트", join(num("weight", "kg"), d("weightType"))],
+                ["슈트", join(d("suit"), d("suitAdd"))],
+                ["챙긴 장비", d("gear")],
+              ]}
+            />
+          </>
+        ) : null}
+
+        {log.kind === "free" ? (
+          <>
+            <Card title="몸 상태">
+              <View style={styles.dl}>
+                {condition > 0 ? (
+                  <DlRow label="컨디션">
+                    <View style={styles.row4} accessibilityLabel={`5점 중 ${condition}점`}>
+                      {[1, 2, 3, 4, 5].map((n) => (
+                        <View key={n} style={[styles.dot, { backgroundColor: n <= condition ? colors.oceanBlue : colors.line }]} />
+                      ))}
+                    </View>
+                  </DlRow>
+                ) : null}
+                {d("eq") ? <DlRow label="이퀄라이징" value={d("eq")} /> : null}
+                {d("memo") ? <DlRow label="메모" value={d("memo")} light /> : null}
+              </View>
+            </Card>
+            <Rows
+              title="장비, 환경"
+              rows={[
+                ["웨이트", num("weight", "kg")],
+                ["수온", num("waterTemp", "°C")],
+                ["시야", num("vis", "m")],
+              ]}
+            />
+            {safety.length > 0 ? (
+              <Card title="안전 체크">
+                <View style={{ gap: 8 }}>
+                  {safety.map((s) => (
+                    <View key={s} style={styles.row4}>
+                      <CheckIcon size={16} color={colors.success} />
+                      <Txt size={14} weight="bold" color={colors.success}>
+                        {s}
+                      </Txt>
+                    </View>
+                  ))}
+                </View>
+              </Card>
+            ) : null}
+          </>
+        ) : null}
+
+        {log.kind === "snorkel" ? <Rows title="기록" rows={[["시간대", d("when")], ["물빛", d("waterClarity")], ["메모", d("memo")]]} /> : null}
+
+        {log.kind === "scuba" && d("memo") ? <Rows title="메모" rows={[["메모", d("memo")]]} light /> : null}
+
+        <Card
+          title="만난 생물"
+          action={
+            <Pressable accessibilityRole="button" onPress={() => router.push("/discover")}>
+              <Txt size={13} weight="black" color={colors.oceanBlue}>
+                + 사진으로 추가
+              </Txt>
+            </Pressable>
+          }
+        >
+          {log.stickers.length > 0 ? (
+            <View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>
+              {log.stickers.map((k) => (
+                <View key={k} style={styles.critterTile}>
+                  <Critter kind={k} width={100} height={52} />
+                  {SPECIES_NAME[k] ? (
+                    <Txt size={13} weight="black">
+                      {SPECIES_NAME[k]}
+                    </Txt>
+                  ) : null}
+                </View>
+              ))}
             </View>
           ) : (
-            <View style={[styles.drawing, { backgroundColor: log.coverBg }]}>
-              <View style={styles.glare} />
-              <Critter kind={log.coverKind} width={220} height={120} />
-              <View style={styles.stickerRow}>
-                {log.stickers.map((k) => (
-                  <Critter key={k} kind={k} width={64} height={36} />
-                ))}
-              </View>
-            </View>
+            <Txt size={13} color={colors.ink3}>
+              아직 만난 생물이 없어요
+            </Txt>
           )}
-          <Txt size={22} style={{ fontFamily: fonts.diaryBold, marginVertical: 8 }} align="center">
-            {log.title}
-          </Txt>
-          <View style={{ alignItems: "center" }}>
-            <Manuscript text={log.diary ?? ""} rows={6} cell={25} />
-          </View>
-          {!log.diary ? (
-            <Txt size={13} color={colors.ink2} align="center" style={{ marginTop: 8 }}>
-              아직 그림일기 글이 없어요
-            </Txt>
-          ) : null}
-        </View>
-
-        <View style={{ flexDirection: "row", gap: 8 }}>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push({ pathname: "/diary/[logId]/write", params: { logId: log.id } })}
-            style={styles.primary}
-          >
-            <Txt size={15} weight="black" color={colors.white}>
-              {log.diary ? "일기 고치기" : "그림일기 쓰기"}
-            </Txt>
-          </Pressable>
-          <Pressable
-            accessibilityRole="button"
-            onPress={() => router.push({ pathname: "/diary/[logId]/decorate", params: { logId: log.id } })}
-            style={styles.secondary}
-          >
-            <Txt size={14} weight="bold">
-              스티커 꾸미기
-            </Txt>
-          </Pressable>
-        </View>
-
-        <View style={styles.card}>
-          <Txt accessibilityRole="header" size={16} weight="black" style={{ marginBottom: 8 }}>
-            {KIND_LABEL[log.kind]} 기록
-          </Txt>
-          <Txt size={14} weight="bold" color={colors.ink2}>
-            {log.summary}
-          </Txt>
-          {rows.map(([k, v]) => (
-            <View key={k} style={styles.dl}>
-              <Txt size={13} color={colors.ink2} style={{ width: 110 }}>
-                {k}
-              </Txt>
-              <Txt size={13} weight="medium" style={{ flex: 1 }}>
-                {v}
-              </Txt>
-            </View>
-          ))}
-        </View>
+        </Card>
 
         <Pressable accessibilityRole="button" disabled={remove.isPending} onPress={confirmDelete} style={styles.deleteBtn}>
           <Txt size={14} weight="bold" color={colors.coral}>
@@ -186,19 +296,141 @@ export function LogDetailScreen({ id }: { id: string }) {
   );
 }
 
+function Chip({ text, solid, outline }: { text: string; solid?: boolean; outline?: boolean }) {
+  return (
+    <View style={[styles.chip, solid && { backgroundColor: colors.navy }, outline && { backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.oceanBlue }]}>
+      <Txt size={12} weight="bold" color={solid ? colors.white : outline ? colors.oceanBlue : colors.ink2}>
+        {text}
+      </Txt>
+    </View>
+  );
+}
+
+function Card({ title, right, action, children }: { title: string; right?: string; action?: ReactNode; children: ReactNode }) {
+  return (
+    <View style={styles.card}>
+      <View style={styles.cardHead}>
+        <Txt accessibilityRole="header" size={15} weight="black">
+          {title}
+        </Txt>
+        {right ? (
+          <Txt size={13} color={colors.ink3}>
+            {right}
+          </Txt>
+        ) : (
+          action
+        )}
+      </View>
+      {children}
+    </View>
+  );
+}
+
+function DlRow({ label, value, children, light }: { label: string; value?: string; children?: ReactNode; light?: boolean }) {
+  return (
+    <View style={styles.dlRow}>
+      <Txt size={14} color={colors.ink2} style={{ width: 96 }}>
+        {label}
+      </Txt>
+      <View style={{ flex: 1 }}>
+        {children ?? (
+          <Txt size={14} weight={light ? "medium" : "black"} style={light ? { lineHeight: 21 } : undefined}>
+            {value}
+          </Txt>
+        )}
+      </View>
+    </View>
+  );
+}
+
+/** A white card of label/value rows; rows without a value are skipped and an empty card is not drawn. */
+function Rows({ title, rows, light, gauge }: { title: string; rows: [string, string | undefined][]; light?: boolean; gauge?: { from: number; to: number } }) {
+  const shown = rows.filter((r): r is [string, string] => !!r[1]);
+  if (shown.length === 0) return null;
+  return (
+    <Card title={title}>
+      <View style={styles.dl}>
+        {shown.map(([k, v]) => (
+          <DlRow key={k} label={k} value={v} light={light} />
+        ))}
+      </View>
+      {gauge && gauge.from > 0 ? (
+        <View style={{ marginTop: 12 }}>
+          <View style={styles.gaugeLabels}>
+            <Txt size={12} color={colors.ink2}>{`입수 ${gauge.from} bar`}</Txt>
+            <Txt size={12} color={colors.ink2}>{`출수 ${gauge.to} bar`}</Txt>
+          </View>
+          <View style={styles.gaugeTrack}>
+            <View style={[styles.gaugeFill, { width: `${Math.max(0, Math.min(100, (gauge.to / gauge.from) * 100))}%` }]} />
+          </View>
+        </View>
+      ) : null}
+    </Card>
+  );
+}
+
+function Cell({ label, value, unit }: { label: string; value?: string; unit?: string }) {
+  if (!value) return null;
+  return (
+    <View style={styles.cell}>
+      <Txt size={11} weight="bold" color={colors.ink2}>
+        {label}
+      </Txt>
+      <Txt size={17} weight="black" style={{ fontVariant: ["tabular-nums"] }}>
+        {value}
+        {unit ? (
+          <Txt size={12} weight="bold" color={colors.ink2}>
+            {` ${unit}`}
+          </Txt>
+        ) : null}
+      </Txt>
+    </View>
+  );
+}
+
+function Stat({ label, value, unit }: { label: string; value?: string; unit?: string }) {
+  return (
+    <View style={styles.stat}>
+      <Txt size={12} color={colors.ink2}>
+        {label}
+      </Txt>
+      <Txt size={24} weight="black" tracking={-0.02}>
+        {value ?? "—"}
+        {value && unit ? (
+          <Txt size={13} color={colors.ink2}>
+            {unit}
+          </Txt>
+        ) : null}
+      </Txt>
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   header: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 8 },
-  deleteBtn: { height: 48, borderRadius: 10, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  page: { padding: 14, borderRadius: 12, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", shadowColor: "#1C1C1E", shadowOpacity: 0.08, shadowRadius: 14, shadowOffset: { width: 0, height: 6 }, elevation: 3 },
-  pageHead: { flexDirection: "row", justifyContent: "space-between", gap: 8, paddingBottom: 8, borderBottomWidth: 1, borderBottomColor: "#EADFC8", marginBottom: 10 },
-  drawFrame: { borderWidth: 2, borderColor: colors.ink2, borderRadius: 4, overflow: "hidden" },
-  drawing: { height: 190, borderRadius: 10, alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  glare: { position: "absolute", left: -20, top: -40, width: 70, height: 280, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "20deg" }] },
-  stickerRow: { position: "absolute", left: 8, bottom: 6, flexDirection: "row", gap: 4 },
-  primary: { flex: 1, height: 50, borderRadius: 10, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
-  secondary: { flex: 1, height: 50, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  card: { padding: 16, borderRadius: 12, backgroundColor: colors.white, gap: 4 },
-  dl: { flexDirection: "row", gap: 8, paddingVertical: 4 },
+  tabs: { flexDirection: "row", padding: 3, borderRadius: 10, backgroundColor: colors.line },
+  tab: { height: 34, paddingHorizontal: 12, borderRadius: 7, alignItems: "center", justifyContent: "center" },
+  tabOn: { backgroundColor: colors.white },
+  content: { paddingTop: 10, paddingHorizontal: 16, paddingBottom: 48, gap: 12 },
+  row8: { flexDirection: "row", alignItems: "center", gap: 8 },
+  row4: { flexDirection: "row", alignItems: "center", gap: 4 },
+  typeChip: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, backgroundColor: colors.sky },
+  chips: { flexDirection: "row", flexWrap: "wrap", gap: 6, marginTop: 8 },
+  chip: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: colors.ghostBg },
+  statStrip: { flexDirection: "row", gap: 1, borderRadius: 12, backgroundColor: colors.line, overflow: "hidden" },
+  stat: { flex: 1, padding: 12, backgroundColor: colors.white },
+  card: { paddingVertical: 16, paddingHorizontal: 18, borderRadius: 12, backgroundColor: colors.white },
+  cardHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between", marginBottom: 10 },
+  cells: { flexDirection: "row", flexWrap: "wrap", gap: 8 },
+  cell: { width: "31.5%", flexGrow: 1, paddingVertical: 8, paddingHorizontal: 10, borderRadius: 8, backgroundColor: colors.ghostBg, gap: 2 },
+  dl: { gap: 10 },
+  dlRow: { flexDirection: "row", gap: 12 },
+  dot: { width: 10, height: 10, borderRadius: 5 },
+  gaugeLabels: { flexDirection: "row", justifyContent: "space-between" },
+  gaugeTrack: { height: 10, borderRadius: 5, marginTop: 6, backgroundColor: colors.line },
+  gaugeFill: { height: 10, borderRadius: 5, backgroundColor: colors.oceanBlue },
+  critterTile: { minWidth: 120, flexGrow: 1, flexBasis: 120, paddingVertical: 10, paddingHorizontal: 8, borderRadius: 12, backgroundColor: colors.ghostBg, alignItems: "center", gap: 4 },
+  deleteBtn: { height: 48, borderRadius: 10, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
 });

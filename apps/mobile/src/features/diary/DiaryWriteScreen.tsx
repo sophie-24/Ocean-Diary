@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Switch, TextInput, View } from "react-native";
+import { KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, TextInput, View } from "react-native";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { ChevronLeft, ChevronRight } from "../../components/icons";
@@ -9,7 +9,6 @@ import type { DiveLog } from "../log/logStore";
 import { useDiveLog, useUpdateDiveLog } from "../../api/queries";
 import { errorMessage } from "../../api/client";
 import { StateView } from "../../components/ui/StateView";
-import { Manuscript, manuscriptPages } from "./Manuscript";
 
 export const DIARY_MAX = 500;
 const PROMPTS = ["처음 본 생물", "가장 기억나는 순간", "버디와 있었던 일", "다음엔 꼭"];
@@ -37,10 +36,8 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
   const insets = useSafeAreaInsets();
   const update = useUpdateDiveLog();
   const [text, setText] = useState(log?.diary ?? "");
-  const [polish, setPolish] = useState(false);
 
   const len = Array.from(text).length;
-  const pages = manuscriptPages(len);
   const onText = (v: string) => setText(Array.from(v).slice(0, DIARY_MAX).join(""));
   const addPrompt = (p: string) => onText(`${text}${text && !text.endsWith("\n") ? "\n" : ""}${p}: `);
 
@@ -68,11 +65,11 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
             그림일기 쓰기
           </Txt>
           <Txt size={11} color={colors.ink2}>
-            2단계 · {log ? `${log.label} 저장됨` : "기록 저장됨"}
+            {`2단계, ${log.kind === "scuba" ? `다이브 ${log.label}` : log.label} 저장됨`}
           </Txt>
         </View>
         <Pressable accessibilityRole="button" onPress={() => router.navigate("/log")} style={[styles.hit, { width: 64, alignItems: "flex-end" }]}>
-          <Txt size={14} weight="bold" color={colors.ink2}>
+          <Txt size={14} weight="medium" color={colors.ink2}>
             나중에
           </Txt>
         </Pressable>
@@ -86,16 +83,16 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
         <ScrollView contentContainerStyle={[styles.content, { paddingBottom: 100 + insets.bottom }]} keyboardShouldPersistTaps="handled">
           {log ? (
             <View style={styles.metaRow}>
-              {[formatDate(log.date), `${log.region} · ${log.point}`].map((m) => (
+              {[formatDate(log.date), `${log.region}, ${log.point}`, Array.isArray(log.details.weather) ? (log.details.weather as string[]).join(", ") : ""].filter(Boolean).map((m) => (
                 <View key={m} style={styles.metaChip}>
-                  <Txt size={12} weight="bold" color={colors.ink2}>
+                  <Txt size={12} weight="bold">
                     {m}
                   </Txt>
                 </View>
               ))}
             </View>
           ) : null}
-          <Txt size={22} weight="black" tracking={-0.02}>
+          <Txt size={21} weight="black" tracking={-0.02} style={{ lineHeight: 28, marginTop: 2 }}>
             오늘 바닷속은 어땠나요?
           </Txt>
           <Txt size={14} color={colors.ink2}>
@@ -105,8 +102,8 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
           <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 6 }} accessibilityLabel="글감 추천">
             {PROMPTS.map((p) => (
               <Pressable key={p} accessibilityRole="button" onPress={() => addPrompt(p)} style={styles.prompt}>
-                <Txt size={13} weight="bold" color="#2563EB">
-                  + {p}
+                <Txt size={13} weight="medium">
+                  {`+ ${p}`}
                 </Txt>
               </Pressable>
             ))}
@@ -118,37 +115,18 @@ function DiaryWriteInner({ log }: { log: DiveLog }) {
               onChangeText={onText}
               multiline
               placeholder="예) 오늘은 가토 섬 동굴 다이빙! 입구가 생각보다 좁아서…"
-              placeholderTextColor="#9AA8C2"
+              placeholderTextColor={colors.ink3}
               accessibilityLabel="그림일기 글"
               style={styles.textarea}
               textAlignVertical="top"
             />
             <View style={styles.paperFoot}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: 6 }}>
-                <Switch value={polish} onValueChange={setPolish} trackColor={{ true: colors.oceanBlue, false: colors.lineStrong }} accessibilityLabel="띄어쓰기·맞춤법만 살짝 다듬기" />
-                <Txt size={12} color={colors.ink2}>
-                  띄어쓰기·맞춤법만 살짝 다듬기
-                </Txt>
-              </View>
-              <Txt size={12} weight="bold" color={len > 450 ? "#DC2626" : colors.ink2} accessibilityLiveRegion="polite">
+              <Txt size={13} weight="bold" color={len > 450 ? colors.coral : colors.ink2} style={{ fontVariant: ["tabular-nums"] }} accessibilityLiveRegion="polite">
                 {len} / {DIARY_MAX}
               </Txt>
             </View>
           </View>
 
-          <View style={styles.preview}>
-            <View style={{ gap: 2 }}>
-              <Txt size={14} weight="extraBold">
-                원고지 {pages}쪽으로 옮겨져요
-              </Txt>
-              <Txt size={12} color={colors.ink2}>
-                1쪽엔 그림 칸 + 72자, 다음 쪽부턴 216자씩
-              </Txt>
-            </View>
-            <View style={{ alignItems: "center" }}>
-              <Manuscript text={text} rows={3} cell={24} />
-            </View>
-          </View>
         </ScrollView>
       </KeyboardAvoidingView>
 
@@ -186,16 +164,15 @@ const styles = StyleSheet.create({
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   progress: { flexDirection: "row", gap: 6, paddingTop: 8, paddingHorizontal: 16 },
   bar: { flex: 1, height: 4, borderRadius: 2 },
-  content: { paddingTop: 16, paddingHorizontal: 20, gap: 12 },
+  content: { paddingTop: 16, paddingHorizontal: 16, gap: 12 },
   metaRow: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  metaChip: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 999, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
-  prompt: { height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: colors.sky, justifyContent: "center" },
-  paper: { borderRadius: 12, backgroundColor: "#FFFDF7", borderWidth: 1, borderColor: "#EADFC8", padding: 14, gap: 8 },
-  textarea: { minHeight: 220, fontFamily: fonts.diary, fontSize: 20, lineHeight: 30, color: "#2B2B2B" },
-  paperFoot: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  preview: { gap: 10, padding: 12, borderRadius: 12, backgroundColor: colors.white },
+  metaChip: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: colors.white },
+  prompt: { height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line, justifyContent: "center" },
+  paper: { borderRadius: 12, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.oceanBlue, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 12, gap: 8 },
+  textarea: { minHeight: 220, fontFamily: fonts.regular, fontSize: 16, lineHeight: 29, color: colors.navy, padding: 0 },
+  paperFoot: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingTop: 10, borderTopWidth: 1, borderTopColor: colors.track },
   footerError: { position: "absolute", left: 16, right: 16, top: -22 },
   footer: { position: "absolute", left: 0, right: 0, bottom: 0, flexDirection: "row", gap: 8, paddingTop: 12, paddingHorizontal: 16, backgroundColor: "rgba(255,255,255,0.97)", borderTopWidth: 1, borderTopColor: colors.line },
-  secondary: { width: 112, height: 52, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  primary: { flex: 1, height: 52, borderRadius: 12, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  secondary: { width: 110, height: 52, borderRadius: 10, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  primary: { flex: 1, height: 52, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

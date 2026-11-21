@@ -8,7 +8,8 @@ export default function TabsLayout() {
       <Tabs.Screen name="dogam" options={{ title: "도감" }} />
       <Tabs.Screen name="discover" options={{ title: "발견" }} />
       <Tabs.Screen name="log" options={{ title: "로그북" }} />
-      <Tabs.Screen name="sea" options={{ title: "나의 바다" }} />
+      {/* v4: 나의 바다 탭 숨김 — 배포 후 재활성화 예정 */}
+      <Tabs.Screen name="sea" options={{ title: "나의 바다", href: null }} />
     </Tabs>
   );
 }

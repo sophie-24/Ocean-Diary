@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import { Alert, Linking, Platform, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Constants from "expo-constants";
@@ -13,6 +13,7 @@ import { onboardingStore } from "../src/features/onboarding/onboardingStore";
 import { useSummary } from "../src/api/queries";
 import { colors } from "../src/theme/tokens";
 import { INSTAGRAM_URL, KAKAO_CHANNEL_CHAT_URL } from "../src/lib/links";
+import * as StoreReview from "expo-store-review";
 
 const PROVIDER_LABEL: Record<string, string> = {
   apple: "Apple",
@@ -76,7 +77,12 @@ export default function SettingsScreen() {
   const { email, nickname, provider, usingDevToken, hasAppleIdentity, signOut } = useAuth();
   const { data: summary } = useSummary();
   const [busy, setBusy] = useState(false);
+  const [canReview, setCanReview] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    void StoreReview.isAvailableAsync().then(setCanReview).catch(() => {});
+  }, []);
 
   const leave = async () => {
     qc.clear();
@@ -131,6 +137,12 @@ export default function SettingsScreen() {
     void Linking.openURL(url).catch(() => setError("링크를 열지 못했어요. 잠시 후 다시 시도해 주세요."));
   };
 
+  const requestReview = () => {
+    void StoreReview.requestReview().catch(() =>
+      setError("리뷰 화면을 열지 못했어요. 앱스토어에서 직접 평가해 주세요."),
+    );
+  };
+
   const providerLabel = provider ? PROVIDER_LABEL[provider] : undefined;
   const version = Constants.expoConfig?.version ?? "—";
 
@@ -174,6 +186,7 @@ export default function SettingsScreen() {
             <Row label="1:1 문의하기" onPress={() => openLink(KAKAO_CHANNEL_CHAT_URL)} />
           ) : null}
           <Row label="Mola 인스타그램 바로가기" onPress={() => openLink(INSTAGRAM_URL)} />
+          {canReview ? <Row label="앱 평가하기" onPress={requestReview} /> : null}
           <Row label="앱 소개 다시 보기" onPress={() => onboardingStore.openManual()} />
         </Section>
 

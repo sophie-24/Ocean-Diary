@@ -203,9 +203,23 @@ function DiaryDecorateInner({ log }: { log: DiveLog }) {
         <Pressable accessibilityRole="button" accessibilityLabel="글쓰기로 돌아가기" onPress={() => router.back()} style={styles.hit}>
           <ChevronLeft />
         </Pressable>
-        <Txt accessibilityRole="header" size={16} weight="black">
-          그림일기 꾸미기
-        </Txt>
+        <View accessibilityRole="tablist" accessibilityLabel="로그 보기" style={styles.tabs}>
+          <View accessibilityRole="tab" accessibilityState={{ selected: true }} style={[styles.tabItem, styles.tabItemOn]}>
+            <Txt size={13} weight="black">
+              그림일기
+            </Txt>
+          </View>
+          <Pressable
+            accessibilityRole="tab"
+            accessibilityState={{ selected: false }}
+            onPress={() => router.replace({ pathname: "/log/[id]", params: { id: logId } })}
+            style={styles.tabItem}
+          >
+            <Txt size={13} weight="bold" color={colors.ink2}>
+              다이빙 기록
+            </Txt>
+          </Pressable>
+        </View>
         <View style={{ flexDirection: "row", alignItems: "center" }}>
           <Pressable accessibilityRole="button" accessibilityLabel="이미지로 저장하거나 공유하기" onPress={share} style={styles.hit}>
             <ShareIcon />
@@ -274,17 +288,34 @@ function DiaryDecorateInner({ log }: { log: DiveLog }) {
         </View>
       </View>
       <Txt size={11} weight="bold" color={update.isError ? colors.coral : colors.ink2} align="center" style={{ marginTop: 8 }} accessibilityLiveRegion="polite">
-        {update.isError ? `${errorMessage(update.error)} 완료를 다시 눌러 주세요.` : "끌어서 옮기고 · 두 손가락으로 크기와 방향을 바꿔요"}
+        {update.isError ? `${errorMessage(update.error)} 완료를 다시 눌러 주세요.` : "끌어서 옮기고, 두 손가락으로 크기와 방향을 바꿔요"}
       </Txt>
 
       <View style={[styles.tray, { paddingBottom: 12 + insets.bottom }]}>
         <View style={styles.grabber} />
+        <View accessibilityRole="tablist" accessibilityLabel="꾸미기 도구" style={styles.tools}>
+          <View accessibilityRole="tab" accessibilityState={{ selected: true }} style={[styles.tool, styles.toolOn]}>
+            <Txt size={14} weight="black">
+              스티커
+            </Txt>
+          </View>
+          <Pressable
+            accessibilityRole="tab"
+            accessibilityState={{ selected: false }}
+            onPress={() => router.push({ pathname: "/diary/[logId]/write", params: { logId } })}
+            style={styles.tool}
+          >
+            <Txt size={14} weight="bold" color={colors.ink3}>
+              글 고치기
+            </Txt>
+          </Pressable>
+        </View>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.cats} accessibilityRole="tablist">
           {[{ key: "mine", label: `내 생물 ${mine.length}` }, ...STICKER_CATEGORIES].map((c) => {
             const on = cat === c.key;
             return (
               <Pressable key={c.key} accessibilityRole="tab" accessibilityState={{ selected: on }} onPress={() => setCat(c.key)} style={[styles.cat, on ? styles.catOn : styles.catOff]}>
-                <Txt size={13} weight={on ? "extraBold" : "bold"} color={on ? colors.white : colors.navy}>
+                <Txt size={13} weight={on ? "extraBold" : "medium"} color={on ? colors.white : colors.navy}>
                   {c.label}
                 </Txt>
               </Pressable>
@@ -322,17 +353,23 @@ const styles = StyleSheet.create({
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   page: { paddingTop: 10, paddingHorizontal: 12, paddingBottom: 12, borderRadius: 6, backgroundColor: "#FFFEF8" },
   dateRow: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", gap: 6, paddingVertical: 6, paddingHorizontal: 8, borderWidth: 2, borderColor: INK, borderRadius: 4 },
+  tabs: { flexDirection: "row", padding: 3, borderRadius: 10, backgroundColor: colors.line },
+  tabItem: { height: 34, paddingHorizontal: 12, borderRadius: 7, alignItems: "center", justifyContent: "center" },
+  tabItemOn: { backgroundColor: colors.white },
+  tools: { flexDirection: "row", gap: 18, paddingTop: 6, paddingHorizontal: 20, borderBottomWidth: 1, borderBottomColor: colors.line },
+  tool: { height: 40, justifyContent: "center", borderBottomWidth: 2, borderBottomColor: "transparent" },
+  toolOn: { borderBottomColor: colors.oceanBlue },
   crayon: { fontFamily: fonts.diary, color: INK, lineHeight: 22 },
   drawing: { marginTop: 8, borderWidth: 2, borderColor: INK, borderRadius: 4, overflow: "hidden", backgroundColor: "#FFFEF8" },
   emptyHint: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center" },
   selBox: { position: "absolute", top: -4, left: -4, right: -4, bottom: -4, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.oceanBlue, borderRadius: 6 },
   delete: { position: "absolute", right: -12, top: -12, width: 24, height: 24, borderRadius: 12, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
-  tray: { marginTop: "auto", paddingTop: 8, backgroundColor: colors.white, borderTopLeftRadius: 12, borderTopRightRadius: 12, shadowColor: "#1C1C1E", shadowOpacity: 0.12, shadowRadius: 24, shadowOffset: { width: 0, height: -8 }, elevation: 8 },
-  grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.lineStrong },
+  tray: { marginTop: "auto", paddingTop: 8, backgroundColor: colors.white, borderTopLeftRadius: 12, borderTopRightRadius: 12 },
+  grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.line },
   cats: { gap: 6, paddingHorizontal: 20, paddingTop: 10 },
   cat: { height: 34, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1.5, justifyContent: "center" },
   catOn: { backgroundColor: colors.navy, borderColor: colors.navy },
-  catOff: { backgroundColor: colors.white, borderColor: colors.lineStrong },
+  catOff: { backgroundColor: colors.white, borderColor: colors.line },
   items: { gap: 10, paddingHorizontal: 20, paddingTop: 10 },
   item: { width: 76, height: 92, borderRadius: 12, borderWidth: 1, borderColor: "#E8E2CF", backgroundColor: "#FFFEF8", alignItems: "center", justifyContent: "center", gap: 4 },
 });

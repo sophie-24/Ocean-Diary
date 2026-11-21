@@ -32,7 +32,7 @@ const SCUBA_OPTS = {
 };
 const FREE_OPTS = {
   discipline: ["CWT", "CWTB", "CNF", "FIM", "STA", "DYN"],
-  place: ["부이 · 라인", "풀", "비치", "보트"],
+  place: ["부이, 라인", "풀", "비치", "보트"],
   safety: ["원 업 원 다운", "랜야드 착용", "회복 호흡", "블랙아웃·LMC 없음"],
 };
 
@@ -73,8 +73,6 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
   const dateOk = DATE_RE.test(date.trim());
   const required = [dateOk, region.trim().length > 0, point.trim().length > 0];
   const requiredDone = required.filter(Boolean).length;
-  const optionalFilled =
-    Object.values(num).filter((v) => v.trim()).length + Object.values(chips).filter((v) => v.length).length + (weather.length ? 1 : 0) + (memo ? 1 : 0) + (buddy ? 1 : 0);
 
   // Bottom time is derived from entry/exit times when both are filled (HH:MM).
   const bottomTime = useMemo(() => {
@@ -166,8 +164,8 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
           <Txt accessibilityRole="header" size={16} weight="black">
             {kind === "snorkel" ? "새 스노클링 기록" : "새 다이빙 기록"}
           </Txt>
-          <Txt size={11} color={colors.ink2}>
-            {kind === "snorkel" ? "30초면 끝 · 그다음 그림일기" : "1단계 로그 · 2단계 그림일기"}
+          <Txt size={11} color={colors.ink3}>
+            {kind === "snorkel" ? "30초면 끝, 그다음 그림일기" : "1단계 로그, 2단계 그림일기"}
           </Txt>
         </View>
         <Pressable
@@ -193,14 +191,20 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
 
           <Section title="기본 정보" note="* 3개만 필수">
             <View style={{ flexDirection: "row", gap: 12, alignItems: "flex-start" }}>
-              <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind, logData?.counts)}`}>
-                <Txt size={9} weight="extraBold" color={colors.ink3}>
-                  {kind === "snorkel" ? "snorkel" : "dive no."}
-                </Txt>
-                <Txt size={24} weight="black">
-                  {nextLabel(kind, logData?.counts).replace("#", "")}
-                </Txt>
-              </View>
+              {kind !== "snorkel" ? (
+                <View style={styles.diveNo} accessibilityLabel={`기록 번호 ${nextLabel(kind, logData?.counts)}`}>
+                  <View style={styles.diveNoHead}>
+                    <Txt size={11} weight="bold" color={colors.white} align="center">
+                      {kind === "free" ? "세션" : `${nextLabel(kind, logData?.counts).replace("#", "")}번째`}
+                    </Txt>
+                  </View>
+                  <View style={styles.diveNoBody}>
+                    <Txt size={28} weight="black">
+                      {nextLabel(kind, logData?.counts).replace("#", "")}
+                    </Txt>
+                  </View>
+                </View>
+              ) : null}
               <View style={{ flex: 1 }}>
                 <Field
                   label="날짜"
@@ -218,7 +222,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
               required
               value={region}
               onChangeText={setRegion}
-              placeholder="예) 필리핀 · 세부 말라파스쿠아"
+              placeholder="예) 필리핀, 세부 말라파스쿠아"
               error={submitted && !region.trim() ? "지역을 적어 주세요" : undefined}
             />
             <View>
@@ -231,7 +235,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                 onBlur={() => setTimeout(() => setPointFocus(false), 150)}
                 placeholder="예) 가토 섬"
                 error={submitted && !point.trim() ? "포인트 이름을 적어 주세요" : undefined}
-                hint={site ? "명소 스탬프가 도감에 찍혀요 · GPS 좌표는 저장하지 않아요" : "GPS 좌표는 저장하지 않아요. 이름만 남겨요."}
+                hint={site ? "명소 스탬프가 도감에 찍혀요. GPS 좌표는 저장하지 않아요." : "GPS 좌표는 저장하지 않아요. 이름만 남겨요."}
               />
               {pointFocus && pointSuggestions.length + siteSuggestions.length > 0 ? (
                 <View style={styles.suggest} accessibilityRole="list">
@@ -243,7 +247,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                       onPress={() => {
                         setPoint(x.name_ko);
                         setSite({ id: x.id, name: x.name_ko });
-                        if (!region.trim()) setRegion(`${x.country_ko} · ${x.region_ko}`);
+                        if (!region.trim()) setRegion(`${x.country_ko}, ${x.region_ko}`);
                         setPointFocus(false);
                       }}
                       style={styles.suggestRow}
@@ -252,7 +256,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                         {x.name_ko}
                       </Txt>
                       <Txt size={12} color={colors.oceanBlue}>
-                        명소 스탬프 · {x.category_ko} · {x.country_ko} {x.region_ko}
+                        {`명소 스탬프, ${x.category_ko}, ${x.country_ko} ${x.region_ko}`}
                       </Txt>
                     </Pressable>
                   ))}
@@ -270,8 +274,8 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                       <Txt size={14} weight="bold">
                         {s.point}
                       </Txt>
-                      <Txt size={12} color={colors.ink2}>
-                        내가 다녀온 곳 · {s.n}회
+                      <Txt size={12} color={colors.ink3}>
+                        {`내가 다녀온 곳, ${s.n}회`}
                       </Txt>
                     </Pressable>
                   ))}
@@ -295,7 +299,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
               <View style={styles.note}>
                 <InfoIcon size={16} />
                 <Txt size={12} color={colors.ink2} style={{ flex: 1 }}>
-                  스노클링은 수심·시간·장비를 묻지 않아요. 다이브 번호 대신 S1, S2…로 따로 쌓여요.
+                  스노클링은 수심·시간·장비를 묻지 않아요. 다이브 번호도 붙지 않고 S1, S2…로 따로 쌓여요.
                 </Txt>
               </View>
             </Section>
@@ -306,8 +310,8 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                 <Segmented
                   label="낮 또는 밤"
                   options={[
-                    ["day", "낮 다이빙 · Day"],
-                    ["night", "나이트 다이빙 · Night"],
+                    ["day", "낮 다이빙"],
+                    ["night", "나이트 다이빙"],
                   ]}
                   value={dayNight}
                   onChange={setDayNight}
@@ -318,7 +322,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
 
           {kind === "scuba" ? (
             <>
-              <Section title="수면 · 수중 기록" optional>
+              <Section title="수면, 수중 기록" optional>
                 <View style={styles.grid3}>
                   <MiniField label="수면 온도" unit="°C" keyboardType="decimal-pad" value={num.surfTemp ?? ""} onChangeText={setN("surfTemp")} />
                   <MiniField label="수면 휴식" placeholder="시:분" value={num.interval ?? ""} onChangeText={setN("interval")} />
@@ -351,18 +355,18 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                   </Txt>
                 </View>
               </Section>
-              <Section title="장비 · 환경" optional>
-                <ChipGroup label="웨이트" sub="Weight" options={SCUBA_OPTS.weightType} value={chips.weightType ?? []} onChange={setC("weightType")} single />
+              <Section title="장비, 환경" optional>
+                <ChipGroup label="웨이트" options={SCUBA_OPTS.weightType} value={chips.weightType ?? []} onChange={setC("weightType")} single />
                 <MiniField label="웨이트 무게" unit="kg" keyboardType="decimal-pad" value={num.weight ?? ""} onChangeText={setN("weight")} />
-                <ChipGroup label="파도" sub="Water" options={SCUBA_OPTS.wave} value={chips.wave ?? []} onChange={setC("wave")} single />
-                <ChipGroup label="조류" sub="Current" options={SCUBA_OPTS.current} value={chips.current ?? []} onChange={setC("current")} single />
-                <ChipGroup label="탱크" sub="Tank" options={SCUBA_OPTS.tank} value={chips.tank ?? []} onChange={setC("tank")} single />
-                <ChipGroup label="기체" sub="Gas" options={SCUBA_OPTS.gas} value={chips.gas ?? []} onChange={setC("gas")} single />
+                <ChipGroup label="파도" options={SCUBA_OPTS.wave} value={chips.wave ?? []} onChange={setC("wave")} single />
+                <ChipGroup label="조류" options={SCUBA_OPTS.current} value={chips.current ?? []} onChange={setC("current")} single />
+                <ChipGroup label="탱크" options={SCUBA_OPTS.tank} value={chips.tank ?? []} onChange={setC("tank")} single />
+                <ChipGroup label="기체" options={SCUBA_OPTS.gas} value={chips.gas ?? []} onChange={setC("gas")} single />
                 {chips.gas?.includes("나이트록스") ? <MiniField label="산소 비율" unit="%" keyboardType="number-pad" value={num.o2 ?? ""} onChangeText={setN("o2")} /> : null}
-                <ChipGroup label="슈트" sub="Suit" options={SCUBA_OPTS.suit} value={chips.suit ?? []} onChange={setC("suit")} single />
+                <ChipGroup label="슈트" options={SCUBA_OPTS.suit} value={chips.suit ?? []} onChange={setC("suit")} single />
                 <ChipGroup label="추가 보온" options={SCUBA_OPTS.suitAdd} value={chips.suitAdd ?? []} onChange={setC("suitAdd")} />
-                <ChipGroup label="장비" sub="Equipment" options={SCUBA_OPTS.gear} value={chips.gear ?? []} onChange={setC("gear")} />
-                <ChipGroup label="종류" sub="Dive Type" options={SCUBA_OPTS.type} value={chips.type ?? []} onChange={setC("type")} />
+                <ChipGroup label="장비" options={SCUBA_OPTS.gear} value={chips.gear ?? []} onChange={setC("gear")} />
+                <ChipGroup label="종류" options={SCUBA_OPTS.type} value={chips.type ?? []} onChange={setC("type")} />
               </Section>
             </>
           ) : null}
@@ -370,7 +374,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
           {kind === "free" ? (
             <>
               <Section title="세션 기록" optional>
-                <ChipGroup label="종목" sub="Discipline" options={FREE_OPTS.discipline} value={chips.discipline ?? []} onChange={setC("discipline")} />
+                <ChipGroup label="종목" options={FREE_OPTS.discipline} value={chips.discipline ?? []} onChange={setC("discipline")} />
                 <ChipGroup label="장소" options={FREE_OPTS.place} value={chips.freePlace ?? []} onChange={setC("freePlace")} single />
                 <View style={styles.grid3}>
                   <MiniField label="최고 수심" unit="m" keyboardType="decimal-pad" value={num.bestDepth ?? ""} onChangeText={setN("bestDepth")} />
@@ -383,7 +387,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                   <MiniField label="웨이트" unit="kg" keyboardType="decimal-pad" value={num.weight ?? ""} onChangeText={setN("weight")} />
                 </View>
               </Section>
-              <Section title="몸 상태 · 안전" optional>
+              <Section title="몸 상태, 안전" optional>
                 <Txt size={12} weight="bold" color={colors.ink2}>
                   컨디션
                 </Txt>
@@ -392,7 +396,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
                     <Pressable key={n} accessibilityLabel={`컨디션 ${n}점`} onPress={() => setCondition(n)} style={[styles.dot, n <= condition && styles.dotOn]} />
                   ))}
                 </View>
-                <Field label="이퀄라이징 · 컨트랙션" value={num.eq ?? ""} onChangeText={setN("eq")} placeholder="예) 프렌젤 · 16m 이후 살짝 압박" />
+                <Field label="이퀄라이징, 컨트랙션" value={num.eq ?? ""} onChangeText={setN("eq")} placeholder="예) 프렌젤, 16m 이후 살짝 압박" />
                 <ChipGroup label="안전 체크" options={FREE_OPTS.safety} value={chips.freeSafety ?? []} onChange={setC("freeSafety")} />
               </Section>
             </>
@@ -402,7 +406,7 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
             <Section title="만난 생물" optional>
               <Pressable accessibilityRole="button" onPress={() => router.push("/discover")} style={styles.addSpecies}>
                 <View style={styles.addIcon}>
-                  <CameraIcon />
+                  <CameraIcon color={colors.oceanBlue} />
                 </View>
                 <View style={{ flex: 1 }}>
                   <Txt size={14} weight="bold">
@@ -433,9 +437,6 @@ export function LogFormScreen({ initialKind = "scuba" }: { initialKind?: LogKind
               {requiredDone === 3 ? "필수 3개 입력 완료" : `필수 ${3 - requiredDone}개 남았어요`}
             </Txt>
           </View>
-          <Txt size={12} color={colors.ink2}>
-            선택 항목 {optionalFilled}개 입력
-          </Txt>
         </View>
         {create.isError ? (
           <Txt size={12} weight="bold" color={colors.coral} accessibilityLiveRegion="assertive">
@@ -467,15 +468,17 @@ const styles = StyleSheet.create({
   progress: { flexDirection: "row", gap: 6, paddingTop: 8, paddingHorizontal: 16 },
   progressBar: { flex: 1, height: 4, borderRadius: 2, backgroundColor: colors.line },
   content: { paddingTop: 14, paddingHorizontal: 16, gap: 12 },
-  diveNo: { width: 64, height: 72, marginTop: 22, borderRadius: 10, borderWidth: 2, borderColor: colors.navy, alignItems: "center", justifyContent: "center", backgroundColor: colors.sky },
-  suggest: { marginTop: 6, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden" },
-  suggestRow: { paddingVertical: 10, paddingHorizontal: 14, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderBottomColor: colors.line },
+  diveNo: { width: 76, marginTop: 22, borderWidth: 2, borderColor: colors.ink2, borderTopLeftRadius: 12, borderTopRightRadius: 12, borderBottomLeftRadius: 38, borderBottomRightRadius: 38, overflow: "hidden" },
+  diveNoHead: { paddingVertical: 4, backgroundColor: colors.ink2 },
+  diveNoBody: { flex: 1, alignItems: "center", justifyContent: "center", paddingTop: 8, paddingBottom: 12, backgroundColor: colors.ghostBg },
+  suggest: { marginTop: 6, borderRadius: 12, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, overflow: "hidden" },
+  suggestRow: { paddingVertical: 10, paddingHorizontal: 14, flexDirection: "row", justifyContent: "space-between", alignItems: "center", borderBottomWidth: 1, borderBottomColor: colors.track },
   grid3: { flexDirection: "row", gap: 8 },
   note: { flexDirection: "row", gap: 6, alignItems: "flex-start" },
   dot: { width: 28, height: 28, borderRadius: 14, borderWidth: 2, borderColor: colors.ghostLine },
   dotOn: { backgroundColor: colors.oceanBlue, borderColor: colors.oceanBlue },
-  addSpecies: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderRadius: 12, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.pillLine, backgroundColor: colors.mist },
-  addIcon: { width: 40, height: 40, borderRadius: 12, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  addSpecies: { flexDirection: "row", alignItems: "center", gap: 12, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.line, backgroundColor: colors.white },
+  addIcon: { width: 40, height: 40, borderRadius: 8, backgroundColor: colors.ghostBg, alignItems: "center", justifyContent: "center" },
   footer: {
     position: "absolute",
     left: 0,
@@ -489,6 +492,6 @@ const styles = StyleSheet.create({
     borderTopColor: colors.line,
   },
   footerInfo: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
-  secondary: { width: 112, height: 52, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  secondary: { width: 120, height: 52, borderRadius: 10, borderWidth: 1.5, borderColor: colors.line, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   primary: { flex: 1, height: 52, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

@@ -125,7 +125,7 @@ export function ChipGroup({ label, sub, options, value, onChange, single }: Chip
             accessibilityState={single ? { checked: on } : { checked: on }}
             style={[styles.chip, on ? styles.chipOn : styles.chipOff]}
           >
-            <Txt size={13} weight={on ? "extraBold" : "medium"} color={on ? colors.white : colors.navy}>
+            <Txt size={13} weight={on ? "extraBold" : "bold"} color={on ? colors.white : colors.navy}>
               {o}
             </Txt>
           </Pressable>
@@ -136,7 +136,7 @@ export function ChipGroup({ label, sub, options, value, onChange, single }: Chip
   if (!label) return chips;
   return (
     <View style={styles.row}>
-      <View style={{ width: 88 }}>
+      <View style={{ width: 92 }}>
         <Txt size={14} weight="extraBold">
           {label}
         </Txt>
@@ -185,8 +185,8 @@ export function Segmented<T extends string>({ options, value, onChange, label }:
       {options.map(([k, text]) => {
         const on = k === value;
         return (
-          <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => onChange(k)} style={[styles.segItem, on && styles.segOn]}>
-            <Txt size={13} weight={on ? "extraBold" : "bold"} color={on ? colors.navy : colors.ink2}>
+          <Pressable key={k} accessibilityRole="radio" accessibilityState={{ checked: on }} onPress={() => onChange(k)} style={[styles.segItem, on ? styles.segOn : styles.segOff]}>
+            <Txt size={13} weight={on ? "extraBold" : "bold"} color={on ? colors.white : colors.ink2}>
               {text}
             </Txt>
           </Pressable>
@@ -203,21 +203,22 @@ export const formStyles = StyleSheet.create({
 const styles = StyleSheet.create({
   sec: { padding: 16, paddingBottom: 18, borderRadius: 12, backgroundColor: colors.white, gap: 12 },
   secHead: { flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" },
-  opt: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 999, backgroundColor: colors.mist },
-  input: { flexDirection: "row", alignItems: "center", gap: 8, height: 48, paddingHorizontal: 14, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.lineStrong },
+  opt: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, backgroundColor: colors.ghostBg },
+  input: { flexDirection: "row", alignItems: "center", gap: 8, height: 48, paddingHorizontal: 14, borderRadius: 8, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
   inputText: { flex: 1, fontFamily: fonts.bold, fontSize: 15, color: colors.navy, paddingVertical: 0 },
-  mini: { flexDirection: "row", alignItems: "center", gap: 4, height: 40, marginTop: 4, paddingHorizontal: 10, borderRadius: 12, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.pillLine },
+  mini: { flexDirection: "row", alignItems: "center", gap: 4, height: 40, marginTop: 4, paddingHorizontal: 10, borderRadius: 8, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
   miniText: { flex: 1, minWidth: 0, fontFamily: fonts.extraBold, fontSize: 16, color: colors.navy, paddingVertical: 0, fontVariant: ["tabular-nums"] },
-  row: { flexDirection: "row", gap: 10, paddingVertical: 12, borderTopWidth: 1, borderTopColor: colors.line },
+  row: { flexDirection: "row", gap: 10, paddingVertical: 12, borderTopWidth: 1, borderTopColor: colors.track },
   chips: { flexDirection: "row", flexWrap: "wrap", gap: 6 },
-  chip: { height: 36, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1.5, justifyContent: "center" },
+  chip: { height: 36, paddingHorizontal: 12, borderRadius: 4, borderWidth: 1.5, justifyContent: "center" },
   chipOn: { backgroundColor: colors.navy, borderColor: colors.navy },
-  chipOff: { backgroundColor: colors.white, borderColor: colors.lineStrong },
+  chipOff: { backgroundColor: colors.white, borderColor: colors.line },
   kinds: { flexDirection: "row", gap: 6 },
   kind: { flex: 1, height: 46, borderRadius: 10, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6, borderWidth: 1 },
   kindOn: { backgroundColor: colors.navy, borderColor: colors.navy },
-  kindOff: { backgroundColor: colors.white, borderColor: colors.lineStrong },
-  seg: { flexDirection: "row", padding: 4, borderRadius: 10, backgroundColor: colors.track },
-  segItem: { flex: 1, height: 36, borderRadius: 9, alignItems: "center", justifyContent: "center" },
-  segOn: { backgroundColor: colors.white },
+  kindOff: { backgroundColor: colors.white, borderColor: colors.white },
+  seg: { flexDirection: "row", gap: 6 },
+  segItem: { flex: 1, height: 42, borderRadius: 10, borderWidth: 1.5, alignItems: "center", justifyContent: "center" },
+  segOn: { backgroundColor: colors.navy, borderColor: colors.navy },
+  segOff: { backgroundColor: colors.white, borderColor: colors.line },
 });
