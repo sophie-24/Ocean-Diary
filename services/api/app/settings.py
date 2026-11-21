@@ -27,6 +27,11 @@ class Settings:
     supabase_access_token_max_age_seconds: int = int(
         os.getenv("SUPABASE_ACCESS_TOKEN_MAX_AGE_SECONDS", "86400")
     )
+    # Sign in with Apple token revocation on account deletion (optional until Apple login ships).
+    apple_team_id: str = os.getenv("APPLE_TEAM_ID", "")
+    apple_key_id: str = os.getenv("APPLE_KEY_ID", "")
+    apple_private_key: str = os.getenv("APPLE_PRIVATE_KEY", "")
+    apple_client_id: str = os.getenv("APPLE_CLIENT_ID", "")
     s3_endpoint_url: str = os.getenv("S3_ENDPOINT_URL", "http://127.0.0.1:9000")
     s3_public_endpoint_url: str = os.getenv(
         "S3_PUBLIC_ENDPOINT_URL", "http://127.0.0.1:9000"
@@ -50,6 +55,7 @@ class Settings:
     ai_provider_timeout_seconds: int = int(os.getenv("AI_PROVIDER_TIMEOUT_SECONDS", "45"))
     openai_api_key: str = os.getenv("OPENAI_API_KEY", "")
     openai_model: str = os.getenv("OPENAI_MODEL", "gpt-6-luna")
+    admin_secret: str = os.getenv("ADMIN_SECRET", "")
 
 
 settings = Settings()

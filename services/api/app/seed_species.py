@@ -98,6 +98,13 @@ def seed_v3(session) -> int:
                 },
             )
         )
+    # The v1 coastal set (no catalog number) is superseded by v3 entries with the same scientific name;
+    # hide the v1 rows so the same species is not listed twice. Rows stay in place for existing observations.
+    session.execute(
+        sa.update(Species)
+        .where(Species.catalog_no.is_(None), Species.scientific_name.in_([i.get("sci_name") or "" for i in catalog["species"]]))
+        .values(is_active=False)
+    )
     return len(catalog["species"])
 
 

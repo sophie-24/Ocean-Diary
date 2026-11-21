@@ -3,11 +3,13 @@ from urllib.request import Request, urlopen
 from datetime import datetime, timedelta, timezone
 
 from botocore.exceptions import BotoCoreError, ClientError
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Body, Depends, HTTPException, status
+from pydantic import BaseModel, Field
 from sqlalchemy import delete, select, text
 from sqlalchemy.orm import Session
 from uuid import UUID
 
+from app.apple_auth import revoke_apple_authorization
 from app.auth import get_current_user_id_for_account_deletion, user_lifecycle_lock_key
 from app.database import get_session
 from app.models import AccountDeletionTombstone, DiveLog, IdentificationJob, MediaAsset, Observation, SiteStamp
@@ -15,6 +17,12 @@ from app.settings import settings
 from app.storage import storage_client
 
 router = APIRouter(prefix="/v1/account", tags=["account"])
+
+
+class AccountDeleteRequest(BaseModel):
+    """Optional body. Apple-linked accounts send a fresh authorization code to revoke tokens."""
+
+    apple_authorization_code: str | None = Field(default=None, min_length=1, max_length=4096)
 
 
 def _delete_supabase_user(user_id: UUID) -> None:
@@ -119,6 +127,7 @@ def finish_account_deletion(session: Session, user_id: UUID) -> None:
 
 @router.delete("", status_code=status.HTTP_204_NO_CONTENT)
 def delete_account(
+    payload: AccountDeleteRequest | None = Body(default=None),
     user_id: UUID = Depends(get_current_user_id_for_account_deletion),
     session: Session = Depends(get_session),
 ) -> None:
@@ -136,6 +145,11 @@ def delete_account(
             status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
             detail={"code": "ACCOUNT_DELETE_NOT_CONFIGURED"},
         )
+
+    if payload and payload.apple_authorization_code and not is_local_dev_identity:
+        # Revoke first: the code is single-use and expires in minutes, so a failure here
+        # must leave nothing half-deleted and let the app retry with a new code.
+        revoke_apple_authorization(payload.apple_authorization_code)
 
     if not is_local_dev_identity:
         # Serialize with normal user requests. Once the pending tombstone commits,

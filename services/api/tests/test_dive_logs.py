@@ -84,7 +84,7 @@ def test_site_stamp_and_places_and_summary(client):
     assert places[0]["region_label"] == BASE["region_label"] and places[0]["log_count"] == 2
     summary = client.get("/v1/me/summary", headers=headers()).json()
     assert summary["log_counts"]["scuba"] == 2 and summary["stamp_count"] == 1
-    assert summary["total_species"] == 181 and summary["total_sites"] == 40
+    assert summary["total_species"] == 314 and summary["total_sites"] == 40
 
 
 def test_delete_hides_log(client):

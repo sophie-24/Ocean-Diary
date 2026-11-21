@@ -18,6 +18,7 @@ from starlette.concurrency import run_in_threadpool
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from app.account import router as account_router
+from app.admin import router as admin_router
 from app.dive_logs import router as dive_logs_router
 from app.auth import _resolve_current_user_id
 from app.database import SessionLocal
@@ -36,7 +37,7 @@ if settings.app_env == "development":
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[],
-        allow_origin_regex=r"^http://(?:localhost|127\.0\.0\.1|\[::1\]):(?:808[0-9]|19006)$",
+        allow_origin_regex=r"^http://(?:localhost|127\.0\.0\.1|\[::1\]):(?:808[0-9]|19006|300[0-9])$",
         allow_credentials=False,
         allow_methods=["GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"],
         allow_headers=["Authorization", "Content-Type", "Idempotency-Key"],
@@ -48,6 +49,7 @@ app.include_router(media_router)
 app.include_router(identification_router)
 app.include_router(observations_router)
 app.include_router(dive_logs_router)
+app.include_router(admin_router)
 logger = logging.getLogger("ocean_diary.api")
 REQUIRED_DB_SCHEMA_REVISION = "0013_v2_logbook"
 RATE_LIMIT_RULES = {
@@ -166,6 +168,19 @@ def _rate_limit_policy(method: str, path: str) -> tuple[str, tuple[int, int] | N
             if rule is not None:
                 return "/v1/media/{media_id}/complete", rule
     return path, None
+
+
+# Photos go straight to object storage through presigned URLs, so API bodies are small JSON.
+# Rejecting oversized bodies early keeps a single request from tying up memory/CPU.
+MAX_REQUEST_BODY_BYTES = 1 * 1024 * 1024
+
+
+@app.middleware("http")
+async def limit_request_body_size(request, call_next):
+    declared = request.headers.get("content-length", "")
+    if declared.isdigit() and int(declared) > MAX_REQUEST_BODY_BYTES:
+        return _error_response(request, 413, "PAYLOAD_TOO_LARGE")
+    return await call_next(request)
 
 
 @app.middleware("http")

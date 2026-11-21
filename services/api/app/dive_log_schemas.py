@@ -10,6 +10,7 @@ LogKind = Literal["scuba", "free", "snorkel"]
 DIARY_MAX_CHARS = 500
 DETAILS_MAX_BYTES = 8_000
 LAYOUT_MAX_ITEMS = 60
+DETAILS_MAX_DEPTH = 6
 
 # Product decision (docs/plan-v2.md): locations are stored by name only. Reject anything that looks
 # like coordinates so a client bug can never persist precise GPS positions in free-form details.
@@ -17,15 +18,18 @@ FORBIDDEN_DETAIL_KEYS = {"lat", "lng", "lon", "latitude", "longitude", "gps", "c
 
 
 def _check_details(value: dict[str, Any]) -> dict[str, Any]:
-    def walk(node: Any) -> None:
+    def walk(node: Any, depth: int = 1) -> None:
+        # Cap nesting so a hostile payload cannot exhaust the recursion limit (500 instead of 422).
+        if depth > DETAILS_MAX_DEPTH:
+            raise ValueError("details is nested too deeply")
         if isinstance(node, dict):
             for key, child in node.items():
                 if str(key).lower() in FORBIDDEN_DETAIL_KEYS:
                     raise ValueError(f"details must not contain location coordinates ({key})")
-                walk(child)
+                walk(child, depth + 1)
         elif isinstance(node, list):
             for child in node:
-                walk(child)
+                walk(child, depth + 1)
 
     walk(value)
     if len(json.dumps(value, ensure_ascii=False).encode("utf-8")) > DETAILS_MAX_BYTES:
