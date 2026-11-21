@@ -4,9 +4,10 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import { Critter } from "../../components/Critter";
 import { PlusIcon, StampBookIcon } from "../../components/icons";
-import { ScreenHeader, RoundIconButton } from "../../components/ui/ScreenHeader";
+import { RoundIconButton } from "../../components/ui/ScreenHeader";
 import { Txt } from "../../components/ui/Txt";
-import { colors, fonts } from "../../theme/tokens";
+import { colors } from "../../theme/tokens";
+import { SPECIES } from "../../data/species";
 import { logStats, type DiveLog, type LogKind } from "./logStore";
 import { useDiveLogs } from "../../api/queries";
 import { StateView } from "../../components/ui/StateView";
@@ -14,12 +15,15 @@ import { StateView } from "../../components/ui/StateView";
 type Filter = "all" | LogKind;
 
 const TYPE_BADGE: Record<LogKind, { text: string; bg: string; fg: string; border?: string }> = {
-  scuba: { text: "SCUBA", bg: colors.navy, fg: colors.white },
-  free: { text: "FREE", bg: colors.white, fg: colors.oceanBlue, border: colors.oceanBlue },
-  snorkel: { text: "SNORKEL", bg: "#FFF4D1", fg: "#8A5A00", border: colors.sunny },
+  scuba: { text: "스쿠버", bg: colors.navy, fg: colors.white },
+  free: { text: "프리", bg: colors.white, fg: colors.oceanBlue, border: colors.oceanBlue },
+  snorkel: { text: "스노클", bg: "#FFF4D1", fg: "#8A5A00" },
 };
 
-const MONTHS = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+const SPECIES_NAME: Record<string, string> = {};
+SPECIES.forEach((sp) => {
+  if (sp.art && !SPECIES_NAME[sp.art]) SPECIES_NAME[sp.art] = sp.nameKo;
+});
 
 export function LogListScreen() {
   const router = useRouter();
@@ -49,36 +53,33 @@ export function LogListScreen() {
 
   const header = (
     <View>
-      <ScreenHeader
-        eyebrow="DIVE SCRAPBOOK"
-        title="로그북"
-        actions={
-          <>
-            <RoundIconButton label="우표첩 보기로 바꾸기">
-              <StampBookIcon />
-            </RoundIconButton>
-            <Pressable accessibilityRole="button" accessibilityLabel="새 기록 쓰기" onPress={() => router.push("/log/new")} style={styles.addBtn}>
-              <PlusIcon />
-            </Pressable>
-          </>
-        }
-      />
+      <View style={styles.headerRow}>
+        <Txt accessibilityRole="header" size={26} weight="black" tracking={-0.02}>
+          로그북
+        </Txt>
+        <View style={styles.actions}>
+          <RoundIconButton label="우표첩 보기로 바꾸기">
+            <StampBookIcon />
+          </RoundIconButton>
+          <Pressable accessibilityRole="button" accessibilityLabel="새 다이빙 기록 쓰기" onPress={() => router.push("/log/new")} style={styles.addBtn}>
+            <PlusIcon />
+          </Pressable>
+        </View>
+      </View>
       <View style={styles.stats}>
         {(
           [
             ["총 다이빙", `${counts.scuba}회`],
-            ["누적 시간", stats.time],
-            ["최대 수심", stats.maxDepth],
+            ["누적", stats.time],
+            ["최대", stats.maxDepth],
           ] as const
         ).map(([k, v]) => (
-          <View key={k} style={styles.stat}>
-            <Txt size={11} color={colors.ink2}>
-              {k}
-            </Txt>
-            <Txt size={18} weight="black">
+          <Txt key={k} size={13} color={colors.ink2}>
+            {k + " "}
+            <Txt size={15} weight="black">
               {v}
             </Txt>
-          </View>
+          </Txt>
         ))}
       </View>
       <View accessibilityRole="tablist" style={styles.segment}>
@@ -111,7 +112,7 @@ export function LogListScreen() {
         stickySectionHeadersEnabled={false}
         contentContainerStyle={{ paddingBottom: 32 }}
         renderSectionHeader={({ section }) => (
-          <Txt accessibilityRole="header" size={14} weight="black" color={colors.ink2} style={styles.month}>
+          <Txt accessibilityRole="header" size={13} weight="bold" color={colors.ink3} tracking={0.02} style={styles.month}>
             {section.title}
           </Txt>
         )}
@@ -146,13 +147,12 @@ function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: 
       <View style={{ transform: [{ rotate: `${tilt}deg` }] }}>
         <View style={styles.stampFrame}>
           <View style={[styles.stampInner, { backgroundColor: log.coverBg }]}>
-            <View style={styles.glare} />
             <Critter kind={log.coverKind} width={70} height={46} />
           </View>
         </View>
         <View style={styles.postmark}>
-          <Txt size={10} weight="black" color={colors.oceanBlue}>
-            {MONTHS[Number(m) - 1]}
+          <Txt size={9} weight="bold" color={colors.oceanBlue} tracking={0.04} style={{ lineHeight: 10 }}>
+            {`${Number(m)}월`}
           </Txt>
           <Txt size={13} weight="black" color={colors.oceanBlue} style={{ lineHeight: 14 }}>
             {d}
@@ -177,22 +177,26 @@ function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: 
             </View>
           ) : null}
         </View>
-        <Txt size={21} style={{ fontFamily: fonts.diaryBold, lineHeight: 24 }} numberOfLines={2}>
+        <Txt size={15} weight="bold" tracking={-0.01} style={{ lineHeight: 19 }} numberOfLines={2}>
           {log.title}
         </Txt>
-        <Txt size={12} color={colors.ink2}>
-          {log.region} · {log.point}
-        </Txt>
-        <Txt size={12} weight="medium" color={colors.ink2} style={{ fontVariant: ["tabular-nums"] }}>
+        <Txt size={12} color={colors.ink3} style={{ fontVariant: ["tabular-nums"] }}>
           {log.summary}
         </Txt>
         {log.stickers.length > 0 ? (
-          <View style={[styles.row6, { gap: 2, marginTop: 2 }]}>
+          <View style={[styles.row6, { marginTop: 2, flexWrap: "wrap" }]}>
             {log.stickers.map((k) => (
-              <Critter key={k} kind={k} width={40} height={22} />
+              <View key={k} style={styles.row3}>
+                <Critter kind={k} width={24} height={14} />
+                {SPECIES_NAME[k] ? (
+                  <Txt size={11} weight="medium" color={colors.ink2}>
+                    {SPECIES_NAME[k]}
+                  </Txt>
+                ) : null}
+              </View>
             ))}
             {log.extraStickers ? (
-              <Txt size={12} weight="bold" color={colors.ink2}>
+              <Txt size={11} weight="medium" color={colors.ink3}>
                 +{log.extraStickers}
               </Txt>
             ) : null}
@@ -205,19 +209,20 @@ function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: 
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
-  addBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
-  stats: { flexDirection: "row", gap: 8, marginTop: 14, marginHorizontal: 20 },
-  stat: { flex: 1, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, backgroundColor: colors.white },
-  segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 10, backgroundColor: colors.track },
-  segItem: { flex: 1, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center" },
+  headerRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20 },
+  actions: { flexDirection: "row", gap: 8 },
+  addBtn: { width: 44, height: 44, borderRadius: 10, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  stats: { flexDirection: "row", gap: 16, marginTop: 14, marginHorizontal: 20 },
+  segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 10, backgroundColor: colors.line },
+  segItem: { flex: 1, height: 36, borderRadius: 7, alignItems: "center", justifyContent: "center" },
   segOn: { backgroundColor: colors.white },
   month: { marginTop: 20, marginBottom: 10, marginHorizontal: 20 },
   card: { flexDirection: "row", alignItems: "center", gap: 14, marginHorizontal: 20, padding: 12, borderRadius: 12, backgroundColor: colors.white },
-  stampFrame: { width: 86, height: 104, padding: 5, backgroundColor: colors.ghostBg, borderWidth: 4, borderStyle: "dotted", borderColor: colors.white, shadowColor: "#1C1C1E", shadowOpacity: 0.16, shadowRadius: 6, shadowOffset: { width: 0, height: 2 }, elevation: 2 },
+  stampFrame: { width: 86, height: 104, padding: 5, backgroundColor: colors.sky, borderWidth: 4, borderStyle: "dotted", borderColor: colors.white },
   stampInner: { flex: 1, alignItems: "center", justifyContent: "center", overflow: "hidden" },
-  glare: { position: "absolute", left: -10, top: -20, width: 26, height: 140, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "20deg" }] },
-  postmark: { position: "absolute", right: -14, top: -10, width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: colors.oceanBlue, backgroundColor: "rgba(255,255,255,0.85)", alignItems: "center", justifyContent: "center", transform: [{ rotate: "-12deg" }] },
+  postmark: { position: "absolute", right: -14, top: -10, width: 44, height: 44, borderRadius: 22, borderWidth: 1.5, borderColor: colors.oceanBlue, backgroundColor: "rgba(255,255,255,0.9)", alignItems: "center", justifyContent: "center", transform: [{ rotate: "-12deg" }] },
   row6: { flexDirection: "row", alignItems: "center", gap: 6 },
-  badge: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 6, borderWidth: 1.5 },
-  draft: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 999, backgroundColor: "#FFF7DC", borderWidth: 1, borderColor: "#F3DE95" },
+  row3: { flexDirection: "row", alignItems: "center", gap: 3 },
+  badge: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 4, borderWidth: 1.5 },
+  draft: { paddingHorizontal: 7, paddingVertical: 1, borderRadius: 4, backgroundColor: "#FFF7DC" },
 });

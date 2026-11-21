@@ -17,7 +17,7 @@ import { useAuth } from "../../api/auth";
 import { onboardingStore, useOnboarding } from "./onboardingStore";
 
 /**
- * 첫 회원가입(혹은 첫 로그인) 시 자동으로 한 번, 그리고 프로필의
+ * 첫 회원가입(혹은 첫 로그인) 시 자동으로 한 번, 그리고 설정의
  * '앱 소개 다시 보기'에서 수동으로 여는 How-to-use 팝업. 실제 각 탭 위에
  * 떠있는 모달이라 라우팅 상태를 건드리지 않는다.
  *
@@ -49,7 +49,7 @@ const STEPS: Step[] = [
     icon: "fish",
     accent: colors.oceanBlue,
     title: "사진 한 장으로 생물 식별",
-    body: "‘발견’ 탭에서 수중 사진을 올리면\nMola가 종(種)을 알아보고\n도감에 자동으로 기록해요.",
+    body: "‘발견’ 탭에서 수중 사진을 올리면\nMola가 종을 알아보고\n도감에 자동으로 기록해요.",
   },
   {
     key: "log",
@@ -70,7 +70,7 @@ const STEPS: Step[] = [
     icon: "check",
     accent: colors.success,
     title: "자, 이제 바다로 출발!",
-    body: "언제든 ‘내 계정 › 앱 소개 다시 보기’에서\n이 안내를 다시 열 수 있어요.",
+    body: "언제든 ‘설정 › 앱 소개 다시 보기’에서\n이 안내를 다시 열 수 있어요.",
   },
 ];
 
@@ -89,7 +89,7 @@ function tapHaptic() {
 }
 
 export function OnboardingOverlay() {
-  const { signedIn, loading } = useAuth();
+  const { signedIn, loading, profileReady } = useAuth();
   const { open, loaded, seen } = useOnboarding();
   const [i, setI] = useState(0);
   // Snapshot the direction so step transitions animate right-to-left on "다음"
@@ -102,10 +102,12 @@ export function OnboardingOverlay() {
   useEffect(() => {
     if (loading) return;
     if (!signedIn) return;
+    // Nickname comes first; the intro opens over Home right after it is saved.
+    if (!profileReady) return;
     if (!loaded) return;
     if (seen) return;
     onboardingStore.autoOpenIfFirstTime();
-  }, [loading, signedIn, loaded, seen]);
+  }, [loading, signedIn, profileReady, loaded, seen]);
 
   // Every time the overlay opens, start from step 0.
   useEffect(() => {
@@ -266,8 +268,8 @@ const styles = StyleSheet.create({
   dotOn: { width: 22, backgroundColor: colors.oceanBlue },
   dotOff: { width: 8, backgroundColor: colors.line },
   footer: { flexDirection: "row", gap: 10, marginTop: 20, alignSelf: "stretch" },
-  btn: { flex: 1, paddingVertical: 14, borderRadius: 12, alignItems: "center" },
+  btn: { flex: 1, paddingVertical: 14, borderRadius: 10, alignItems: "center" },
   btnPrimary: { backgroundColor: colors.oceanBlue },
-  btnGhost: { backgroundColor: colors.mist, borderWidth: 1, borderColor: colors.line },
+  btnGhost: { backgroundColor: colors.ghostBg, borderWidth: 1, borderColor: colors.line },
   btnSpacer: { backgroundColor: "transparent" },
 });

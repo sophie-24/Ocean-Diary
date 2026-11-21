@@ -30,5 +30,5 @@ export function Chip({ label, count, selected, onPress }: Props) {
 const styles = StyleSheet.create({
   chip: { height: 40, paddingHorizontal: 15, borderRadius: 999, borderWidth: 1, justifyContent: "center" },
   on: { backgroundColor: colors.navy, borderColor: colors.navy },
-  off: { backgroundColor: colors.white, borderColor: colors.lineStrong },
+  off: { backgroundColor: colors.white, borderColor: colors.line },
 });

@@ -6,7 +6,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown, runOnJS, useAnimatedStyle, useSharedValue } from "react-native-reanimated";
 import { GestureDetector, usePanGesture } from "react-native-gesture-handler";
 import { Critter } from "../../components/Critter";
-import { CloseIcon, SearchIcon } from "../../components/icons";
+import { ChevronLeft, CloseIcon, SearchIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import type { CritterKind } from "../../data/illustrations";
 import { colors } from "../../theme/tokens";
@@ -166,7 +166,7 @@ export function MacroTankScreen() {
             <View style={styles.handle} />
             {near && !card ? (
               <View style={styles.nearPill}>
-                <Txt size={12} weight="black">
+                <Txt size={12} weight="bold" color={colors.white}>
                   조금만 더! 뭔가 있어요
                 </Txt>
               </View>
@@ -177,6 +177,9 @@ export function MacroTankScreen() {
 
       <View style={[styles.top, { paddingTop: insets.top + 8 }]} pointerEvents="box-none">
         <View style={{ flexDirection: "row", gap: 10, alignItems: "flex-start" }} pointerEvents="box-none">
+          <Pressable accessibilityRole="button" accessibilityLabel="산호초 수조로 돌아가기" onPress={() => (router.canGoBack() ? router.back() : router.replace("/sea/tank/reef"))} style={[styles.glass, styles.round]}>
+            <ChevronLeft color={colors.white} />
+          </Pressable>
           <View style={styles.glass}>
             <Txt accessibilityRole="header" size={19} weight="black" color={colors.white}>
               마크로 수조
@@ -221,17 +224,27 @@ export function MacroTankScreen() {
           </View>
           <View style={{ flex: 1, paddingRight: 22 }}>
             <Txt size={11} weight="black" color={card.fresh ? colors.coral : colors.oceanBlue}>
-              {card.fresh ? "찾았다! · 오늘의 발견 +1" : "마크로 수조 친구"}
+              {card.fresh ? "찾았다! 오늘의 발견 +1" : "마크로 수조 친구"}
             </Txt>
             <Txt size={16} weight="black">
               {cardData.name}
             </Txt>
             <Txt size={11} color={colors.inkSoft}>
-              {cardData.en} · 실제 크기 {cardData.size}
+              {cardData.en}
+            </Txt>
+            <Txt size={11} color={colors.inkSoft}>
+              실제 크기 {cardData.size}
             </Txt>
             <Txt size={12} color={colors.ink2} style={{ marginTop: 4 }}>
-              처음 만난 날 · {cardData.date}
+              처음 만난 날 {cardData.date}
             </Txt>
+            {NO_BY_ART.get(cardData.kind) ? (
+              <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/species/[no]", params: { no: NO_BY_ART.get(cardData.kind)! } })} style={styles.cardCta}>
+                <Txt size={12} weight="bold" color={colors.white}>
+                  도감에서 보기
+                </Txt>
+              </Pressable>
+            ) : null}
           </View>
         </Animated.View>
       ) : null}
@@ -296,20 +309,21 @@ const styles = StyleSheet.create({
   handle: { position: "absolute", left: LENS - 14, top: LENS - 14, width: 16, height: 58, borderRadius: 9, backgroundColor: "#1F3F7A", transform: [{ rotate: "-45deg" }] },
   nearPill: { position: "absolute", top: -40, alignSelf: "center", paddingHorizontal: 12, height: 28, borderRadius: 999, backgroundColor: colors.sunny, justifyContent: "center" },
   top: { position: "absolute", left: 16, right: 16, top: 0, gap: 10 },
-  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.22)", borderRadius: 18, paddingVertical: 8, paddingHorizontal: 14 },
+  glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.22)", borderRadius: 12, paddingVertical: 8, paddingHorizontal: 14 },
   round: { width: 44, height: 44, borderRadius: 22, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
   counter: { height: 34, paddingHorizontal: 12, borderRadius: 999, backgroundColor: "rgba(255,255,255,0.94)", flexDirection: "row", alignItems: "center", gap: 8 },
   pip: { width: 7, height: 7, borderRadius: 4 },
   hint: { flex: 1, height: 34, paddingHorizontal: 12, borderRadius: 999, borderWidth: 1, borderColor: "rgba(247,201,72,0.5)", backgroundColor: "rgba(8,24,58,0.55)", flexDirection: "row", alignItems: "center", gap: 6 },
-  card: { position: "absolute", left: 16, right: 16, flexDirection: "row", alignItems: "center", gap: 12, padding: 14, borderRadius: 22, backgroundColor: colors.white },
-  cardClose: { position: "absolute", right: 6, top: 6, width: 36, height: 36, alignItems: "center", justifyContent: "center" },
-  cardArt: { width: 96, height: 76, borderRadius: 16, backgroundColor: colors.sky, alignItems: "center", justifyContent: "center" },
+  card: { position: "absolute", left: 16, right: 16, flexDirection: "row", alignItems: "center", gap: 12, padding: 14, borderRadius: 12, backgroundColor: colors.white },
+  cardCta: { alignSelf: "flex-start", marginTop: 8, height: 34, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.navy, justifyContent: "center" },
+  cardClose: { position: "absolute", right: 6, top: 6, width: 36, height: 36, borderRadius: 18, alignItems: "center", justifyContent: "center" },
+  cardArt: { width: 96, height: 76, borderRadius: 12, backgroundColor: colors.sky, alignItems: "center", justifyContent: "center" },
   tray: { position: "absolute", left: 0, right: 0, flexGrow: 0 },
-  slot: { width: 66, height: 62, borderRadius: 16, alignItems: "center", justifyContent: "center", gap: 3 },
+  slot: { width: 66, height: 62, borderRadius: 12, alignItems: "center", justifyContent: "center", gap: 3 },
   slotOn: { backgroundColor: "rgba(255,255,255,0.16)", borderWidth: 1, borderColor: "rgba(169,210,255,0.35)" },
   slotOff: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1.5, borderStyle: "dashed", borderColor: "rgba(169,210,255,0.35)" },
   switcher: { position: "absolute", left: 0, right: 0, flexGrow: 0 },
-  switcherChip: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 16, alignItems: "center" },
+  switcherChip: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, alignItems: "center" },
   switcherOn: { backgroundColor: "rgba(255,255,255,0.92)" },
   switcherOff: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
 });

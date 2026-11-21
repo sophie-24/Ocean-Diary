@@ -7,7 +7,7 @@ import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useQuery } from "@tanstack/react-query";
 import { Critter } from "../../components/Critter";
-import { CloseIcon, InfoIcon, PlusIcon, SparkleIcon } from "../../components/icons";
+import { CloseIcon, InfoIcon, PlusIcon, SearchIcon, SparkleIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { exifToIso, getClientConfig, keyFor, localDate, type PickedPhoto } from "../../api/discover";
 import { useDiveLogs } from "../../api/queries";
@@ -54,8 +54,8 @@ export function DiscoverSelectScreen() {
         const many = m.sameDay.length > 1;
         return {
           id: k,
-          title: k === NO_DATE ? "촬영 날짜를 모르는 사진" : `${dateTitle(k)}${log ? ` · ${log.region} ${log.point}` : ""}`,
-          diveLabel: log ? `로그 ${log.label}${many ? ` · ${m.sameDay.length}개 중` : ""}` : k === NO_DATE ? "로그 고르기" : "연결 안 함",
+          title: k === NO_DATE ? "촬영 날짜를 모르는 사진" : `${dateTitle(k)}${log ? `, ${log.region} ${log.point}` : ""}`,
+          diveLabel: log ? `로그 ${log.label}${many ? `, ${m.sameDay.length}개 중` : ""}` : k === NO_DATE ? "로그 고르기" : "연결 안 함",
           attention: m.guessed,
           items,
         };
@@ -141,9 +141,9 @@ export function DiscoverSelectScreen() {
       </View>
 
       <View style={styles.hint}>
-        <InfoIcon color={colors.oceanBlue} size={16} />
+        <SparkleIcon color={colors.oceanBlue} size={18} />
         <Txt size={13} color={colors.oceanBlue} style={{ flex: 1 }}>
-          촬영 날짜가 같은 다이빙 로그에 자동으로 연결해요
+          촬영 날짜와 위치로 다이빙을 찾아 자동으로 연결해요
         </Txt>
       </View>
 
@@ -153,7 +153,7 @@ export function DiscoverSelectScreen() {
             <Txt size={14} weight="extraBold" color={colors.white}>
               하던 사진 {open}장이 남아 있어요
             </Txt>
-            <Txt size={12} color={colors.ghostLine}
+            <Txt size={12} color={colors.ghostLine}>
               {savedCount ? `${savedCount}장은 이미 도감에 저장했어요` : "올린 사진은 다시 올리지 않아요"}
             </Txt>
           </View>
@@ -225,12 +225,12 @@ export function DiscoverSelectScreen() {
                 {selected.length}개 선택됨
               </Txt>
               <Txt size={12} color={error ? colors.coral : colors.ink2}>
-                {error ?? "JPEG·PNG 사진을 한 장씩 분석해요"}
+                {error ?? "영상은 한 개당 최대 60초까지 분석해요"}
               </Txt>
             </View>
-            <Pressable accessibilityRole="button" onPress={() => discoverStore.reset()} hitSlop={8} style={{ height: 44, justifyContent: "center" }}>
+            <Pressable accessibilityRole="button" onPress={() => discoverStore.set({ selected: [] })} hitSlop={8} style={{ height: 44, justifyContent: "center" }}>
               <Txt size={13} weight="bold" color={colors.oceanBlue}>
-                새로 시작
+                선택 해제
               </Txt>
             </Pressable>
           </View>
@@ -241,9 +241,9 @@ export function DiscoverSelectScreen() {
             onPress={() => void analyse()}
             style={[styles.cta, selected.length === 0 && { opacity: 0.45 }]}
           >
-            <SparkleIcon />
+            <SearchIcon size={20} color={colors.white} />
             <Txt size={16} weight="extraBold" color={colors.white}>
-              AI로 바닷속 친구 찾기
+              바닷속 친구 찾기
             </Txt>
           </Pressable>
         </View>
@@ -335,10 +335,10 @@ const styles = StyleSheet.create({
   segOn: { backgroundColor: colors.white },
   hint: { flexDirection: "row", alignItems: "center", gap: 8, marginTop: 12, marginHorizontal: 20, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 10, backgroundColor: colors.sky },
   groupHead: { flexDirection: "row", alignItems: "center", gap: 8, paddingTop: 16, paddingBottom: 8, paddingHorizontal: 20 },
-  diveChip: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.lineStrong },
+  diveChip: { paddingHorizontal: 8, paddingVertical: 3, borderRadius: 4, backgroundColor: colors.white },
   grid: { flexDirection: "row", flexWrap: "wrap", gap: 2 },
   thumb: { height: 128, overflow: "hidden", backgroundColor: colors.track },
-  diveChipWarn: { backgroundColor: "#FFF4D6", borderColor: "#E9C46A" },
+  diveChipWarn: { backgroundColor: "#FFF4D6" },
   resume: { flexDirection: "row", alignItems: "center", gap: 12, marginTop: 12, marginHorizontal: 20, paddingVertical: 12, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.navy },
   resumeCta: { height: 40, paddingHorizontal: 14, borderRadius: 12, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   empty: { flex: 1, alignItems: "center", justifyContent: "center", gap: 10, paddingHorizontal: 32, paddingBottom: 80 },
@@ -346,8 +346,8 @@ const styles = StyleSheet.create({
   consent: { gap: 14, padding: 20, backgroundColor: colors.white, borderTopLeftRadius: 12, borderTopRightRadius: 12 },
   consentNo: { width: 96, height: 54, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, alignItems: "center", justifyContent: "center" },
   glare: { position: "absolute", left: -20, top: -30, width: 70, height: 190, backgroundColor: "rgba(255,255,255,0.12)", transform: [{ rotate: "22deg" }] },
-  dur: { position: "absolute", left: 6, bottom: 6, flexDirection: "row", alignItems: "center", gap: 3, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 6, backgroundColor: "rgba(15,32,50,0.72)" },
-  ring: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderWidth: 4, borderColor: colors.oceanBlue, backgroundColor: "rgba(47,111,219,0.14)" },
+  dur: { position: "absolute", left: 6, bottom: 6, flexDirection: "row", alignItems: "center", gap: 3, paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: "rgba(15,32,50,0.72)" },
+  ring: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderWidth: 4, borderColor: colors.oceanBlue, backgroundColor: "rgba(37,99,235,0.14)" },
   num: { position: "absolute", top: 7, right: 7, width: 24, height: 24, borderRadius: 12, borderWidth: 2, borderColor: colors.white, alignItems: "center", justifyContent: "center" },
   numOn: { backgroundColor: colors.oceanBlue },
   numOff: { backgroundColor: "rgba(15,32,50,0.25)" },
@@ -362,11 +362,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.white,
     borderTopLeftRadius: 12,
     borderTopRightRadius: 12,
-    shadowColor: "#1C1C1E",
-    shadowOpacity: 0.1,
-    shadowRadius: 24,
-    shadowOffset: { width: 0, height: -8 },
-    elevation: 10,
   },
   sheetRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between" },
   cta: { height: 54, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 8 },

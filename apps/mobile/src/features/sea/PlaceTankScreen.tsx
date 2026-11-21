@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { usePlaces } from "../../api/queries";
 import { useRouter } from "expo-router";
 import { Critter } from "../../components/Critter";
@@ -30,7 +30,7 @@ type Place = {
 export const PLACES: Record<string, Place> = {
   malapascua: {
     id: "malapascua",
-    country: "필리핀 · 세부",
+    country: "필리핀, 세부",
     name: "말라파스쿠아의 바다",
     aliases: ["말라파스쿠아", "malapascua"],
     cast: { thresher: "007", whitetip: "006", mandarin: "026", lionfish: "027", moray: "030", trevally: "034" },
@@ -53,13 +53,13 @@ export function PlaceTankScreen({ id }: { id: string }) {
   const logs = visits.reduce((n, v) => n + v.log_count, 0);
   const first = visits.map((v) => v.first_date).sort()[0];
   const last = visits.map((v) => v.last_date).sort().at(-1);
-  const range = first ? `${first.replace(/-/g, ".")}${last && last !== first ? ` – ${last.slice(5).replace(/-/g, ".")}` : ""} · ` : "";
+  const range = first ? `${first.replace(/-/g, ".")}${last && last !== first ? ` – ${last.slice(5).replace(/-/g, ".")}` : ""}, ` : "";
 
   return (
     <TankShell
       eyebrow={place.country}
       title={place.name}
-      subtitle={(n) => `${range}다이빙 ${logs}회 · ${n}종`}
+      subtitle={(n) => `${range}다이빙 ${logs}회, ${n}종`}
       emptyHint="이 바다에서 기록한 생물이 아직 없어요"
       scene={({ rays, phase }) => (
         <VideoScene phase={phase} videos={oceanVideos} fallback={<OceanScene rays={rays} />} />
@@ -69,7 +69,11 @@ export function PlaceTankScreen({ id }: { id: string }) {
       sound="scuba"
       notes={{ dawn: "환도상어가 클리닝 스테이션에 올라와요", day: "만다린피쉬는 산호 틈에 숨었어요", dusk: "만다린피쉬 짝짓기 춤 시간", night: "백기흉상어가 사냥 중" }}
       footer={
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.strip} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>
+        <View style={styles.strip}>
+        <Txt size={12} weight="bold" color={colors.sky} style={styles.stripTitle}>
+          이 바다에서 만난 친구 {friends.length}
+        </Txt>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ gap: 8, paddingHorizontal: 16 }}>
           {friends.map((k) => (
             <Pressable
               key={k}
@@ -79,12 +83,13 @@ export function PlaceTankScreen({ id }: { id: string }) {
               style={styles.friend}
             >
               <Critter kind={k} width={52} height={30} />
-              <Txt size={10} weight="bold" color={colors.white} numberOfLines={1}>
+              <Txt size={11} weight="bold" color={colors.white} numberOfLines={1}>
                 {SPECIES_BY_NO[residents[k]!.no].nameKo}
               </Txt>
             </Pressable>
           ))}
         </ScrollView>
+        </View>
       }
     >
       {({ night, dark, pick }) => (
@@ -123,6 +128,7 @@ export function PlaceTankScreen({ id }: { id: string }) {
 }
 
 const styles = StyleSheet.create({
-  strip: { position: "absolute", left: 0, right: 0, bottom: 20, flexGrow: 0 },
+  strip: { position: "absolute", left: 0, right: 0, bottom: 20 },
+  stripTitle: { paddingHorizontal: 18, paddingBottom: 8 },
   friend: { width: 76, height: 64, borderRadius: 12, alignItems: "center", justifyContent: "center", gap: 2, backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
 });

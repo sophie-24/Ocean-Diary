@@ -11,7 +11,7 @@ export function ScreenHeader({ eyebrow, title, actions, tone = "light" }: Props)
   return (
     <View style={styles.row}>
       <View style={{ flexShrink: 1 }}>
-        <Txt size={12} weight="extraBold" tracking={0.14} color={dark ? "#8EC5FF" : colors.oceanBlue}>
+        <Txt size={12} weight="bold" color={dark ? "#8EC5FF" : colors.ink2}>
           {eyebrow}
         </Txt>
         <Txt accessibilityRole="header" size={26} weight="black" tracking={-0.02} color={dark ? colors.white : colors.navy}>

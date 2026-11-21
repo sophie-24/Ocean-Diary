@@ -126,15 +126,15 @@ export function CountryDetailScreen() {
           <ChevronLeft />
         </Pressable>
         <View style={{ flex: 1 }}>
-          <Txt size={12} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
-            {country.continent.toUpperCase()}
-          </Txt>
-          <Txt accessibilityRole="header" size={22} weight="black">
+          <Txt accessibilityRole="header" size={22} weight="black" tracking={-0.02}>
             {country.nameKo}
+          </Txt>
+          <Txt size={12} color={colors.ink2} style={{ marginTop: 2 }}>
+            {country.continent}
           </Txt>
         </View>
         <View style={styles.flagBubble}>
-          <Txt size={28} style={{ lineHeight: 34 }}>
+          <Txt size={26} style={{ lineHeight: 32 }}>
             {country.flag}
           </Txt>
         </View>
@@ -166,16 +166,22 @@ function CollectedView({
   return (
     <>
       <View style={styles.statRow}>
-        <StatCard label="수집 생물" value={`${collection.uniqueSpecies}종`} />
-        <StatCard label="방문 명소" value={`${collection.siteLabels.length}곳`} />
-        <StatCard label="그림일기" value={`${collection.logCount}회`} />
+        <StatCard label="수집한 종" value={`${collection.uniqueSpecies}`} accent />
+        <View style={styles.statDivider} />
+        <StatCard label="다이브 사이트" value={`${collection.siteLabels.length}`} />
+        <View style={styles.statDivider} />
+        <StatCard label="그림일기" value={`${collection.logCount}`} />
       </View>
 
       {collection.siteLabels.length > 0 ? (
-        <Section title={`📍 방문한 다이브 사이트 (${collection.siteLabels.length})`}>
-          {collection.siteLabels.map((label) => (
+        <Section title={`방문한 다이브 사이트 (${collection.siteLabels.length})`}>
+          {collection.siteLabels.map((label, i) => (
             <View key={label} style={styles.listRow}>
-              <View style={styles.listDot} />
+              <View style={styles.listBadge}>
+                <Txt size={13} weight="bold" color={colors.white}>
+                  {i + 1}
+                </Txt>
+              </View>
               <Txt size={15} weight="bold" style={{ flex: 1 }}>
                 {label}
               </Txt>
@@ -184,7 +190,7 @@ function CollectedView({
         </Section>
       ) : null}
 
-      <Section title={`🐠 여기서 만난 친구들 (${collection.speciesArt.length})`}>
+      <Section title={`여기서 만난 친구들 (${collection.speciesArt.length})`}>
         <View style={styles.speciesGrid}>
           {collection.speciesArt.map((artKey) => (
             <SpeciesTile key={artKey} artKey={artKey} />
@@ -192,8 +198,8 @@ function CollectedView({
         </View>
       </Section>
 
-      <Txt size={12} color={colors.ink2} align="center" style={{ marginTop: 24 }}>
-        {country.nameKo}에서 만난 친구들 · 그림일기 {collection.logCount}회
+      <Txt size={12} color={colors.ink2} align="center" style={{ marginTop: 24, lineHeight: 18 }}>
+        {country.nameKo}에서 만난 친구들{"\n"}그림일기 {collection.logCount}회
       </Txt>
     </>
   );
@@ -215,7 +221,7 @@ function EmptyStateView({
           아직 수집한 생물이 없어요
         </Txt>
         <Txt size={14} color={colors.ink2} align="center" style={{ marginTop: 6 }}>
-          {country.nameKo}에서 만난 친구를 기록해 보세요
+          첫 {country.nameKo} 다이빙을{"\n"}Mola에 담아 볼까요?
         </Txt>
         <Pressable
           accessibilityRole="button"
@@ -224,13 +230,13 @@ function EmptyStateView({
           style={styles.cta}
         >
           <Txt size={15} weight="extraBold" color={colors.white}>
-            + 로그 작성하기
+            첫 로그 쓰기
           </Txt>
         </Pressable>
       </View>
 
       {recommended.length > 0 ? (
-        <Section title="✨ 여기서 자주 만나는 친구들">
+        <Section title="여기서 자주 만나는 친구들">
           <View style={styles.speciesGrid}>
             {recommended.map((artKey) => (
               <SpeciesTile key={artKey} artKey={artKey} dimmed />
@@ -257,11 +263,11 @@ function NotVisitedView({
   const notableSites = country.notableSites ?? [];
   return (
     <>
-      <View style={styles.hero}>
-        <Txt size={18} weight="black" align="center">
+      <View style={[styles.hero, styles.heroSky]}>
+        <Txt size={16} weight="bold" align="center">
           아직 다녀오지 않았어요
         </Txt>
-        <Txt size={14} color={colors.ink2} align="center" style={{ marginTop: 6 }}>
+        <Txt size={12} color={colors.oceanBlue} align="center" style={{ marginTop: 4 }}>
           {notableSites.length > 0
             ? "다이빙으로 유명한 지역이에요"
             : "다음 다이빙 목적지로 어떠세요?"}
@@ -269,10 +275,14 @@ function NotVisitedView({
       </View>
 
       {notableSites.length > 0 ? (
-        <Section title="📍 주요 다이빙 포인트">
-          {notableSites.map((label) => (
+        <Section title="주요 다이빙 포인트">
+          {notableSites.map((label, i) => (
             <View key={label} style={styles.listRow}>
-              <View style={styles.listDot} />
+              <View style={styles.listBadge}>
+                <Txt size={11} weight="bold" color={colors.white}>
+                  {i + 1}위
+                </Txt>
+              </View>
               <Txt size={15} weight="bold" style={{ flex: 1 }}>
                 {label}
               </Txt>
@@ -282,7 +292,7 @@ function NotVisitedView({
       ) : null}
 
       {recommended.length > 0 ? (
-        <Section title="🐠 여기서 만날 수 있는 친구들">
+        <Section title="여기서 만날 수 있어요">
           <View style={styles.speciesGrid}>
             {recommended.map((artKey) => (
               <SpeciesTile key={artKey} artKey={artKey} dimmed />
@@ -300,8 +310,8 @@ function NotVisitedView({
         onPress={onLog}
         style={[styles.cta, { marginTop: 20, marginHorizontal: 16 }]}
       >
-        <Txt size={15} weight="extraBold" color={colors.white}>
-          + 로그 작성하기
+        <Txt size={15} weight="bold" color={colors.white}>
+          첫 로그 쓰기
         </Txt>
       </Pressable>
     </>
@@ -312,7 +322,7 @@ function NotVisitedView({
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <View style={styles.section}>
-      <Txt size={13} weight="extraBold" color={colors.ink2} style={styles.sectionTitle}>
+      <Txt size={13} weight="bold" color={colors.navy} style={styles.sectionTitle}>
         {title}
       </Txt>
       {children}
@@ -320,14 +330,14 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function StatCard({ label, value }: { label: string; value: string }) {
+function StatCard({ label, value, accent = false }: { label: string; value: string; accent?: boolean }) {
   return (
     <View style={styles.statCard}>
-      <Txt size={11} color={colors.ink2}>
-        {label}
-      </Txt>
-      <Txt size={18} weight="black" color={colors.oceanBlue} style={{ marginTop: 2 }}>
+      <Txt size={28} weight="bold" tracking={-0.02} color={accent ? colors.oceanBlue : colors.navy}>
         {value}
+      </Txt>
+      <Txt size={11} weight="medium" color={colors.ink3} style={{ marginTop: 2 }}>
+        {label}
       </Txt>
     </View>
   );
@@ -357,30 +367,26 @@ const styles = StyleSheet.create({
   },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
   flagBubble: {
-    width: 56,
-    height: 56,
+    width: 44,
+    height: 44,
     borderRadius: 12,
-    backgroundColor: "#DFEBFC",
-    borderWidth: 1.5,
-    borderColor: colors.oceanBlue,
+    backgroundColor: colors.white,
     alignItems: "center",
     justifyContent: "center",
   },
   scroll: { paddingBottom: 48 },
   statRow: {
     flexDirection: "row",
-    gap: 8,
-    paddingHorizontal: 16,
-    marginTop: 10,
-  },
-  statCard: {
-    flex: 1,
-    paddingVertical: 12,
-    paddingHorizontal: 12,
-    backgroundColor: colors.white,
-    borderRadius: 10,
     alignItems: "center",
+    marginHorizontal: 16,
+    marginTop: 10,
+    paddingVertical: 18,
+    paddingHorizontal: 16,
+    backgroundColor: colors.white,
+    borderRadius: 12,
   },
+  statCard: { flex: 1, alignItems: "center" },
+  statDivider: { width: 1, height: 44, backgroundColor: colors.line },
   section: { paddingHorizontal: 16, paddingTop: 20 },
   sectionTitle: { marginBottom: 10, paddingHorizontal: 4 },
   listRow: {
@@ -391,13 +397,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     marginBottom: 6,
     backgroundColor: colors.white,
-    borderRadius: 10,
+    borderRadius: 12,
   },
-  listDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
+  listBadge: {
+    minWidth: 32,
+    height: 32,
+    paddingHorizontal: 4,
+    borderRadius: 8,
     backgroundColor: colors.oceanBlue,
+    alignItems: "center",
+    justifyContent: "center",
   },
   speciesGrid: {
     flexDirection: "row",
@@ -414,8 +423,10 @@ const styles = StyleSheet.create({
     padding: 8,
   },
   speciesCardDim: {
-    opacity: 0.75,
-    backgroundColor: colors.mist,
+    backgroundColor: colors.ghostBg,
+    borderWidth: 1.5,
+    borderStyle: "dashed",
+    borderColor: colors.line,
   },
   speciesImg: { width: "100%", height: "100%" },
   hero: {
@@ -426,12 +437,13 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: "center",
   },
+  heroSky: { backgroundColor: colors.sky },
   cta: {
     marginTop: 16,
-    height: 50,
+    height: 52,
     paddingHorizontal: 24,
     borderRadius: 10,
-    backgroundColor: colors.navy,
+    backgroundColor: colors.oceanBlue,
     alignItems: "center",
     justifyContent: "center",
     minWidth: 180,

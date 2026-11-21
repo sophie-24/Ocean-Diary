@@ -111,6 +111,11 @@ export function errorMessage(error: unknown): string {
       return "다시 로그인해 주세요.";
     case "RATE_LIMITED":
       return "요청이 잠시 많아요. 조금 뒤에 다시 시도해 주세요.";
+    case "APPLE_AUTHORIZATION_CODE_INVALID":
+      return "Apple 확인이 만료됐어요. 삭제를 다시 시도해 주세요.";
+    case "ACCOUNT_DELETE_APPLE_REVOKE_FAILED":
+    case "ACCOUNT_DELETE_APPLE_REVOKE_UNAVAILABLE":
+      return "Apple 연결을 해제하지 못했어요. 잠시 후 다시 시도해 주세요.";
     case "DIVE_LOG_NOT_FOUND":
       return "기록을 찾을 수 없어요.";
     default:

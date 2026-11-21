@@ -1,10 +1,12 @@
+import * as AppleAuthentication from "expo-apple-authentication";
+import * as Crypto from "expo-crypto";
 import * as Linking from "expo-linking";
 import * as WebBrowser from "expo-web-browser";
 import { Platform } from "react-native";
 import type { Session } from "@supabase/supabase-js";
 import { supabase } from "../../lib/supabase";
 
-/** Providers wired through Supabase. Add Apple here once Development Build is live. */
+/** Browser-based providers wired through Supabase. Apple uses the native flow below. */
 export type OAuthProvider = "kakao" | "google";
 
 export type OAuthResult =
@@ -102,6 +104,87 @@ function friendlyError(provider: OAuthProvider, raw: string | undefined): string
     return `${name} Redirect URI가 Supabase 설정과 맞지 않아요.`;
   }
   return `${name} 로그인에 실패했어요: ${raw}`;
+}
+
+/** True only on iOS devices where the native Sign in with Apple sheet is available. */
+export async function isAppleSignInAvailable(): Promise<boolean> {
+  if (Platform.OS !== "ios") return false;
+  try {
+    return await AppleAuthentication.isAvailableAsync();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Native Sign in with Apple → Supabase `signInWithIdToken`.
+ * Requires a Development/production build (not Expo Go) and the bundle ID listed in
+ * Supabase → Auth → Providers → Apple → Client IDs.
+ */
+export async function signInWithApple(): Promise<OAuthResult> {
+  if (!supabase) return { kind: "error", message: "로그인 설정이 아직 없어요." };
+
+  try {
+    // Supabase checks the SHA-256 of this nonce inside Apple's token against the raw value.
+    const rawNonce = Crypto.randomUUID();
+    const hashedNonce = await Crypto.digestStringAsync(Crypto.CryptoDigestAlgorithm.SHA256, rawNonce);
+
+    const credential = await AppleAuthentication.signInAsync({
+      requestedScopes: [
+        AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+        AppleAuthentication.AppleAuthenticationScope.EMAIL,
+      ],
+      nonce: hashedNonce,
+    });
+    if (!credential.identityToken) {
+      return { kind: "error", message: "Apple 로그인 응답에 토큰이 없어요." };
+    }
+
+    const { data, error } = await supabase.auth.signInWithIdToken({
+      provider: "apple",
+      token: credential.identityToken,
+      nonce: rawNonce,
+    });
+    if (error || !data.session) {
+      return { kind: "error", message: `Apple 로그인에 실패했어요${error?.message ? `: ${error.message}` : "."}` };
+    }
+
+    // Apple only returns the name on the very first authorization, so persist it now.
+    const given = credential.fullName?.givenName ?? "";
+    const family = credential.fullName?.familyName ?? "";
+    const fullName = [family, given].filter(Boolean).join("");
+    if (fullName) {
+      await supabase.auth.updateUser({ data: { full_name: fullName } }).catch(() => undefined);
+    }
+
+    return { kind: "success", session: data.session };
+  } catch (e) {
+    if ((e as { code?: string })?.code === "ERR_REQUEST_CANCELED") return { kind: "cancel" };
+    return { kind: "error", message: `Apple 로그인에 실패했어요: ${(e as Error)?.message ?? "알 수 없는 오류"}` };
+  }
+}
+
+export type AppleCodeResult =
+  | { kind: "success"; code: string }
+  | { kind: "cancel" }
+  | { kind: "error"; message: string };
+
+/**
+ * Asks Apple for a fresh, single-use authorization code. Account deletion sends it to the API,
+ * which revokes the user's Apple tokens (App Store guideline 5.1.1(v)). Shows the Apple sheet
+ * again, which doubles as a re-authentication step before something irreversible.
+ */
+export async function requestAppleAuthorizationCode(): Promise<AppleCodeResult> {
+  try {
+    const credential = await AppleAuthentication.signInAsync({ requestedScopes: [] });
+    if (!credential.authorizationCode) {
+      return { kind: "error", message: "Apple 확인 응답에 코드가 없어요." };
+    }
+    return { kind: "success", code: credential.authorizationCode };
+  } catch (e) {
+    if ((e as { code?: string })?.code === "ERR_REQUEST_CANCELED") return { kind: "cancel" };
+    return { kind: "error", message: `Apple 확인에 실패했어요: ${(e as Error)?.message ?? "알 수 없는 오류"}` };
+  }
 }
 
 /** So Expo Go can clean up the auth session on cold start. Safe to call unconditionally. */

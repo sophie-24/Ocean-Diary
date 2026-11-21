@@ -4,7 +4,7 @@ import { Image } from "expo-image";
 import { Txt } from "../../components/ui/Txt";
 import { SITE_ART } from "../../data/illustrations";
 import type { SiteEntry } from "../../data/sites";
-import { colors, shadow } from "../../theme/tokens";
+import { colors } from "../../theme/tokens";
 
 const STAMP = 92;
 
@@ -14,13 +14,13 @@ function SiteStampCardBase({ site }: { site: SiteEntry }) {
     <View
       accessible
       accessibilityLabel={`${site.nameKo}, ${site.country} ${site.region}, ${got ? `${site.collectedOn} 스탬프 획득` : "아직 찍지 않은 스탬프"}`}
-      style={[styles.card, got ? [styles.got, shadow.card] : styles.ghost]}
+      style={[styles.card, got ? styles.got : styles.ghost]}
     >
       <View style={styles.stampWrap}>
         <View style={[styles.stamp, got && styles.tilt]}>
           <Image
             source={SITE_ART[site.art]}
-            style={[styles.img, !got && { opacity: 0.32 }]}
+            style={[styles.img, !got && { opacity: 0.42 }]}
             contentFit="cover"
           />
           {/* Uncollected stamps read as a faded, washed-out print. */}
@@ -29,19 +29,19 @@ function SiteStampCardBase({ site }: { site: SiteEntry }) {
         <View style={[styles.ring, got ? [styles.ringGot, styles.tilt] : styles.ringGhost]} pointerEvents="none" />
         {got ? (
           <View style={styles.date}>
-            <Txt size={9} weight="black" color={colors.white}>
+            <Txt size={9} weight="bold" color={colors.white} style={{ lineHeight: 13 }}>
               {site.collectedOn?.slice(2).replace(/-/g, ".")}
             </Txt>
           </View>
         ) : null}
       </View>
-      <Txt size={14} weight="black" align="center" style={{ marginTop: 10 }}>
+      <Txt size={14} weight="bold" align="center" style={{ marginTop: 10, lineHeight: 18 }}>
         {site.nameKo}
       </Txt>
-      <Txt size={11} color={colors.ink2} align="center">
-        {site.country} · {site.region}
+      <Txt size={11} color={colors.ink2} align="center" style={{ marginTop: 2 }}>
+        {site.country}, {site.region}
       </Txt>
-      <Txt size={11} color={colors.ink3} align="center" style={{ marginTop: 4 }}>
+      <Txt size={11} color={colors.ink3} align="center" style={{ marginTop: 4, lineHeight: 15 }}>
         {site.note}
       </Txt>
     </View>
@@ -53,7 +53,7 @@ export const SiteStampCard = memo(SiteStampCardBase);
 const styles = StyleSheet.create({
   card: { flex: 1, paddingVertical: 14, paddingHorizontal: 10, borderRadius: 12 },
   got: { backgroundColor: colors.white },
-  ghost: { backgroundColor: colors.ghostBg, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.ghostLine },
+  ghost: { backgroundColor: colors.track, borderWidth: 1.5, borderStyle: "dashed", borderColor: colors.line },
   stampWrap: { width: STAMP, height: STAMP, alignSelf: "center", marginTop: 2 },
   stamp: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: STAMP / 2, overflow: "hidden" },
   img: { width: "100%", height: "100%" },
@@ -61,14 +61,14 @@ const styles = StyleSheet.create({
   tilt: { transform: [{ rotate: "-6deg" }] },
   ring: { position: "absolute", top: 0, left: 0, right: 0, bottom: 0, borderRadius: STAMP / 2 },
   ringGot: { borderWidth: 3, borderColor: colors.navy },
-  ringGhost: { borderWidth: 2, borderStyle: "dashed", borderColor: colors.ghostInk },
+  ringGhost: { borderWidth: 2, borderStyle: "dashed", borderColor: colors.ink3 },
   date: {
     position: "absolute",
     right: -10,
     bottom: 2,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: 6,
+    borderRadius: 4,
     backgroundColor: colors.coral,
     transform: [{ rotate: "-8deg" }],
   },

@@ -30,7 +30,7 @@ export function LogPickerSheet({ date, logs, selectedId, onPick, onClose }: Prop
 
   const Row = ({ log }: { log: DiveLog }) => {
     const on = selectedId === log.id;
-    const time = typeof log.details.timeIn === "string" ? ` · ${log.details.timeIn} 입수` : "";
+    const time = typeof log.details.timeIn === "string" ? `, ${log.details.timeIn} 입수` : "";
     return (
       <Pressable
         accessibilityRole="radio"
@@ -48,7 +48,7 @@ export function LogPickerSheet({ date, logs, selectedId, onPick, onClose }: Prop
             {log.region} {log.point}
           </Txt>
           <Txt size={12} color={colors.ink2}>
-            {fmt(log.date)} · {KIND_LABEL[log.kind]}
+            {fmt(log.date)}, {KIND_LABEL[log.kind]}
             {time}
           </Txt>
         </View>
@@ -105,5 +105,5 @@ const styles = StyleSheet.create({
   grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.lineStrong, marginBottom: 12 },
   row: { flexDirection: "row", alignItems: "center", gap: 12, minHeight: 56, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12, backgroundColor: colors.white, borderWidth: 1.5, borderColor: colors.line },
   rowOn: { borderColor: colors.oceanBlue, backgroundColor: "#F0F4FA" },
-  label: { minWidth: 44, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 8, backgroundColor: colors.sky, alignItems: "center" },
+  label: { minWidth: 44, paddingHorizontal: 6, paddingVertical: 4, borderRadius: 4, backgroundColor: colors.sky, alignItems: "center" },
 });

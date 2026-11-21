@@ -154,7 +154,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
               ) : null}
               <View style={[styles.glass, { flexShrink: 1 }]}>
                 {eyebrow ? (
-                  <Txt size={11} weight="extraBold" tracking={0.08} color="#8EC5FF">
+                  <Txt size={11} weight="bold" tracking={0.04} color="#8EC5FF">
                     {eyebrow}
                   </Txt>
                 ) : null}
@@ -166,20 +166,6 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
                 </Txt>
               </View>
             </View>
-            {!backHref ? (
-              <View style={[styles.glass, styles.toggle]} accessibilityRole="tablist">
-                <View style={styles.toggleOn} accessibilityRole="tab" accessibilityState={{ selected: true }}>
-                  <Txt size={13} weight="extraBold">
-                    수족관
-                  </Txt>
-                </View>
-                <Pressable accessibilityRole="tab" accessibilityState={{ selected: false }} onPress={() => router.push("/sea/map")} style={styles.toggleOff}>
-                  <Txt size={13} weight="bold" color={colors.sky}>
-                    지도
-                  </Txt>
-                </Pressable>
-              </View>
-            ) : null}
           </View>
           <View style={styles.row} pointerEvents="box-none">
             <Pressable
@@ -191,8 +177,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
               <View style={[styles.dot, { backgroundColor: look.dot }]} />
               <View style={{ flexShrink: 1 }}>
                 <Txt size={12} weight="black" color={colors.white}>
-                  {look.label}
-                  {preview ? " · 미리보기" : ` · ${clockLabel(now)}`}
+                  {preview ? `${look.label} 미리보기` : `${look.label} ${clockLabel(now)}`}
                 </Txt>
                 <Txt size={11} color={colors.darkInkSoft} numberOfLines={2}>
                   {notes?.[phase] ?? look.note}
@@ -222,19 +207,26 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
       ) : (
         <Pressable onPress={() => setHud(true)} accessibilityRole="button" style={[styles.glass, styles.exitView, { bottom: 16 }]}>
           <Txt size={12} weight="extraBold" color={colors.white}>
-            감상 모드 · 눌러서 돌아가기
+            감상 모드, 눌러서 돌아가기
           </Txt>
         </Pressable>
       )}
 
       {r && s ? (
-        <Animated.View entering={FadeInDown.duration(220)} style={[styles.plaque, { bottom: footer || current ? 92 : 24 + insets.bottom }]}>
+        <Animated.View entering={FadeInDown.duration(220)} style={[styles.plaque, { bottom: footer ? 124 : current ? 92 : 24 + insets.bottom }]}>
           <Pressable accessibilityRole="button" accessibilityLabel="명판 닫기" onPress={() => setSel(null)} style={styles.plaqueClose}>
             <CloseIcon size={14} color={colors.white} />
           </Pressable>
           <NameTag ko={s.nameKo} en={s.nameEn} size="md" filled />
+          {r.isNew ? (
+            <View style={styles.plaqueNew}>
+              <Txt size={10} weight="bold" color={colors.white}>
+                신규
+              </Txt>
+            </View>
+          ) : null}
           <Txt size={13} color={colors.darkInkSoft} style={{ marginTop: 4 }}>
-            처음 만난 날{r.isNew ? " · 신규" : ""}
+            처음 만난 날
           </Txt>
           <Txt size={15} weight="extraBold" color={colors.white}>
             {r.date}
@@ -247,7 +239,7 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
             </View>
             <Pressable accessibilityRole="button" onPress={() => router.push({ pathname: "/species/[no]", params: { no: r.no } })} style={styles.plaqueCta}>
               <Txt size={13} weight="extraBold" color={colors.white}>
-                도감에서 보기
+                도감 보기
               </Txt>
             </Pressable>
           </View>
@@ -273,8 +265,13 @@ export function TankShell({ title, subtitle, eyebrow, scene, residents, emptyHin
                   {t.name}
                 </Txt>
                 <Txt size={11} color={on ? colors.inkSoft : colors.darkInkSoft}>
-                  {on ? `${t.count} · 보는 중` : t.count}
+                  {t.count}
                 </Txt>
+                {on ? (
+                  <Txt size={11} weight="bold" color={colors.oceanBlue}>
+                    보는 중
+                  </Txt>
+                ) : null}
               </Pressable>
             );
           })}
@@ -297,18 +294,16 @@ const styles = StyleSheet.create({
   hudTop: { position: "absolute", left: 0, right: 0, top: 0, paddingHorizontal: 16, gap: 10 },
   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "flex-start", gap: 10 },
   glass: { backgroundColor: "rgba(8,24,58,0.5)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)", borderRadius: 12, paddingVertical: 10, paddingHorizontal: 14 },
-  round44: { width: 44, height: 44, borderRadius: 12, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
-  toggle: { flexDirection: "row", paddingVertical: 3, paddingHorizontal: 3, borderRadius: 10 },
-  toggleOn: { height: 36, paddingHorizontal: 12, borderRadius: 11, backgroundColor: colors.white, justifyContent: "center" },
-  toggleOff: { height: 36, paddingHorizontal: 12, borderRadius: 11, justifyContent: "center" },
+  round44: { width: 44, height: 44, borderRadius: 8, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
   chip: { flexDirection: "row", alignItems: "center", gap: 9, maxWidth: 250, paddingVertical: 8, paddingLeft: 9, paddingRight: 12, borderRadius: 12 },
   dot: { width: 28, height: 28, borderRadius: 10 },
-  round: { width: 48, height: 40, borderRadius: 12, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
+  round: { width: 48, height: 40, borderRadius: 8, paddingVertical: 0, paddingHorizontal: 0, alignItems: "center", justifyContent: "center" },
   exitView: { position: "absolute", alignSelf: "center", borderRadius: 999, paddingVertical: 9 },
-  plaque: { position: "absolute", left: 16, right: 16, alignItems: "center", gap: 6, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14, borderRadius: 12, backgroundColor: "rgba(6,20,50,0.85)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
-  plaqueClose: { position: "absolute", right: 8, top: 8, width: 36, height: 36, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" },
-  plaqueCount: { height: 40, paddingHorizontal: 12, borderRadius: 12, backgroundColor: "rgba(169,210,255,0.16)", justifyContent: "center" },
-  plaqueCta: { flex: 1, height: 40, borderRadius: 12, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
+  plaque: { position: "absolute", left: 16, right: 16, alignItems: "center", gap: 6, paddingTop: 16, paddingHorizontal: 16, paddingBottom: 14, borderRadius: 12, backgroundColor: "rgba(6,20,50,0.8)", borderWidth: 1, borderColor: "rgba(169,210,255,0.25)" },
+  plaqueNew: { position: "absolute", left: 14, top: 14, paddingHorizontal: 8, paddingVertical: 2, borderRadius: 4, backgroundColor: colors.coral },
+  plaqueClose: { position: "absolute", right: 8, top: 8, width: 36, height: 36, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.1)", alignItems: "center", justifyContent: "center" },
+  plaqueCount: { height: 40, paddingHorizontal: 12, borderRadius: 10, backgroundColor: "rgba(169,210,255,0.16)", justifyContent: "center" },
+  plaqueCta: { flex: 1, height: 40, borderRadius: 10, backgroundColor: colors.oceanBlue, alignItems: "center", justifyContent: "center" },
   tanks: { position: "absolute", left: 0, right: 0, bottom: 12, flexGrow: 0 },
   tank: { minWidth: 112, paddingVertical: 10, paddingHorizontal: 12, borderRadius: 12 },
   tankOn: { backgroundColor: "rgba(255,255,255,0.92)" },

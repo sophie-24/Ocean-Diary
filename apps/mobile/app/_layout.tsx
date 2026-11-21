@@ -31,15 +31,24 @@ const queryClient = new QueryClient({
 
 /** Sends signed-out users to the login screen (only when Supabase login is configured). */
 function AuthGate() {
-  const { loading, signedIn } = useAuth();
+  const { loading, signedIn, profileReady } = useAuth();
   const segments = useSegments();
   const router = useRouter();
   const onLogin = segments[0] === "login";
+  const onNickname = segments[0] === "nickname";
   useEffect(() => {
     if (loading) return;
-    if (!signedIn && !onLogin) router.replace("/login");
-    else if (signedIn && onLogin) router.replace("/");
-  }, [loading, signedIn, onLogin, router]);
+    // 로그인 → 닉네임 설정 → (앱 소개 팝업) → 홈
+    if (!signedIn) {
+      if (!onLogin) router.replace("/login");
+      return;
+    }
+    if (!profileReady) {
+      if (!onNickname) router.replace("/nickname");
+      return;
+    }
+    if (onLogin || onNickname) router.replace("/");
+  }, [loading, signedIn, profileReady, onLogin, onNickname, router]);
   return null;
 }
 
@@ -69,6 +78,8 @@ export default function RootLayout() {
       <Stack screenOptions={{ headerShown: false, contentStyle: { backgroundColor: colors.mist } }}>
         <Stack.Screen name="(tabs)" />
         <Stack.Screen name="login" options={{ animation: "fade" }} />
+        <Stack.Screen name="nickname" options={{ animation: "fade", gestureEnabled: false }} />
+        <Stack.Screen name="nickname-edit" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="profile" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="species/[no]" options={{ animation: "slide_from_right" }} />
         <Stack.Screen name="discover/analyzing" options={{ animation: "fade", gestureEnabled: false }} />

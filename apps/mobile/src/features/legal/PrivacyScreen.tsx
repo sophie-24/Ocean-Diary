@@ -84,9 +84,9 @@ export function PrivacyScreen() {
 
         <Section title="5. 이용자 권리">
           <Txt size={14}>이용자는 언제든 다음 권리를 행사할 수 있습니다.</Txt>
-          <Bullet>열람: &apos;내 계정&apos;에서 수집된 정보 확인</Bullet>
+          <Bullet>열람: &apos;설정&apos;에서 수집된 정보 확인</Bullet>
           <Bullet>수정: 프로필 수정</Bullet>
-          <Bullet>삭제: &apos;내 계정 → 계정 삭제&apos;로 모든 기록 영구 삭제</Bullet>
+          <Bullet>삭제: &apos;설정 → 회원탈퇴&apos;로 모든 기록 영구 삭제</Bullet>
           <Bullet>처리 정지 요청: 아래 책임자 연락처로 문의</Bullet>
         </Section>
 

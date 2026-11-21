@@ -12,10 +12,10 @@ import Animated, {
   withSequence,
   withTiming,
 } from "react-native-reanimated";
-import Svg, { Path, Rect } from "react-native-svg";
+import Svg, { Circle, Path, Rect } from "react-native-svg";
 import { Image } from "expo-image";
 import { useQueryClient } from "@tanstack/react-query";
-import { CheckIcon, ChevronLeft } from "../../components/icons";
+import { CheckIcon, CloseIcon } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { discoverError, getClientConfig, identify, localDate, uploadPhoto } from "../../api/discover";
 import { errorMessage } from "../../api/client";
@@ -119,7 +119,7 @@ export function DiscoverAnalyzingScreen() {
     <SafeAreaView style={styles.root}>
       <View style={styles.top}>
         <Pressable accessibilityRole="button" accessibilityLabel="분석 취소하고 돌아가기" onPress={() => router.back()} style={styles.hit}>
-          <ChevronLeft color={colors.white} />
+          <CloseIcon color={colors.white} />
         </Pressable>
         <View style={styles.counter}>
           <Txt size={13} weight="bold" color={colors.white}>
@@ -138,7 +138,7 @@ export function DiscoverAnalyzingScreen() {
           ))}
         </View>
         <Txt size={12} weight="bold" color={colors.ink2} style={{ marginTop: 8 }}>
-          {taken ? `${taken} · 사진` : "사진"}
+          {taken ? `${taken}, 사진` : "사진"}
         </Txt>
       </View>
 
@@ -146,16 +146,24 @@ export function DiscoverAnalyzingScreen() {
         <Animated.View style={[styles.ping, pingStyle]} />
         <Animated.View style={bobStyle}>
           <Svg width={134} height={80} viewBox="0 0 134 80">
+            <Path d="M62 14 V4 H76" stroke="#E8B93C" strokeWidth={4} fill="none" strokeLinecap="round" />
             <Rect x={50} y={12} width={30} height={20} rx={8} fill="#F5D66B" stroke="#C99A2A" strokeWidth={2} />
             <Rect x={14} y={26} width={100} height={44} rx={22} fill="#F5D66B" stroke="#C99A2A" strokeWidth={2} />
-            <Path d="M30 48 H98" stroke="#C99A2A" strokeWidth={2} strokeLinecap="round" />
+            {[44, 70, 96].map((cx) => (
+              <Circle key={cx} cx={cx} cy={48} r={9} fill="#BFE6E2" stroke="#C99A2A" strokeWidth={3} />
+            ))}
+            {[41, 67, 93].map((cx) => (
+              <Circle key={cx} cx={cx} cy={45} r={2.5} fill="#FFFFFF" />
+            ))}
+            <Path d="M14 48 L4 40 L4 56 Z" fill="#E9776B" stroke="#B8473C" strokeWidth={2} strokeLinejoin="round" />
+            <Path d="M114 44 L128 38 M114 50 L130 50 M114 56 L128 62" stroke={ACCENT} strokeWidth={2} strokeLinecap="round" opacity={0.8} />
           </Svg>
         </Animated.View>
       </View>
 
       <View style={styles.copy}>
         <Txt size={23} weight="black" color={colors.white} align="center" accessibilityRole="header">
-          {error ? "잠깐 문제가 생겼어요" : "AI가 바닷속 친구를 찾고 있어요…"}
+          {error ? "잠깐 문제가 생겼어요" : "바닷속 친구를 찾고 있어요…"}
         </Txt>
         <Txt size={14} color="#C3D8F5" align="center" style={{ marginTop: 6 }}>
           {error ?? "사진 속 생물을 살펴보는 중"}
@@ -222,7 +230,7 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.deepSea },
   top: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 },
   hit: { width: 44, height: 44, alignItems: "center", justifyContent: "center" },
-  counter: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: "rgba(255,255,255,0.14)" },
+  counter: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 4, backgroundColor: "rgba(255,255,255,0.14)" },
   polaroid: {
     alignSelf: "center",
     width: 240,

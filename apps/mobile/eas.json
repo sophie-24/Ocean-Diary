@@ -4,6 +4,16 @@
     "appVersionSource": "local"
   },
   "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "OCEAN_DIARY_BUILD_TARGET": "development"
+      }
+    },
     "preview": {
       "distribution": "internal",
       "environment": "preview",

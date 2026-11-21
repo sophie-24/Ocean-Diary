@@ -55,7 +55,7 @@ export function DiscoverResultScreen() {
   const log = match.log;
   const context = [day?.replace(/-/g, "."), log ? `${log.region} ${log.point}` : null, log ? `로그 ${log.label}에 연결` : "로그 연결 안 함"]
     .filter(Boolean)
-    .join(" · ");
+    .join(", ");
   const chosen: ApiSpecies | null = manual ?? candidates[pickedCandidate]?.species ?? null;
   const met = (sp: ApiSpecies) => (sp.catalog_no ? collection?.get(sp.catalog_no) : undefined);
 
@@ -96,7 +96,7 @@ export function DiscoverResultScreen() {
         {top ? (
           <View style={styles.boxLabel}>
             <Txt size={13} weight="black">
-              {top.species.common_name_ko} · 일치도 {BAND[top.confidence_band]?.label ?? "—"}
+              {top.species.common_name_ko}, 일치도 {BAND[top.confidence_band]?.label ?? "—"}
             </Txt>
           </View>
         ) : null}
@@ -106,7 +106,7 @@ export function DiscoverResultScreen() {
           </Pressable>
           <View style={styles.glassPill}>
             <Txt size={13} weight="bold" color={colors.white}>
-              {selected.length || 1}개 중 {current + 1}번째 · 사진
+              {selected.length || 1}개 중 {current + 1}번째, 사진
             </Txt>
           </View>
           <View style={{ width: 44 }} />
@@ -153,7 +153,7 @@ export function DiscoverResultScreen() {
               const on = !manual && pickedCandidate === i;
               const band = BAND[c.confidence_band] ?? BAND.low;
               const mark = met(sp);
-              const note = mark ? `도감에 있는 친구 · ${mark.count}번 만났어요` : "도감에 없는 친구예요 · 첫 만남이 돼요";
+              const note = mark ? `도감에 있는 친구, ${mark.count}번 만났어요` : "도감에 없는 친구예요, 첫 만남이 돼요";
               return (
                 <Pressable
                   key={sp.id}
@@ -258,7 +258,7 @@ export function DiscoverResultScreen() {
           ) : (
             <Pressable accessibilityRole="button" onPress={() => setSearchOpen(true)} style={styles.manual}>
               <Txt size={13} weight="bold" color={colors.oceanBlue} style={{ textDecorationLine: "underline" }}>
-                목록에 없어요 · 이름으로 직접 찾기
+                목록에 없어요, 이름으로 직접 찾기
               </Txt>
             </Pressable>
           )}
@@ -303,10 +303,10 @@ const styles = StyleSheet.create({
   media: { height: 420, backgroundColor: "#1B4F86", overflow: "hidden" },
   glare: { position: "absolute", top: -60, width: 90, height: 520, backgroundColor: "rgba(255,255,255,0.08)", transform: [{ rotate: "18deg" }] },
   box: { position: "absolute", left: 16, right: 18, top: 120, height: 176, borderWidth: 2.5, borderColor: colors.sunny, borderRadius: 10 },
-  boxLabel: { position: "absolute", left: 16, bottom: 44, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8, backgroundColor: colors.sunny },
+  boxLabel: { position: "absolute", left: 16, bottom: 44, paddingHorizontal: 10, paddingVertical: 4, borderRadius: 4, backgroundColor: colors.sunny },
   topBar: { position: "absolute", left: 0, right: 0, top: 0, flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 12 },
-  glassBtn: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(9,25,56,0.45)", alignItems: "center", justifyContent: "center" },
-  glassPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 999, backgroundColor: "rgba(9,25,56,0.45)" },
+  glassBtn: { width: 44, height: 44, borderRadius: 22, backgroundColor: "rgba(9,25,56,0.45)", alignItems: "center", justifyContent: "center" },
+  glassPill: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 4, backgroundColor: "rgba(9,25,56,0.45)" },
   scrubber: { position: "absolute", left: 20, right: 20, top: 334, gap: 6 },
   scrubLabels: { flexDirection: "row", justifyContent: "space-between" },
   timeChip: { paddingHorizontal: 8, paddingVertical: 2, borderRadius: 6, backgroundColor: "rgba(9,25,56,0.55)" },
@@ -317,9 +317,9 @@ const styles = StyleSheet.create({
   grabber: { alignSelf: "center", width: 40, height: 5, borderRadius: 3, backgroundColor: colors.lineStrong },
   ctxRow: { flexDirection: "row", alignItems: "center", gap: 4, marginTop: 4 },
   cand: { flexDirection: "row", alignItems: "center", gap: 12, padding: 12, borderRadius: 12, borderWidth: 2 },
-  candOn: { backgroundColor: "#F0F4FA", borderColor: colors.oceanBlue },
+  candOn: { backgroundColor: colors.sky, borderColor: colors.oceanBlue },
   candOff: { backgroundColor: colors.white, borderColor: colors.line },
-  candArt: { width: 76, height: 60, borderRadius: 10, backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line, alignItems: "center", justifyContent: "center" },
+  candArt: { width: 76, height: 60, borderRadius: 12, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
   track: { flex: 1, height: 6, borderRadius: 3, backgroundColor: colors.track, overflow: "hidden" },
   fill: { height: 6, borderRadius: 3 },
   radio: { width: 22, height: 22, borderRadius: 11, backgroundColor: colors.white },
@@ -331,6 +331,6 @@ const styles = StyleSheet.create({
   searchInput: { flex: 1, fontFamily: fonts.regular, fontSize: 15, color: colors.navy },
   searchItem: { paddingVertical: 10, paddingHorizontal: 6, borderBottomWidth: 1, borderBottomColor: colors.line },
   actions: { flexDirection: "row", gap: 10, paddingTop: 8 },
-  noBtn: { width: 110, height: 54, borderRadius: 12, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
-  yesBtn: { flex: 1, height: 54, borderRadius: 12, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  noBtn: { width: 110, height: 54, borderRadius: 10, borderWidth: 1.5, borderColor: colors.lineStrong, backgroundColor: colors.white, alignItems: "center", justifyContent: "center" },
+  yesBtn: { flex: 1, height: 54, borderRadius: 10, backgroundColor: colors.oceanBlue, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
 });

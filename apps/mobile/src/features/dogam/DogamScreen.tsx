@@ -3,8 +3,7 @@ import { FlatList, Pressable, ScrollView, StyleSheet, Switch, View } from "react
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
-import { ScreenHeader, RoundIconButton } from "../../components/ui/ScreenHeader";
-import { Chip } from "../../components/ui/Chip";
+import { ChevronDown, ChevronRight } from "../../components/icons";
 import { Txt } from "../../components/ui/Txt";
 import { SPECIES, SPECIES_GROUPS, TOTAL_SPECIES, type SpeciesEntry } from "../../data/species";
 import { SITES, SITE_CATEGORIES, type SiteEntry } from "../../data/sites";
@@ -64,47 +63,32 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
 
   const header = (
     <View>
+      <View style={styles.titleRow}>
+        <Txt accessibilityRole="header" size={26} weight="bold" tracking={-0.02}>
+          도감
+        </Txt>
+        <View style={styles.actions}>
+          <Pressable accessibilityRole="button" accessibilityLabel={book === "species" ? "생물 검색" : "명소 검색"} style={styles.iconBtn} hitSlop={4}>
+            <Svg width={20} height={20} viewBox="0 0 24 24">
+              <Circle cx={11} cy={11} r={6.5} fill="none" stroke={colors.navy} strokeWidth={2} />
+              <Path d="M16 16 L20.5 20.5" stroke={colors.navy} strokeWidth={2} strokeLinecap="round" />
+            </Svg>
+          </Pressable>
+          <Pressable accessibilityRole="button" accessibilityLabel="배지 모음" style={styles.iconBtn} hitSlop={4}>
+            <Svg width={20} height={20} viewBox="0 0 24 24">
+              <Circle cx={12} cy={9} r={5.5} fill="none" stroke={colors.navy} strokeWidth={1.9} />
+              <Path d="M8.5 13.5 L7 21 L12 18.5 L17 21 L15.5 13.5" fill="none" stroke={colors.navy} strokeWidth={1.9} strokeLinecap="round" strokeLinejoin="round" />
+            </Svg>
+          </Pressable>
+        </View>
+      </View>
+
       {mapBookTab ? (
-        <View style={{ paddingHorizontal: 20, paddingTop: 8, paddingBottom: 10 }}>
+        <View style={styles.mapBookWrap}>
           <MapBookTabs active={mapBookTab.active} onChange={mapBookTab.onChange} />
         </View>
       ) : null}
-      <ScreenHeader
-        eyebrow={book === "species" ? "MY SPECIES BOOK" : "MY DIVE PASSPORT"}
-        title="나의 도감"
-        actions={
-          <>
-            <RoundIconButton label={book === "species" ? "생물 검색" : "명소 검색"}>
-              <Svg width={20} height={20} viewBox="0 0 24 24">
-                <Circle cx={11} cy={11} r={6.5} fill="none" stroke={colors.navy} strokeWidth={2} />
-                <Path d="M16 16 L20.5 20.5" stroke={colors.navy} strokeWidth={2} strokeLinecap="round" />
-              </Svg>
-            </RoundIconButton>
-          </>
-        }
-      />
 
-      {mapBookTab ? (
-        <Pressable
-          // `/discover/autogen` is a new route — expo-router typed routes regenerate
-          // on the next `pnpm expo start`. Cast narrows the gap until then.
-          onPress={() => router.navigate("/discover/autogen" as never)}
-          accessibilityRole="button"
-          accessibilityLabel="자동 생성 1건 검증 대기 · 관리자가 일주일 안에 확인해요"
-          style={styles.pendingBanner}
-        >
-          <View style={styles.pendingBadge}>
-            <Txt size={14}>✨</Txt>
-          </View>
-          <View style={{ flex: 1 }}>
-            <Txt size={12} color={colors.navy}>
-              <Txt weight="extraBold" color={colors.navy}>자동 생성 1건 검증 대기</Txt>
-              {" · 관리자가 일주일 안에 확인해요"}
-            </Txt>
-          </View>
-          <Txt size={12} color="#8B6A14" weight="extraBold">›</Txt>
-        </Pressable>
-      ) : null}
       <View accessibilityRole="tablist" style={styles.segment}>
         {(
           [
@@ -121,11 +105,11 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
               onPress={() => setBook(key)}
               style={[styles.segItem, on && styles.segOn]}
             >
-              <Txt size={14} weight={on ? "black" : "bold"} color={on ? colors.navy : colors.ink2}>
-                {label}{" "}
-                <Txt size={14} weight="medium" color={colors.ink2}>
-                  {count}
-                </Txt>
+              <Txt size={13} weight="bold" color={on ? colors.navy : colors.ink2}>
+                {label}
+              </Txt>
+              <Txt size={13} weight="medium" color={colors.ink2}>
+                {count}
               </Txt>
             </Pressable>
           );
@@ -133,54 +117,90 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
       </View>
 
       {book === "species" ? (
-        <View style={styles.progress}>
-          <Txt size={26} weight="black" color={colors.oceanBlue}>
-            {gotCount}
-            <Txt size={14} color={colors.ink2}>
-              {" "}
+        <>
+          <View style={styles.progressRow}>
+            <Txt size={20} weight="bold" color={colors.oceanBlue}>
+              {gotCount}
+            </Txt>
+            <Txt size={14} color={colors.ink3}>
               / {TOTAL_SPECIES}종
             </Txt>
-          </Txt>
-          <View style={{ flex: 1, gap: 6 }}>
-            <View
-              style={styles.track}
-              accessibilityRole="progressbar"
-              accessibilityValue={{ min: 0, max: TOTAL_SPECIES, now: gotCount, text: `${pct}%` }}
-            >
-              <View style={[styles.fill, { width: `${pct}%` }]} />
-            </View>
-            <Txt size={12} color={colors.ink2}>
+            <Txt size={12} color={colors.ink2} style={{ marginLeft: "auto" }}>
               {nextMilestone - gotCount}종 더 모으면{" "}
-              <Txt size={12} weight="bold">
+              <Txt size={12} weight="bold" color={colors.navy}>
                 {nextMilestone}종 기념 카드
               </Txt>
-              를 받아요
             </Txt>
           </View>
-        </View>
+          <View
+            style={styles.track}
+            accessibilityRole="progressbar"
+            accessibilityValue={{ min: 0, max: TOTAL_SPECIES, now: gotCount, text: `${pct}%` }}
+          >
+            <View style={[styles.fill, { width: `${pct}%` }]} />
+          </View>
+        </>
       ) : (
         <Txt size={13} color={colors.ink2} style={styles.sitesIntro}>
           난파선, 수중 조각, 동굴처럼 생물이 아닌 이유로 찾아가는 다이빙 명소예요. 로그에 포인트를 적으면 스탬프가 찍혀요.
         </Txt>
       )}
 
+      {mapBookTab ? (
+        <Pressable
+          // `/discover/autogen` is a new route — expo-router typed routes regenerate
+          // on the next `pnpm expo start`. Cast narrows the gap until then.
+          onPress={() => router.navigate("/discover/autogen" as never)}
+          accessibilityRole="button"
+          accessibilityLabel="자동 생성 1건 검증 대기, 관리자가 일주일 안에 확인해요"
+          style={styles.pendingBanner}
+        >
+          <View style={styles.pendingBadge}>
+            <Txt size={14} style={{ lineHeight: 18 }}>✨</Txt>
+          </View>
+          <View style={{ flex: 1, minWidth: 0 }}>
+            <Txt size={12} weight="bold" color={colors.navy} style={{ lineHeight: 17 }}>
+              자동 생성 1건 검증 대기
+            </Txt>
+            <Txt size={12} color={colors.ink2} style={{ lineHeight: 17 }}>
+              관리자가 일주일 안에 확인해요
+            </Txt>
+          </View>
+          <ChevronRight size={12} color={colors.ink3} strokeWidth={2.5} />
+        </Pressable>
+      ) : null}
+
       <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.chips} accessibilityRole="tablist">
-        {(book === "species" ? groupChips : siteChips).map((c) => (
-          <Chip
-            key={c.label}
-            label={c.label}
-            count={c.count}
-            selected={(book === "species" ? group : siteCat) === c.label}
-            onPress={() => (book === "species" ? setGroup(c.label) : setSiteCat(c.label))}
-          />
-        ))}
+        {(book === "species" ? groupChips : siteChips).map((c) => {
+          const on = (book === "species" ? group : siteCat) === c.label;
+          return (
+            <Pressable
+              key={c.label}
+              accessibilityRole="tab"
+              accessibilityState={{ selected: on }}
+              accessibilityLabel={`${c.label} ${c.count}`}
+              onPress={() => (book === "species" ? setGroup(c.label) : setSiteCat(c.label))}
+              style={[styles.chip, on ? styles.chipOn : styles.chipOff]}
+            >
+              <Txt size={13} weight="bold" color={on ? colors.white : colors.navy}>
+                {c.label}{" "}
+                <Txt size={13} weight="medium" color={on ? colors.white : colors.navy} style={{ opacity: 0.7 }}>
+                  {c.count}
+                </Txt>
+              </Txt>
+            </Pressable>
+          );
+        })}
       </ScrollView>
 
       {book === "species" ? (
         <View style={styles.sortRow}>
-          <Txt size={13} weight="extraBold">
-            도감 번호순
-          </Txt>
+          <View style={styles.sortBtn}>
+            <Txt size={13} weight="bold">
+              도감 번호순
+            </Txt>
+            <ChevronDown size={14} color={colors.navy} />
+          </View>
           <View style={styles.toggle}>
             <Txt size={13} color={colors.ink2}>
               미수집도 보기
@@ -248,44 +268,34 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.mist },
   list: { paddingTop: 12, paddingBottom: 32, gap: 10 },
   columns: { gap: 10, paddingHorizontal: 20 },
+  titleRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingTop: 8 },
+  actions: { flexDirection: "row", gap: 4 },
+  iconBtn: { width: 40, height: 40, borderRadius: 8, alignItems: "center", justifyContent: "center" },
+  mapBookWrap: { marginTop: 14, paddingHorizontal: 20 },
+  segment: { flexDirection: "row", marginTop: 8, marginHorizontal: 20, padding: 3, borderRadius: 10, backgroundColor: "#EDF2F9" },
+  segItem: { flex: 1, height: 34, borderRadius: 7, flexDirection: "row", alignItems: "center", justifyContent: "center", gap: 6 },
+  segOn: { backgroundColor: colors.white },
+  progressRow: { flexDirection: "row", alignItems: "baseline", gap: 8, marginTop: 16, marginHorizontal: 20 },
+  track: { height: 4, borderRadius: 2, backgroundColor: colors.line, overflow: "hidden", marginTop: 8, marginHorizontal: 20 },
+  fill: { height: 4, borderRadius: 2, backgroundColor: colors.oceanBlue },
   pendingBanner: {
     marginHorizontal: 20,
-    marginTop: 10,
-    padding: 12,
+    marginTop: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
     borderRadius: 10,
-    backgroundColor: "#FFF8E0",
-    borderWidth: 1,
-    borderColor: "#F3DE95",
+    backgroundColor: "#FFFBEB",
     flexDirection: "row",
     alignItems: "center",
     gap: 10,
   },
-  pendingBadge: {
-    width: 28,
-    height: 28,
-    borderRadius: 14,
-    backgroundColor: colors.sunny,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  segment: { flexDirection: "row", marginTop: 14, marginHorizontal: 20, padding: 4, borderRadius: 10, backgroundColor: colors.track },
-  segItem: { flex: 1, height: 40, borderRadius: 10, alignItems: "center", justifyContent: "center" },
-  segOn: { backgroundColor: colors.white, shadowColor: "#1C1C1E", shadowOpacity: 0.12, shadowRadius: 4, shadowOffset: { width: 0, height: 1 }, elevation: 1 },
-  progress: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    marginTop: 14,
-    marginHorizontal: 20,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    borderRadius: 12,
-    backgroundColor: colors.white,
-  },
-  track: { height: 8, borderRadius: 4, backgroundColor: colors.track, overflow: "hidden" },
-  fill: { height: 8, borderRadius: 4, backgroundColor: colors.oceanBlue },
+  pendingBadge: { width: 28, height: 28, borderRadius: 8, backgroundColor: "#FDE68A", alignItems: "center", justifyContent: "center" },
   sitesIntro: { marginTop: 12, marginHorizontal: 20 },
-  chips: { gap: 8, paddingHorizontal: 20, paddingTop: 14, paddingBottom: 2 },
-  sortRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingTop: 8, paddingBottom: 8 },
+  chips: { gap: 6, paddingHorizontal: 20, paddingTop: 12, paddingBottom: 2 },
+  chip: { height: 36, paddingHorizontal: 14, borderRadius: 8, justifyContent: "center" },
+  chipOn: { backgroundColor: colors.navy },
+  chipOff: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
+  sortRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingTop: 6, paddingBottom: 8 },
+  sortBtn: { flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 8 },
   toggle: { flexDirection: "row", alignItems: "center", gap: 8 },
 });
