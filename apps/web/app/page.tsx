@@ -1,3 +1,4 @@
+import { SiteNav } from "@/components/SiteNav";
 import { Hero } from "@/components/sections/Hero";
 import { Background } from "@/components/sections/Background";
 import { Solution } from "@/components/sections/Solution";
@@ -26,7 +27,9 @@ import { Footer } from "@/components/sections/Footer";
  */
 export default function HomePage() {
   return (
-    <main>
+    <>
+      <SiteNav />
+      <main>
       <Hero />
       <Background />
       <Solution />
@@ -38,6 +41,7 @@ export default function HomePage() {
       <Aquarium />
       <SignupCTA />
       <Footer />
-    </main>
+      </main>
+    </>
   );
 }

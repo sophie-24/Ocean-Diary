@@ -2,7 +2,7 @@
 $projectRoot = Split-Path -Parent $PSScriptRoot
 $apiRoot = Join-Path $projectRoot "services\api"
 $python = Join-Path $apiRoot ".venv\Scripts\python.exe"
-$requiredSchemaRevision = "0013_v2_logbook"
+$requiredSchemaRevision = "0014_enable_rls"
 $apiBaseUrl = if ($env:OCEAN_DIARY_API_URL) { $env:OCEAN_DIARY_API_URL.TrimEnd('/') } else { "http://127.0.0.1:8765" }
 
 if (-not (Test-Path -LiteralPath $python)) {

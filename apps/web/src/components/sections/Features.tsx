@@ -79,7 +79,7 @@ export function Features() {
         >
           <div style={{ maxWidth: 740 }}>
             <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-              Features
+              핵심 기능
             </p>
             <h2 style={{ ...type.h1, color: colors.navy, margin: "22px 0 18px" }}>
               다이버의 하루를

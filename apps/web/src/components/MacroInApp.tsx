@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { colors } from "@/theme/tokens";
 import { Critter } from "@/components/Critter";
@@ -95,7 +97,7 @@ export function MacroInApp() {
             style={{
               fontSize: 10,
               fontWeight: 800,
-              letterSpacing: "0.1em",
+              letterSpacing: "-0.005em",
               color: "#CFE0F7",
             }}
           >

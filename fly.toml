@@ -1,0 +1,40 @@
+# fly.toml app configuration file generated for mola-api on 2026-11-23T01:29:33+09:00
+#
+# See https://docs.fly.io/reference/configuration for information about how to use this file.
+#
+
+app = 'mola-api'
+primary_region = 'nrt'
+
+[build]
+  dockerfile = 'infra/api.Dockerfile'
+
+[deploy]
+  release_command = "sh -c 'alembic upgrade head && python -m app.seed_species'"
+
+[env]
+  APP_ENV = 'production'
+  DEV_AUTH_ENABLED = 'false'
+  IDENTIFICATION_PROVIDER = 'mock'
+  MAX_IDENTIFICATION_JOBS_PER_USER_PER_DAY = '10'
+  S3_BUCKET_NAME = 'mola-media'
+  S3_REGION = 'auto'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'off'
+  auto_start_machines = false
+  min_machines_running = 1
+
+  [[http_service.checks]]
+    interval = '30s'
+    timeout = '5s'
+    grace_period = '30s'
+    method = 'GET'
+    path = '/v1/health'
+
+[[vm]]
+  size = 'shared-cpu-1x'
+  memory = '512mb'
+  cpus = 1

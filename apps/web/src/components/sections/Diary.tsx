@@ -11,7 +11,7 @@ export function Diary() {
     <SectionShell
       id="diary"
       background={colors.white}
-      label="Step 02 · 그림일기"
+      label="그림일기"
       title={
         <>
           말 몇 마디면,

@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { colors } from "@/theme/tokens";
 import { Critter } from "@/components/Critter";
@@ -63,7 +65,7 @@ export function DiscoverInApp() {
             fontSize: 12,
             fontWeight: 700,
             color: "#B9DCFF",
-            letterSpacing: "0.1em",
+            letterSpacing: "-0.005em",
           }}
         >
           02 발견 · {STEPS[step].label}
@@ -546,8 +548,8 @@ function CollectedStep() {
         flexDirection: "column",
       }}
     >
-      <div style={{ fontSize: 11, fontWeight: 800, color: "#B9DCFF", letterSpacing: "0.12em" }}>
-        MY SPECIES BOOK · NO.007
+      <div style={{ fontSize: 11, fontWeight: 800, color: "#B9DCFF", letterSpacing: "-0.005em" }}>
+        나의 생물 도감 · NO.007
       </div>
       <div style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.02em", marginTop: 4 }}>
         도감의 22번째 친구가 생겼어요! ✨

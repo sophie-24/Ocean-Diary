@@ -11,7 +11,7 @@ export function Logbook() {
     <SectionShell
       id="logbook"
       background={colors.mist}
-      label="Step 01 · 로그북"
+      label="로그북"
       title={
         <>
           다이빙 끝났으니,

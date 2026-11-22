@@ -25,7 +25,7 @@ export function TodayInApp({ destination }: { destination: Destination }) {
     >
       {/* 상단 바 (Mola 네이티브 홈의 헤더 톤) */}
       <div style={{ padding: "18px 20px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "0.22em", color: colors.oceanBlue }}>
+        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "-0.005em", color: colors.oceanBlue }}>
           MOLA · 오늘의 바다
         </span>
         <div
@@ -58,7 +58,7 @@ export function TodayInApp({ destination }: { destination: Destination }) {
             boxShadow: "0 4px 12px rgba(30,70,140,0.06)",
           }}
         >
-          <p style={{ fontWeight: 800, fontSize: 11, letterSpacing: "0.26em", color: colors.oceanBlue, margin: 0, textTransform: "uppercase" }}>
+          <p style={{ fontWeight: 800, fontSize: 11, letterSpacing: "-0.005em", color: colors.oceanBlue, margin: 0 }}>
             오늘은
           </p>
           <h3 style={{ fontWeight: 900, fontSize: 28, lineHeight: 1.12, letterSpacing: "-0.025em", color: colors.navy, margin: "6px 0 4px" }}>
@@ -88,7 +88,7 @@ export function TodayInApp({ destination }: { destination: Destination }) {
 
         {/* 만나는 친구들 */}
         <div style={{ marginTop: 14 }}>
-          <p style={{ fontWeight: 800, fontSize: 10, letterSpacing: "0.22em", color: colors.ink3, margin: "0 0 10px 4px", textTransform: "uppercase" }}>
+          <p style={{ fontWeight: 800, fontSize: 10, letterSpacing: "-0.005em", color: colors.ink3, margin: "0 0 10px 4px" }}>
             만나는 친구들
           </p>
           <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
@@ -123,7 +123,7 @@ export function TodayInApp({ destination }: { destination: Destination }) {
             padding: "10px 12px",
           }}
         >
-          <p style={{ fontWeight: 800, fontSize: 10, letterSpacing: "0.22em", color: colors.ink3, margin: 0, textTransform: "uppercase" }}>
+          <p style={{ fontWeight: 800, fontSize: 10, letterSpacing: "-0.005em", color: colors.ink3, margin: 0 }}>
             살짝 팁
           </p>
           <p style={{ fontSize: 12.5, color: colors.ink2, margin: "4px 0 0", lineHeight: 1.5 }}>
@@ -149,7 +149,7 @@ function MiniFact({ label, value }: { label: string; value: string }) {
         textAlign: "center",
       }}
     >
-      <div style={{ fontWeight: 800, fontSize: 9, letterSpacing: "0.18em", color: colors.ink3, textTransform: "uppercase" }}>
+      <div style={{ fontWeight: 800, fontSize: 9, letterSpacing: "-0.005em", color: colors.ink3 }}>
         {label}
       </div>
       <div style={{ fontWeight: 800, fontSize: 11.5, color: colors.navy, marginTop: 2, letterSpacing: "-0.01em" }}>

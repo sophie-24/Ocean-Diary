@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet, Switch, View } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import Svg, { Circle, Path } from "react-native-svg";
@@ -25,7 +25,7 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
   const [book, setBook] = useState<Book>("species");
   const [group, setGroup] = useState(ALL);
   const [siteCat, setSiteCat] = useState(ALL);
-  const [showHidden, setShowHidden] = useState(true);
+  
 
   const collectionQuery = useCollection();
   const stampsQuery = useSiteStamps();
@@ -53,8 +53,8 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
   );
 
   const speciesItems = useMemo(
-    () => SPECIES.filter((s) => (group === ALL || s.group === group) && (showHidden || collected.has(s.no))),
-    [group, showHidden, collected],
+    () => SPECIES.filter((s) => group === ALL || s.group === group),
+    [group],
   );
   const siteItems = useMemo(() => sites.filter((s) => siteCat === ALL || s.category === siteCat), [siteCat, sites]);
 
@@ -201,17 +201,7 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
             </Txt>
             <ChevronDown size={14} color={colors.navy} />
           </View>
-          <View style={styles.toggle}>
-            <Txt size={13} color={colors.ink2}>
-              미수집도 보기
-            </Txt>
-            <Switch
-              value={showHidden}
-              onValueChange={setShowHidden}
-              trackColor={{ true: colors.oceanBlue, false: colors.lineStrong }}
-              accessibilityLabel="미수집 생물도 보기"
-            />
-          </View>
+
         </View>
       ) : (
         <View style={{ height: 12 }} />
@@ -241,6 +231,7 @@ export function DogamScreen({ mapBookTab }: DogamScreenProps = {}) {
               <SpeciesCard
                 species={item}
                 collected={!!mark}
+                collectedDate={mark?.firstSeen ?? null}
                 isNew={mark?.isNew}
                 onPress={() => router.push({ pathname: "/species/[no]", params: { no: item.no } })}
               />
@@ -297,5 +288,4 @@ const styles = StyleSheet.create({
   chipOff: { backgroundColor: colors.white, borderWidth: 1, borderColor: colors.line },
   sortRow: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingHorizontal: 20, paddingTop: 6, paddingBottom: 8 },
   sortBtn: { flexDirection: "row", alignItems: "center", gap: 4, paddingVertical: 8 },
-  toggle: { flexDirection: "row", alignItems: "center", gap: 8 },
 });

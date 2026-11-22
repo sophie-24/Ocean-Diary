@@ -205,7 +205,7 @@ function Fact({ label, value }: { label: string; value: string }) {
         textAlign: "center",
       }}
     >
-      <p style={{ ...type.label, color: colors.ink3, margin: 0, fontSize: 10, letterSpacing: "0.22em" }}>
+      <p style={{ ...type.label, color: colors.ink3, margin: 0, fontSize: 10, letterSpacing: "-0.005em" }}>
         {label}
       </p>
       <p

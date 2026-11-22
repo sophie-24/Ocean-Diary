@@ -113,7 +113,7 @@ function BlockText({
       <span
         style={{
           fontFamily: "var(--font-body)",
-          fontWeight: 900,
+          fontWeight: 800,
           fontSize: "clamp(56px, 7vw, 92px)",
           lineHeight: 1,
           color: colors.oceanBlue,

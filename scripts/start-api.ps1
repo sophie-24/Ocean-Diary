@@ -7,7 +7,7 @@ $projectRoot = Split-Path -Parent $PSScriptRoot
 $apiRoot = Join-Path $projectRoot "services\api"
 $python = Join-Path $apiRoot ".venv\Scripts\python.exe"
 $composeFile = Join-Path $projectRoot "infra\docker-compose.yml"
-$requiredSchemaRevision = "0013_v2_logbook"
+$requiredSchemaRevision = "0014_enable_rls"
 $projectEnvFile = Join-Path $projectRoot ".env"
 $projectEnvExample = Join-Path $projectRoot ".env.example"
 

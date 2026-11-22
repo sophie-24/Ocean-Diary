@@ -71,7 +71,7 @@ export function SignupCTA() {
       >
         <div>
           <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-            Pre-launch Signup
+            사전 등록
           </p>
           <h2 style={{ ...type.h1, color: colors.white, margin: "22px 0 18px", lineHeight: 1.1 }}>
             Mola 출시하면
@@ -114,7 +114,7 @@ export function SignupCTA() {
                   opacity: 0.85,
                 }}
               >
-                Email
+                이메일
               </label>
               <input
                 id="email"
@@ -149,7 +149,7 @@ export function SignupCTA() {
                   backgroundColor: colors.navy,
                   color: colors.white,
                   fontFamily: "var(--font-body)",
-                  fontWeight: 900,
+                  fontWeight: 800,
                   fontSize: 17,
                   letterSpacing: "-0.005em",
                   cursor: state === "loading" ? "wait" : "pointer",

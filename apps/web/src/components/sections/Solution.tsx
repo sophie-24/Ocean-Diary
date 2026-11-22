@@ -48,7 +48,7 @@ export function Solution() {
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-          Solution
+          이렇게 해결해요
         </p>
 
         <h2 style={{ ...type.h1, color: colors.white, margin: "22px 0 18px", maxWidth: 900 }}>
@@ -95,7 +95,7 @@ function StepText({ step }: { step: Step }) {
   return (
     <div style={{ maxWidth: 520 }}>
       <p style={{ ...type.label, color: colors.sky, margin: 0, opacity: 0.8 }}>
-        Step {step.no}
+        {step.no}단계
       </p>
       <h3 style={{ ...type.h2, color: colors.white, margin: "10px 0 14px", lineHeight: 1.15 }}>
         {step.title}

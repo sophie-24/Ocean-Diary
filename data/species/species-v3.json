@@ -174,9 +174,11 @@
    "name_ko": "오셔닉 만타",
    "name_en": "Oceanic Manta Ray",
    "sci_name": "Mobula birostris",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "oceanicmantaray",
+   "note": "",
+   "art_src": "sheet07_02",
+   "review": "ai_guess"
   },
   {
    "no": "017",
@@ -185,9 +187,11 @@
    "name_ko": "리프 만타",
    "name_en": "Reef Manta Ray",
    "sci_name": "Mobula alfredi",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "reefmantaray",
+   "note": "",
+   "art_src": "sheet07_03",
+   "review": "ai_guess"
   },
   {
    "no": "018",
@@ -196,9 +200,11 @@
    "name_ko": "옐로 스팅레이",
    "name_en": "Yellow Stingray",
    "sci_name": "Urobatis jamaicensis",
-   "art": "N",
-   "art_key": "",
-   "note": "국명 '노랑가오리'는 다른 종(Hemitrygon akajei)이라 변경"
+   "art": "Y",
+   "art_key": "yellowstingray",
+   "note": "국명 '노랑가오리'는 다른 종(Hemitrygon akajei)이라 변경",
+   "art_src": "sheet07_04",
+   "review": "ai_guess"
   },
   {
    "no": "019",
@@ -207,9 +213,11 @@
    "name_ko": "푸른점가오리",
    "name_en": "Bluespotted Ribbontail Ray",
    "sci_name": "Taeniura lymma",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bluespottedribbontailray",
+   "note": "",
+   "art_src": "sheet07_05",
+   "review": "ai_guess"
   },
   {
    "no": "020",
@@ -218,9 +226,11 @@
    "name_ko": "스무스 스팅레이",
    "name_en": "Smooth Stingray",
    "sci_name": "Bathytoshia brevicaudata",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "smoothstingray",
+   "note": "",
+   "art_src": "sheet07_06",
+   "review": "ai_guess"
   },
   {
    "no": "021",
@@ -229,9 +239,11 @@
    "name_ko": "점박이매가오리",
    "name_en": "Spotted Eagle Ray",
    "sci_name": "Aetobatus ocellatus",
-   "art": "N",
-   "art_key": "",
-   "note": "대서양 개체군은 A. narinari"
+   "art": "Y",
+   "art_key": "spottedeagleray",
+   "note": "대서양 개체군은 A. narinari",
+   "art_src": "sheet07_07",
+   "review": "ai_guess"
   },
   {
    "no": "022",
@@ -240,9 +252,11 @@
    "name_ko": "배트레이",
    "name_en": "Bat Ray",
    "sci_name": "Myliobatis californica",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "batray",
+   "note": "",
+   "art_src": "sheet07_08",
+   "review": "ai_guess"
   },
   {
    "no": "023",
@@ -251,9 +265,11 @@
    "name_ko": "나비가오리",
    "name_en": "Butterfly Ray",
    "sci_name": "Gymnura spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "butterflyray",
+   "note": "",
+   "art_src": "sheet07_09",
+   "review": "ai_guess"
   },
   {
    "no": "024",
@@ -383,9 +399,11 @@
    "name_ko": "엔젤피쉬",
    "name_en": "Angelfish",
    "sci_name": "Pomacanthidae",
-   "art": "N",
-   "art_key": "",
-   "note": "청줄돔과"
+   "art": "Y",
+   "art_key": "angelfish",
+   "note": "청줄돔과",
+   "art_src": "sheet13_01",
+   "review": "ai_guess"
   },
   {
    "no": "036",
@@ -394,9 +412,11 @@
    "name_ko": "나비고기",
    "name_en": "Butterflyfish",
    "sci_name": "Chaetodontidae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "butterflyfish",
+   "note": "",
+   "art_src": "sheet08_09",
+   "review": "ai_guess"
   },
   {
    "no": "037",
@@ -405,9 +425,11 @@
    "name_ko": "흰동가리",
    "name_en": "Clown Anemonefish",
    "sci_name": "Amphiprion ocellaris",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "clownanemonefish",
+   "note": "",
+   "art_src": "sheet08_08",
+   "review": "ai_guess"
   },
   {
    "no": "038",
@@ -416,9 +438,11 @@
    "name_ko": "파이어고비",
    "name_en": "Fire Goby",
    "sci_name": "Nemateleotris magnifica",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "firegoby",
+   "note": "",
+   "art_src": "sheet13_04",
+   "review": "ai_guess"
   },
   {
    "no": "039",
@@ -427,9 +451,11 @@
    "name_ko": "패롯피쉬",
    "name_en": "Parrotfish",
    "sci_name": "Scaridae",
-   "art": "N",
-   "art_key": "",
-   "note": "비늘돔과"
+   "art": "Y",
+   "art_key": "parrotfish",
+   "note": "비늘돔과",
+   "art_src": "sheet13_06",
+   "review": "ai_guess"
   },
   {
    "no": "040",
@@ -438,9 +464,11 @@
    "name_ko": "스위트립스",
    "name_en": "Sweetlips",
    "sci_name": "Plectorhinchus spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "sweetlips",
+   "note": "",
+   "art_src": "sheet21_05",
+   "review": "ai_guess"
   },
   {
    "no": "041",
@@ -449,9 +477,11 @@
    "name_ko": "오리엔탈 스위트립스",
    "name_en": "Oriental Sweetlips",
    "sci_name": "Plectorhinchus vittatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "orientalsweetlips",
+   "note": "",
+   "art_src": "sheet13_07",
+   "review": "ai_guess"
   },
   {
    "no": "042",
@@ -460,9 +490,10 @@
    "name_ko": "트리거피쉬",
    "name_en": "Triggerfish",
    "sci_name": "Balistidae",
-   "art": "N",
-   "art_key": "",
-   "note": "쥐치복과"
+   "art": "Y",
+   "art_key": "triggerfish",
+   "note": "쥐치복과",
+   "art_src": "triggerfish"
   },
   {
    "no": "043",
@@ -471,9 +502,11 @@
    "name_ko": "스내퍼",
    "name_en": "Snapper",
    "sci_name": "Lutjanidae",
-   "art": "N",
-   "art_key": "",
-   "note": "퉁돔과"
+   "art": "Y",
+   "art_key": "snapper",
+   "note": "퉁돔과",
+   "art_src": "sheet09_02",
+   "review": "ai_guess"
   },
   {
    "no": "044",
@@ -493,9 +526,11 @@
    "name_ko": "유니콘피쉬",
    "name_en": "Bluespine Unicornfish",
    "sci_name": "Naso unicornis",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '뿔돔' 표기 수정: 뿔돔은 Priacanthidae"
+   "art": "Y",
+   "art_key": "bluespineunicornfish",
+   "note": "원본 '뿔돔' 표기 수정: 뿔돔은 Priacanthidae",
+   "art_src": "sheet24_06",
+   "review": "ai_guess"
   },
   {
    "no": "046",
@@ -570,9 +605,11 @@
    "name_ko": "리본곰치",
    "name_en": "Ribbon Eel",
    "sci_name": "Rhinomuraena quaesita",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "ribboneel",
+   "note": "",
+   "art_src": "sheet15_09",
+   "review": "ai_guess"
   },
   {
    "no": "053",
@@ -592,9 +629,11 @@
    "name_ko": "이빨다랑어",
    "name_en": "Dogtooth Tuna",
    "sci_name": "Gymnosarda unicolor",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "dogtoothtuna",
+   "note": "",
+   "art_src": "sheet14_01",
+   "review": "ai_guess"
   },
   {
    "no": "055",
@@ -603,9 +642,11 @@
    "name_ko": "자이언트 트레발리",
    "name_en": "Giant Trevally",
    "sci_name": "Caranx ignobilis",
-   "art": "N",
-   "art_key": "",
-   "note": "국명 무명갈전갱이"
+   "art": "Y",
+   "art_key": "gianttrevally",
+   "note": "국명 무명갈전갱이",
+   "art_src": "sheet21_07",
+   "review": "ai_guess"
   },
   {
    "no": "056",
@@ -614,9 +655,11 @@
    "name_ko": "블루핀 트레발리",
    "name_en": "Bluefin Trevally",
    "sci_name": "Caranx melampygus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bluefintrevally",
+   "note": "",
+   "art_src": "sheet23_08",
+   "review": "ai_guess"
   },
   {
    "no": "057",
@@ -658,9 +701,10 @@
    "name_ko": "스콜피온피쉬",
    "name_en": "Scorpionfish",
    "sci_name": "Scorpaenidae",
-   "art": "N",
-   "art_key": "",
-   "note": "쏨뱅이류"
+   "art": "Y",
+   "art_key": "scorpionfish",
+   "note": "쏨뱅이류",
+   "art_src": "scorpionfish"
   },
   {
    "no": "061",
@@ -669,9 +713,11 @@
    "name_ko": "스톤피쉬",
    "name_en": "Stonefish",
    "sci_name": "Synanceia verrucosa",
-   "art": "N",
-   "art_key": "",
-   "note": "맹독 · 접촉 주의"
+   "art": "Y",
+   "art_key": "stonefish",
+   "note": "맹독 · 접촉 주의",
+   "art_src": "sheet15_07",
+   "review": "ai_guess"
   },
   {
    "no": "062",
@@ -702,9 +748,10 @@
    "name_ko": "가자미 · 넙치류",
    "name_en": "Flounder & Sole",
    "sci_name": "Pleuronectiformes",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "flounder",
+   "note": "",
+   "art_src": "flounder"
   },
   {
    "no": "065",
@@ -735,9 +782,11 @@
    "name_ko": "스포티드 가든일",
    "name_en": "Spotted Garden Eel",
    "sci_name": "Heteroconger hassi",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "spottedgardeneel",
+   "note": "",
+   "art_src": "sheet24_01",
+   "review": "ai_guess"
   },
   {
    "no": "068",
@@ -746,9 +795,11 @@
    "name_ko": "망둑어류",
    "name_en": "Goby",
    "sci_name": "Gobiidae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "goby",
+   "note": "",
+   "art_src": "sheet13_09",
+   "review": "ai_guess"
   },
   {
    "no": "069",
@@ -757,9 +808,11 @@
    "name_ko": "드워프 고비류",
    "name_en": "Dwarf Gobies",
    "sci_name": "Eviota spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "dwarfgobies",
+   "note": "",
+   "art_src": "sheet03_05",
+   "review": "ai_guess"
   },
   {
    "no": "070",
@@ -768,9 +821,11 @@
    "name_ko": "블레니",
    "name_en": "Blenny",
    "sci_name": "Blenniidae",
-   "art": "N",
-   "art_key": "",
-   "note": "청베도라치류"
+   "art": "Y",
+   "art_key": "blenny",
+   "note": "청베도라치류",
+   "art_src": "sheet09_01",
+   "review": "ai_guess"
   },
   {
    "no": "071",
@@ -790,9 +845,11 @@
    "name_ko": "푸른바다거북",
    "name_en": "Green Sea Turtle",
    "sci_name": "Chelonia mydas",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "greenseaturtle",
+   "note": "",
+   "art_src": "sheet11_01",
+   "review": "ai_guess"
   },
   {
    "no": "073",
@@ -801,9 +858,11 @@
    "name_ko": "매부리바다거북",
    "name_en": "Hawksbill Sea Turtle",
    "sci_name": "Eretmochelys imbricata",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "hawksbillseaturtle",
+   "note": "",
+   "art_src": "sheet11_02",
+   "review": "ai_guess"
   },
   {
    "no": "074",
@@ -812,9 +871,11 @@
    "name_ko": "붉은바다거북",
    "name_en": "Loggerhead Sea Turtle",
    "sci_name": "Caretta caretta",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '바다거북' 수정"
+   "art": "Y",
+   "art_key": "loggerheadseaturtle",
+   "note": "원본 '바다거북' 수정",
+   "art_src": "sheet11_03",
+   "review": "ai_guess"
   },
   {
    "no": "075",
@@ -823,9 +884,11 @@
    "name_ko": "올리브각시바다거북",
    "name_en": "Olive Ridley Sea Turtle",
    "sci_name": "Lepidochelys olivacea",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "oliveridleyseaturtle",
+   "note": "",
+   "art_src": "sheet11_04",
+   "review": "ai_guess"
   },
   {
    "no": "076",
@@ -834,9 +897,11 @@
    "name_ko": "장수거북",
    "name_en": "Leatherback Sea Turtle",
    "sci_name": "Dermochelys coriacea",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "leatherbackseaturtle",
+   "note": "",
+   "art_src": "sheet11_05",
+   "review": "ai_guess"
   },
   {
    "no": "077",
@@ -845,9 +910,11 @@
    "name_ko": "납작등바다거북",
    "name_en": "Flatback Sea Turtle",
    "sci_name": "Natator depressus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "flatbackseaturtle",
+   "note": "",
+   "art_src": "sheet11_06",
+   "review": "ai_guess"
   },
   {
    "no": "078",
@@ -856,9 +923,11 @@
    "name_ko": "켐프각시바다거북",
    "name_en": "Kemp's Ridley Sea Turtle",
    "sci_name": "Lepidochelys kempii",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "kempsridleyseaturtle",
+   "note": "",
+   "art_src": "sheet11_07",
+   "review": "ai_guess"
   },
   {
    "no": "079",
@@ -867,9 +936,11 @@
    "name_ko": "향고래",
    "name_en": "Sperm Whale",
    "sci_name": "Physeter macrocephalus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "spermwhale",
+   "note": "",
+   "art_src": "sheet09_03",
+   "review": "ai_guess"
   },
   {
    "no": "080",
@@ -878,9 +949,11 @@
    "name_ko": "혹등고래",
    "name_en": "Humpback Whale",
    "sci_name": "Megaptera novaeangliae",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '혹돔고래' 삭제"
+   "art": "Y",
+   "art_key": "humpbackwhale",
+   "note": "원본 '혹돔고래' 삭제",
+   "art_src": "sheet09_04",
+   "review": "ai_guess"
   },
   {
    "no": "081",
@@ -889,9 +962,11 @@
    "name_ko": "대왕고래",
    "name_en": "Blue Whale",
    "sci_name": "Balaenoptera musculus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bluewhale",
+   "note": "",
+   "art_src": "sheet09_05",
+   "review": "ai_guess"
   },
   {
    "no": "082",
@@ -900,9 +975,11 @@
    "name_ko": "밍크고래",
    "name_en": "Minke Whale",
    "sci_name": "Balaenoptera acutorostrata",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "minkewhale",
+   "note": "",
+   "art_src": "sheet09_06",
+   "review": "ai_guess"
   },
   {
    "no": "083",
@@ -911,9 +988,11 @@
    "name_ko": "범고래",
    "name_en": "Orca",
    "sci_name": "Orcinus orca",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "orca",
+   "note": "",
+   "art_src": "sheet09_07",
+   "review": "ai_guess"
   },
   {
    "no": "084",
@@ -922,9 +1001,11 @@
    "name_ko": "들쇠고래",
    "name_en": "Pilot Whale",
    "sci_name": "Globicephala spp.",
-   "art": "N",
-   "art_key": "",
-   "note": "파일럿웨일"
+   "art": "Y",
+   "art_key": "pilotwhale",
+   "note": "파일럿웨일",
+   "art_src": "sheet09_08",
+   "review": "ai_guess"
   },
   {
    "no": "085",
@@ -933,9 +1014,11 @@
    "name_ko": "큰돌고래",
    "name_en": "Bottlenose Dolphin",
    "sci_name": "Tursiops truncatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bottlenosedolphin",
+   "note": "",
+   "art_src": "sheet09_09",
+   "review": "ai_guess"
   },
   {
    "no": "086",
@@ -944,9 +1027,11 @@
    "name_ko": "참돌고래",
    "name_en": "Common Dolphin",
    "sci_name": "Delphinus delphis",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "commondolphin",
+   "note": "",
+   "art_src": "sheet10_04",
+   "review": "ai_guess"
   },
   {
    "no": "087",
@@ -955,9 +1040,11 @@
    "name_ko": "긴부리돌고래",
    "name_en": "Spinner Dolphin",
    "sci_name": "Stenella longirostris",
-   "art": "N",
-   "art_key": "",
-   "note": "스피너돌고래"
+   "art": "Y",
+   "art_key": "spinnerdolphin",
+   "note": "스피너돌고래",
+   "art_src": "sheet10_07",
+   "review": "ai_guess"
   },
   {
    "no": "088",
@@ -966,9 +1053,11 @@
    "name_ko": "큰머리돌고래",
    "name_en": "Risso's Dolphin",
    "sci_name": "Grampus griseus",
-   "art": "N",
-   "art_key": "",
-   "note": "리소돌고래"
+   "art": "Y",
+   "art_key": "rissosdolphin",
+   "note": "리소돌고래",
+   "art_src": "sheet16_05",
+   "review": "ai_guess"
   },
   {
    "no": "089",
@@ -977,9 +1066,11 @@
    "name_ko": "알락돌고래",
    "name_en": "Pantropical Spotted Dolphin",
    "sci_name": "Stenella attenuata",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "pantropicalspotteddolphin",
+   "note": "",
+   "art_src": "sheet16_01",
+   "review": "ai_guess"
   },
   {
    "no": "090",
@@ -999,9 +1090,11 @@
    "name_ko": "브라이드고래",
    "name_en": "Bryde's Whale",
    "sci_name": "Balaenoptera edeni",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "brydeswhale",
+   "note": "",
+   "art_src": "sheet16_07",
+   "review": "ai_guess"
   },
   {
    "no": "092",
@@ -1076,9 +1169,11 @@
    "name_ko": "듀공",
    "name_en": "Dugong",
    "sci_name": "Dugong dugon",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "dugong",
+   "note": "",
+   "art_src": "sheet17_04",
+   "review": "ai_guess"
   },
   {
    "no": "099",
@@ -1109,9 +1204,10 @@
    "name_ko": "노랑입술바다뱀",
    "name_en": "Yellow-lipped Sea Krait",
    "sci_name": "Laticauda colubrina",
-   "art": "N",
-   "art_key": "",
-   "note": "맹독 · 접촉 주의"
+   "art": "Y",
+   "art_key": "bandedseakrait",
+   "note": "맹독 · 접촉 주의",
+   "art_src": "bandedseakrait"
   },
   {
    "no": "102",
@@ -1142,9 +1238,10 @@
    "name_ko": "대왕문어",
    "name_en": "Giant Pacific Octopus",
    "sci_name": "Enteroctopus dofleini",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "giantpacificoctopus",
+   "note": "",
+   "art_src": "giantpacificoctopus"
   },
   {
    "no": "105",
@@ -1153,9 +1250,11 @@
    "name_ko": "무늬오징어",
    "name_en": "Bigfin Reef Squid",
    "sci_name": "Sepioteuthis lessoniana",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bigfinreefsquid",
+   "note": "",
+   "art_src": "sheet11_09",
+   "review": "ai_guess"
   },
   {
    "no": "106",
@@ -1175,9 +1274,11 @@
    "name_ko": "커먼 갑오징어",
    "name_en": "Common Cuttlefish",
    "sci_name": "Sepia officinalis",
-   "art": "N",
-   "art_key": "",
-   "note": "동북대서양·지중해 종"
+   "art": "Y",
+   "art_key": "commoncuttlefish",
+   "note": "동북대서양·지중해 종",
+   "art_src": "sheet17_09",
+   "review": "ai_guess"
   },
   {
    "no": "108",
@@ -1197,9 +1298,11 @@
    "name_ko": "플램보이언트 갑오징어",
    "name_en": "Flamboyant Cuttlefish",
    "sci_name": "Metasepia pfefferi",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "flamboyantcuttlefish",
+   "note": "",
+   "art_src": "sheet24_07",
+   "review": "ai_guess"
   },
   {
    "no": "110",
@@ -1208,9 +1311,11 @@
    "name_ko": "큰파란고리문어",
    "name_en": "Greater Blue-ringed Octopus",
    "sci_name": "Hapalochlaena lunulata",
-   "art": "N",
-   "art_key": "",
-   "note": "맹독 · 접촉 금지"
+   "art": "Y",
+   "art_key": "greaterblueringedoctopus",
+   "note": "맹독 · 접촉 금지",
+   "art_src": "sheet07_01",
+   "review": "ai_guess"
   },
   {
    "no": "111",
@@ -1219,9 +1324,11 @@
    "name_ko": "코코넛문어",
    "name_en": "Coconut Octopus",
    "sci_name": "Amphioctopus marginatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "coconutoctopus",
+   "note": "",
+   "art_src": "sheet17_08",
+   "review": "ai_guess"
   },
   {
    "no": "112",
@@ -1230,9 +1337,11 @@
    "name_ko": "미믹문어",
    "name_en": "Mimic Octopus",
    "sci_name": "Thaumoctopus mimicus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "mimicoctopus",
+   "note": "",
+   "art_src": "sheet17_07",
+   "review": "ai_guess"
   },
   {
    "no": "113",
@@ -1241,9 +1350,11 @@
    "name_ko": "낮문어",
    "name_en": "Day Octopus",
    "sci_name": "Octopus cyanea",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '산호문어(Blue-spotted Octopus)'는 실재 종 확인 불가 → 대체 후보, 확인 필요"
+   "art": "Y",
+   "art_key": "dayoctopus",
+   "note": "원본 '산호문어(Blue-spotted Octopus)'는 실재 종 확인 불가 → 대체 후보, 확인 필요",
+   "art_src": "sheet11_08",
+   "review": "ai_guess"
   },
   {
    "no": "114",
@@ -1318,9 +1429,10 @@
    "name_ko": "스페니쉬 댄서",
    "name_en": "Spanish Dancer",
    "sci_name": "Hexabranchus sanguineus",
-   "art": "N",
-   "art_key": "",
-   "note": "붉은 리본 모양 알 덩어리도 함께 기록"
+   "art": "Y",
+   "art_key": "spanishdancer",
+   "note": "붉은 리본 모양 알 덩어리도 함께 기록",
+   "art_src": "spanishdancer"
   },
   {
    "no": "121",
@@ -1329,9 +1441,11 @@
    "name_ko": "블루 드래곤",
    "name_en": "Blue Dragon",
    "sci_name": "Glaucus atlanticus",
-   "art": "N",
-   "art_key": "",
-   "note": "맨손 접촉 주의"
+   "art": "Y",
+   "art_key": "bluedragon",
+   "note": "맨손 접촉 주의",
+   "art_src": "sheet20_09",
+   "review": "ai_guess"
   },
   {
    "no": "122",
@@ -1340,9 +1454,11 @@
    "name_ko": "데니스피그미해마",
    "name_en": "Denise's Pygmy Seahorse",
    "sci_name": "Hippocampus denise",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "denisespygmyseahorse",
+   "note": "",
+   "art_src": "sheet03_02",
+   "review": "ai_guess"
   },
   {
    "no": "123",
@@ -1351,9 +1467,11 @@
    "name_ko": "폰토피그미해마",
    "name_en": "Pontoh's Pygmy Seahorse",
    "sci_name": "Hippocampus pontohi",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '바고에' 수정"
+   "art": "Y",
+   "art_key": "pontohspygmyseahorse",
+   "note": "원본 '바고에' 수정",
+   "art_src": "sheet03_03",
+   "review": "ai_guess"
   },
   {
    "no": "124",
@@ -1373,9 +1491,11 @@
    "name_ko": "태평양해마",
    "name_en": "Pacific Seahorse",
    "sci_name": "Hippocampus ingens",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '거대한 해마'"
+   "art": "Y",
+   "art_key": "pacificseahorse",
+   "note": "원본 '거대한 해마'",
+   "art_src": "sheet23_09",
+   "review": "ai_guess"
   },
   {
    "no": "126",
@@ -1384,9 +1504,11 @@
    "name_ko": "줄무늬해마",
    "name_en": "Lined Seahorse",
    "sci_name": "Hippocampus erectus",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '점박이해마' 수정"
+   "art": "Y",
+   "art_key": "linedseahorse",
+   "note": "원본 '점박이해마' 수정",
+   "art_src": "sheet24_04",
+   "review": "ai_guess"
   },
   {
    "no": "127",
@@ -1406,9 +1528,11 @@
    "name_ko": "로버스트 고스트파이프피쉬",
    "name_en": "Robust Ghost Pipefish",
    "sci_name": "Solenostomus cyanopterus",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '로버슨'"
+   "art": "Y",
+   "art_key": "robustghostpipefish",
+   "note": "원본 '로버슨'",
+   "art_src": "sheet24_05",
+   "review": "ai_guess"
   },
   {
    "no": "129",
@@ -1428,9 +1552,11 @@
    "name_ko": "밴디드 파이프피쉬",
    "name_en": "Banded Pipefish",
    "sci_name": "Doryrhamphus dactyliophorus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bandedpipefish",
+   "note": "",
+   "art_src": "sheet24_03",
+   "review": "ai_guess"
   },
   {
    "no": "131",
@@ -1439,9 +1565,11 @@
    "name_ko": "앨리게이터 파이프피쉬",
    "name_en": "Alligator Pipefish",
    "sci_name": "Syngnathoides biaculeatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "alligatorpipefish",
+   "note": "",
+   "art_src": "sheet22_05",
+   "review": "ai_guess"
   },
   {
    "no": "132",
@@ -1461,9 +1589,11 @@
    "name_ko": "바다대벌레",
    "name_en": "Skeleton Shrimp",
    "sci_name": "Caprellidae",
-   "art": "N",
-   "art_key": "",
-   "note": "스켈레톤새우"
+   "art": "Y",
+   "art_key": "skeletonshrimp",
+   "note": "스켈레톤새우",
+   "art_src": "sheet02_02",
+   "review": "ai_guess"
   },
   {
    "no": "134",
@@ -1472,9 +1602,11 @@
    "name_ko": "스컹크청소새우",
    "name_en": "Pacific Cleaner Shrimp",
    "sci_name": "Lysmata amboinensis",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '한스청소새우'와 같은 종으로 통합"
+   "art": "Y",
+   "art_key": "pacificcleanershrimp",
+   "note": "원본 '한스청소새우'와 같은 종으로 통합",
+   "art_src": "sheet12_04",
+   "review": "ai_guess"
   },
   {
    "no": "135",
@@ -1494,9 +1626,11 @@
    "name_ko": "말미잘새우",
    "name_en": "Anemone Shrimp",
    "sci_name": "Ancylomenes spp.",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '아니메네새우'"
+   "art": "Y",
+   "art_key": "anemoneshrimp",
+   "note": "원본 '아니메네새우'",
+   "art_src": "sheet14_06",
+   "review": "ai_guess"
   },
   {
    "no": "137",
@@ -1516,9 +1650,11 @@
    "name_ko": "오랑우탄크랩",
    "name_en": "Orangutan Crab",
    "sci_name": "Achaeus japonicus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "orangutancrab",
+   "note": "",
+   "art_src": "sheet12_06",
+   "review": "ai_guess"
   },
   {
    "no": "139",
@@ -1527,9 +1663,11 @@
    "name_ko": "말미잘소라게",
    "name_en": "Anemone Hermit Crab",
    "sci_name": "Dardanus pedunculatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "anemonehermitcrab",
+   "note": "",
+   "art_src": "sheet12_07",
+   "review": "ai_guess"
   },
   {
    "no": "140",
@@ -1538,9 +1676,11 @@
    "name_ko": "포슬린크랩",
    "name_en": "Porcelain Crab",
    "sci_name": "Neopetrolisthes maculatus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "porcelaincrab",
+   "note": "",
+   "art_src": "sheet04_03",
+   "review": "ai_guess"
   },
   {
    "no": "141",
@@ -1549,9 +1689,11 @@
    "name_ko": "리프로브스터",
    "name_en": "Reef Lobster",
    "sci_name": "Enoplometopus spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "reeflobster",
+   "note": "",
+   "art_src": "sheet04_01",
+   "review": "ai_guess"
   },
   {
    "no": "142",
@@ -1560,9 +1702,11 @@
    "name_ko": "부채새우",
    "name_en": "Slipper Lobster",
    "sci_name": "Scyllaridae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "slipperlobster",
+   "note": "",
+   "art_src": "sheet04_02",
+   "review": "ai_guess"
   },
   {
    "no": "143",
@@ -1582,9 +1726,11 @@
    "name_ko": "거미게",
    "name_en": "Spider Crab",
    "sci_name": "Majidae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "spidercrab",
+   "note": "",
+   "art_src": "sheet04_04",
+   "review": "ai_guess"
   },
   {
    "no": "145",
@@ -1615,9 +1761,11 @@
    "name_ko": "악마불가사리",
    "name_en": "Crown-of-thorns Starfish",
    "sci_name": "Acanthaster planci",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '가시배게' 수정 · 가시 독 주의"
+   "art": "Y",
+   "art_key": "crownofthornsstarfish",
+   "note": "원본 '가시배게' 수정 · 가시 독 주의",
+   "art_src": "sheet20_03",
+   "review": "ai_guess"
   },
   {
    "no": "148",
@@ -1626,9 +1774,11 @@
    "name_ko": "갯고사리",
    "name_en": "Feather Star",
    "sci_name": "Crinoidea",
-   "art": "N",
-   "art_key": "",
-   "note": "원본 '깃털갯지렁이' 수정 (갯지렁이 아님)"
+   "art": "Y",
+   "art_key": "featherstar",
+   "note": "원본 '깃털갯지렁이' 수정 (갯지렁이 아님)",
+   "art_src": "sheet20_01",
+   "review": "ai_guess"
   },
   {
    "no": "149",
@@ -1670,9 +1820,11 @@
    "name_ko": "대형 해삼",
    "name_en": "Giant Sea Cucumber",
    "sci_name": "Thelenota anax",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "giantseacucumber",
+   "note": "",
+   "art_src": "sheet06_07",
+   "review": "ai_guess"
   },
   {
    "no": "153",
@@ -1692,9 +1844,11 @@
    "name_ko": "뇌산호",
    "name_en": "Brain Coral",
    "sci_name": "Platygyra / Diploria spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "braincoral",
+   "note": "",
+   "art_src": "sheet18_02",
+   "review": "ai_guess"
   },
   {
    "no": "155",
@@ -1703,9 +1857,11 @@
    "name_ko": "사슴뿔산호",
    "name_en": "Staghorn Coral",
    "sci_name": "Acropora cervicornis",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "staghorncoral",
+   "note": "",
+   "art_src": "sheet18_03",
+   "review": "ai_guess"
   },
   {
    "no": "156",
@@ -1714,9 +1870,11 @@
    "name_ko": "엘크뿔산호",
    "name_en": "Elkhorn Coral",
    "sci_name": "Acropora palmata",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "elkhorncoral",
+   "note": "",
+   "art_src": "sheet18_04",
+   "review": "ai_guess"
   },
   {
    "no": "157",
@@ -1725,9 +1883,10 @@
    "name_ko": "버블코랄",
    "name_en": "Bubble Coral",
    "sci_name": "Plerogyra sinuosa",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bubblecoral",
+   "note": "",
+   "art_src": "bubblecoral"
   },
   {
    "no": "158",
@@ -1736,9 +1895,11 @@
    "name_ko": "버섯산호",
    "name_en": "Mushroom Coral",
    "sci_name": "Fungiidae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "mushroomcoral",
+   "note": "",
+   "art_src": "sheet18_05",
+   "review": "ai_guess"
   },
   {
    "no": "159",
@@ -1758,9 +1919,11 @@
    "name_ko": "테이블산호",
    "name_en": "Table Coral",
    "sci_name": "Acropora spp. (tabular)",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "tablecoral",
+   "note": "",
+   "art_src": "sheet18_01",
+   "review": "ai_guess"
   },
   {
    "no": "161",
@@ -1769,9 +1932,11 @@
    "name_ko": "부채산호",
    "name_en": "Sea Fan",
    "sci_name": "Gorgoniidae",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "seafan",
+   "note": "",
+   "art_src": "sheet18_06",
+   "review": "ai_guess"
   },
   {
    "no": "162",
@@ -1791,9 +1956,11 @@
    "name_ko": "카네이션코랄",
    "name_en": "Carnation Coral",
    "sci_name": "Dendronephthya spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "carnationcoral",
+   "note": "",
+   "art_src": "sheet18_07",
+   "review": "ai_guess"
   },
   {
    "no": "164",
@@ -1802,9 +1969,10 @@
    "name_ko": "가죽산호",
    "name_en": "Leather Coral",
    "sci_name": "Sarcophyton spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "leathercoral",
+   "note": "",
+   "art_src": "leathercoral"
   },
   {
    "no": "165",
@@ -1813,9 +1981,11 @@
    "name_ko": "스타폴립",
    "name_en": "Star Polyp",
    "sci_name": "Briareum spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "starpolyp",
+   "note": "",
+   "art_src": "sheet02_01",
+   "review": "ai_guess"
   },
   {
    "no": "166",
@@ -1824,9 +1994,11 @@
    "name_ko": "흑산호",
    "name_en": "Black Coral",
    "sci_name": "Antipatharia",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "blackcoral",
+   "note": "",
+   "art_src": "sheet18_08",
+   "review": "ai_guess"
   },
   {
    "no": "167",
@@ -1835,9 +2007,11 @@
    "name_ko": "기둥산호",
    "name_en": "Pillar Coral",
    "sci_name": "Dendrogyra cylindrus",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "pillarcoral",
+   "note": "",
+   "art_src": "sheet18_09",
+   "review": "ai_guess"
   },
   {
    "no": "168",
@@ -1857,9 +2031,11 @@
    "name_ko": "거꾸로해파리",
    "name_en": "Upside-down Jellyfish",
    "sci_name": "Cassiopea spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "upsidedownjellyfish",
+   "note": "",
+   "art_src": "sheet05_03",
+   "review": "ai_guess"
   },
   {
    "no": "170",
@@ -1868,9 +2044,11 @@
    "name_ko": "사자갈기해파리",
    "name_en": "Lion's Mane Jellyfish",
    "sci_name": "Cyanea capillata",
-   "art": "N",
-   "art_key": "",
-   "note": "쏘임 주의"
+   "art": "Y",
+   "art_key": "lionsmanejellyfish",
+   "note": "쏘임 주의",
+   "art_src": "sheet03_07",
+   "review": "ai_guess"
   },
   {
    "no": "171",
@@ -1879,9 +2057,11 @@
    "name_ko": "상자해파리",
    "name_en": "Box Jellyfish",
    "sci_name": "Cubozoa",
-   "art": "N",
-   "art_key": "",
-   "note": "맹독 · 접촉 금지"
+   "art": "Y",
+   "art_key": "boxjellyfish",
+   "note": "맹독 · 접촉 금지",
+   "art_src": "sheet03_09",
+   "review": "ai_guess"
   },
   {
    "no": "172",
@@ -1890,9 +2070,11 @@
    "name_ko": "블루버튼",
    "name_en": "Blue Button",
    "sci_name": "Porpita porpita",
-   "art": "N",
-   "art_key": "",
-   "note": "해파리가 아닌 히드라충 군체"
+   "art": "Y",
+   "art_key": "bluebutton",
+   "note": "해파리가 아닌 히드라충 군체",
+   "art_src": "sheet20_06",
+   "review": "ai_guess"
   },
   {
    "no": "173",
@@ -1912,9 +2094,11 @@
    "name_ko": "자이언트 그린 아네모네",
    "name_en": "Giant Green Anemone",
    "sci_name": "Anthopleura xanthogrammica",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "giantgreenanemone",
+   "note": "",
+   "art_src": "sheet05_02",
+   "review": "ai_guess"
   },
   {
    "no": "175",
@@ -1923,9 +2107,11 @@
    "name_ko": "카펫아네모네",
    "name_en": "Carpet Anemone",
    "sci_name": "Stichodactyla spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "carpetanemone",
+   "note": "",
+   "art_src": "sheet05_09",
+   "review": "ai_guess"
   },
   {
    "no": "176",
@@ -1934,9 +2120,11 @@
    "name_ko": "버블팁아네모네",
    "name_en": "Bubble-tip Anemone",
    "sci_name": "Entacmaea quadricolor",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "bubbletipanemone",
+   "note": "",
+   "art_src": "sheet05_05",
+   "review": "ai_guess"
   },
   {
    "no": "177",
@@ -1945,9 +2133,10 @@
    "name_ko": "대왕조개",
    "name_en": "Giant Clam",
    "sci_name": "Tridacna spp.",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "giantclam",
+   "note": "",
+   "art_src": "giantclam"
   },
   {
    "no": "178",
@@ -1967,9 +2156,11 @@
    "name_ko": "불갯지렁이",
    "name_en": "Bearded Fireworm",
    "sci_name": "Hermodice carunculata",
-   "art": "N",
-   "art_key": "",
-   "note": "접촉 주의"
+   "art": "Y",
+   "art_key": "beardedfireworm",
+   "note": "접촉 주의",
+   "art_src": "sheet02_04",
+   "review": "ai_guess"
   },
   {
    "no": "180",
@@ -1978,9 +2169,11 @@
    "name_ko": "납작벌레류",
    "name_en": "Flatworm",
    "sci_name": "Polycladida",
-   "art": "N",
-   "art_key": "",
-   "note": ""
+   "art": "Y",
+   "art_key": "flatworm",
+   "note": "",
+   "art_src": "sheet02_03",
+   "review": "ai_guess"
   },
   {
    "no": "181",
@@ -1992,6 +2185,1670 @@
    "art": "N",
    "art_key": "",
    "note": "바닷새"
+  },
+  {
+   "no": "182",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "전복",
+   "name_en": "Pacific Abalone",
+   "sci_name": "Haliotis discus hannai",
+   "art": "Y",
+   "art_key": "abalone",
+   "note": "",
+   "art_src": "abalone"
+  },
+  {
+   "no": "183",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "멸치",
+   "name_en": "Japanese Anchovy",
+   "sci_name": "Engraulis japonicus",
+   "art": "Y",
+   "art_key": "anchovy",
+   "note": "",
+   "art_src": "anchovy"
+  },
+  {
+   "no": "184",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "혹돔",
+   "name_en": "Asian Sheepshead Wrasse",
+   "sci_name": "Semicossyphus reticulatus",
+   "art": "Y",
+   "art_key": "asiansheepsheadwrasse",
+   "note": "",
+   "art_src": "asiansheepsheadwrasse"
+  },
+  {
+   "no": "185",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "임연수어",
+   "name_en": "Okhotsk Atka Mackerel",
+   "sci_name": "Pleurogrammus azonus",
+   "art": "Y",
+   "art_key": "atkamackerel",
+   "note": "",
+   "art_src": "atkamackerel"
+  },
+  {
+   "no": "186",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "감성돔",
+   "name_en": "Black Porgy",
+   "sci_name": "Acanthopagrus schlegelii",
+   "art": "Y",
+   "art_key": "blackporgy",
+   "note": "",
+   "art_src": "blackporgy"
+  },
+  {
+   "no": "187",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "볼락",
+   "name_en": "Dark-banded Rockfish",
+   "sci_name": "Sebastes inermis",
+   "art": "Y",
+   "art_key": "blackrockfish",
+   "note": "",
+   "art_src": "blackrockfish"
+  },
+  {
+   "no": "188",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "블랙시브림",
+   "name_en": "Black Seabream",
+   "sci_name": "Spondyliosoma cantharus",
+   "art": "Y",
+   "art_key": "blackseabream",
+   "note": "",
+   "art_src": "blackseabream",
+   "review": "name_check"
+  },
+  {
+   "no": "189",
+   "group": "물고기",
+   "subgroup": "산호초 어류",
+   "name_ko": "파랑돔",
+   "name_en": "Blue Devil Damselfish",
+   "sci_name": "Chrysiptera cyanea",
+   "art": "Y",
+   "art_key": "bluedamselfish",
+   "note": "",
+   "art_src": "bluedamselfish",
+   "review": "name_check"
+  },
+  {
+   "no": "190",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "두토막눈썹참갯지렁이",
+   "name_en": "Blue Ragworm",
+   "sci_name": "Perinereis aibuhitensis",
+   "art": "Y",
+   "art_key": "blueragworm",
+   "note": "",
+   "art_src": "blueragworm"
+  },
+  {
+   "no": "191",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "석회관갯지렁이",
+   "name_en": "Calcareous Tubeworm",
+   "sci_name": "Hydroides ezoensis",
+   "art": "Y",
+   "art_key": "calcareouspolychaete",
+   "note": "",
+   "art_src": "calcareouspolychaete",
+   "review": "name_check"
+  },
+  {
+   "no": "192",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "꼬막",
+   "name_en": "Blood Cockle",
+   "sci_name": "Tegillarca granosa",
+   "art": "Y",
+   "art_key": "cockle",
+   "note": "",
+   "art_src": "cockle"
+  },
+  {
+   "no": "193",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "대구",
+   "name_en": "Pacific Cod",
+   "sci_name": "Gadus macrocephalus",
+   "art": "Y",
+   "art_key": "cod",
+   "note": "",
+   "art_src": "cod"
+  },
+  {
+   "no": "194",
+   "group": "두족류",
+   "subgroup": "두족류",
+   "name_ko": "참문어",
+   "name_en": "Common Octopus",
+   "sci_name": "Octopus vulgaris",
+   "art": "Y",
+   "art_key": "commonoctopus",
+   "note": "",
+   "art_src": "commonoctopus"
+  },
+  {
+   "no": "195",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "붕장어",
+   "name_en": "Whitespotted Conger",
+   "sci_name": "Conger myriaster",
+   "art": "Y",
+   "art_key": "congereel",
+   "note": "",
+   "art_src": "congereel"
+  },
+  {
+   "no": "196",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "갈치",
+   "name_en": "Largehead Hairtail",
+   "sci_name": "Trichiurus lepturus",
+   "art": "Y",
+   "art_key": "cutlassfish",
+   "note": "",
+   "art_src": "cutlassfish"
+  },
+  {
+   "no": "197",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "갯장어",
+   "name_en": "Daggertooth Pike Conger",
+   "sci_name": "Muraenesox cinereus",
+   "art": "Y",
+   "art_key": "daggertoothpikeconger",
+   "note": "",
+   "art_src": "daggertoothpikeconger"
+  },
+  {
+   "no": "198",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "곱상어",
+   "name_en": "Spiny Dogfish",
+   "sci_name": "Squalus suckleyi",
+   "art": "Y",
+   "art_key": "dogfishshark",
+   "note": "",
+   "art_src": "dogfishshark"
+  },
+  {
+   "no": "199",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "자리돔",
+   "name_en": "Pearl-spot Chromis",
+   "sci_name": "Chromis notata",
+   "art": "Y",
+   "art_key": "duskydamselfish",
+   "note": "",
+   "art_src": "duskydamselfish",
+   "review": "name_check"
+  },
+  {
+   "no": "200",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "등가시치",
+   "name_en": "Blotched Eelpout",
+   "sci_name": "Zoarces gillii",
+   "art": "Y",
+   "art_key": "eelpout",
+   "note": "",
+   "art_src": "eelpout"
+  },
+  {
+   "no": "201",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "쥐노래미",
+   "name_en": "Fat Greenling",
+   "sci_name": "Hexagrammos otakii",
+   "art": "Y",
+   "art_key": "fatgreenling",
+   "note": "",
+   "art_src": "fatgreenling"
+  },
+  {
+   "no": "202",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "농게",
+   "name_en": "Bowed Fiddler Crab",
+   "sci_name": "Tubuca arcuata",
+   "art": "Y",
+   "art_key": "fiddlercrab",
+   "note": "",
+   "art_src": "fiddlercrab"
+  },
+  {
+   "no": "203",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "쥐치",
+   "name_en": "Threadsail Filefish",
+   "sci_name": "Stephanolepis cirrhifer",
+   "art": "Y",
+   "art_key": "filefish",
+   "note": "",
+   "art_src": "filefish"
+  },
+  {
+   "no": "204",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "플라밍고텅 달팽이",
+   "name_en": "Flamingo Tongue Snail",
+   "sci_name": "Cyphoma gibbosum",
+   "art": "Y",
+   "art_key": "flamingotonguesnail",
+   "note": "",
+   "art_src": "flamingotonguesnail"
+  },
+  {
+   "no": "205",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "납작게",
+   "name_en": "Flat Crab",
+   "sci_name": "Gaetice depressus",
+   "art": "Y",
+   "art_key": "flatcrab",
+   "note": "",
+   "art_src": "flatcrab"
+  },
+  {
+   "no": "206",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "전어",
+   "name_en": "Dotted Gizzard Shad",
+   "sci_name": "Konosirus punctatus",
+   "art": "Y",
+   "art_key": "gizzardshad",
+   "note": "",
+   "art_src": "gizzardshad"
+  },
+  {
+   "no": "207",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "복섬",
+   "name_en": "Grass Puffer",
+   "sci_name": "Takifugu niphobles",
+   "art": "Y",
+   "art_key": "grasspuffer",
+   "note": "",
+   "art_src": "grasspuffer"
+  },
+  {
+   "no": "208",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "그레이리프샤크",
+   "name_en": "Grey Reef Shark",
+   "sci_name": "Carcharhinus amblyrhynchos",
+   "art": "Y",
+   "art_key": "grayreefshark",
+   "note": "",
+   "art_src": "grayreefshark"
+  },
+  {
+   "no": "209",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "노래미",
+   "name_en": "Spotty-belly Greenling",
+   "sci_name": "Hexagrammos agrammus",
+   "art": "Y",
+   "art_key": "greenling",
+   "note": "",
+   "art_src": "greenling"
+  },
+  {
+   "no": "210",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "해머코랄",
+   "name_en": "Hammer Coral",
+   "sci_name": "Euphyllia ancora",
+   "art": "Y",
+   "art_key": "hammercoral",
+   "note": "",
+   "art_src": "hammercoral"
+  },
+  {
+   "no": "211",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "백합",
+   "name_en": "Hard Clam",
+   "sci_name": "Meretrix lusoria",
+   "art": "Y",
+   "art_key": "hardclam",
+   "note": "",
+   "art_src": "hardclam"
+  },
+  {
+   "no": "212",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "소라게",
+   "name_en": "Hermit Crab",
+   "sci_name": "Pagurus spp.",
+   "art": "Y",
+   "art_key": "hermitcrab",
+   "note": "",
+   "art_src": "hermitcrab",
+   "review": "image_name_mismatch"
+  },
+  {
+   "no": "213",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "청어",
+   "name_en": "Pacific Herring",
+   "sci_name": "Clupea pallasii",
+   "art": "Y",
+   "art_key": "herring",
+   "note": "",
+   "art_src": "herring"
+  },
+  {
+   "no": "214",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "전갱이",
+   "name_en": "Japanese Jack Mackerel",
+   "sci_name": "Trachurus japonicus",
+   "art": "Y",
+   "art_key": "horsemackerel",
+   "note": "",
+   "art_src": "horsemackerel"
+  },
+  {
+   "no": "215",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "괭이상어",
+   "name_en": "Japanese Bullhead Shark",
+   "sci_name": "Heterodontus japonicus",
+   "art": "Y",
+   "art_key": "japanesebullheadshark",
+   "note": "",
+   "art_src": "japanesebullheadshark"
+  },
+  {
+   "no": "216",
+   "group": "두족류",
+   "subgroup": "두족류",
+   "name_ko": "살오징어",
+   "name_en": "Japanese Flying Squid",
+   "sci_name": "Todarodes pacificus",
+   "art": "Y",
+   "art_key": "japanesecommonsquid",
+   "note": "",
+   "art_src": "japanesecommonsquid"
+  },
+  {
+   "no": "217",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "조피볼락",
+   "name_en": "Korean Rockfish",
+   "sci_name": "Sebastes schlegelii",
+   "art": "Y",
+   "art_key": "koreanrockfish",
+   "note": "",
+   "art_src": "koreanrockfish"
+  },
+  {
+   "no": "218",
+   "group": "두족류",
+   "subgroup": "두족류",
+   "name_ko": "낙지",
+   "name_en": "Long Arm Octopus",
+   "sci_name": "Octopus minor",
+   "art": "Y",
+   "art_key": "longarmoctopus",
+   "note": "",
+   "art_src": "longarmoctopus"
+  },
+  {
+   "no": "219",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "고등어",
+   "name_en": "Chub Mackerel",
+   "sci_name": "Scomber japonicus",
+   "art": "Y",
+   "art_key": "mackerel",
+   "note": "",
+   "art_src": "mackerel"
+  },
+  {
+   "no": "220",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "청상아리",
+   "name_en": "Shortfin Mako Shark",
+   "sci_name": "Isurus oxyrinchus",
+   "art": "Y",
+   "art_key": "makoshark",
+   "note": "",
+   "art_src": "makoshark"
+  },
+  {
+   "no": "221",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "바지락",
+   "name_en": "Manila Clam",
+   "sci_name": "Ruditapes philippinarum",
+   "art": "Y",
+   "art_key": "manilaclam",
+   "note": "",
+   "art_src": "manilaclam"
+  },
+  {
+   "no": "222",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "매시브코랄",
+   "name_en": "Massive Coral",
+   "sci_name": "Porites spp.",
+   "art": "Y",
+   "art_key": "massivecoral",
+   "note": "",
+   "art_src": "massivecoral"
+  },
+  {
+   "no": "223",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "민어",
+   "name_en": "Brown Croaker",
+   "sci_name": "Miichthys miiuy",
+   "art": "Y",
+   "art_key": "meagre",
+   "note": "",
+   "art_src": "meagre",
+   "review": "name_check"
+  },
+  {
+   "no": "224",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "숭어",
+   "name_en": "Flathead Grey Mullet",
+   "sci_name": "Mugil cephalus",
+   "art": "Y",
+   "art_key": "mullet",
+   "note": "",
+   "art_src": "mullet"
+  },
+  {
+   "no": "225",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "굴",
+   "name_en": "Pacific Oyster",
+   "sci_name": "Magallana gigas",
+   "art": "Y",
+   "art_key": "oyster",
+   "note": "",
+   "art_src": "oyster"
+  },
+  {
+   "no": "226",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "꽁치",
+   "name_en": "Pacific Saury",
+   "sci_name": "Cololabis saira",
+   "art": "Y",
+   "art_key": "pacificsaury",
+   "note": "",
+   "art_src": "pacificsaury"
+  },
+  {
+   "no": "227",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "키조개",
+   "name_en": "Pen Shell",
+   "sci_name": "Atrina pectinata",
+   "art": "Y",
+   "art_key": "penshell",
+   "note": "",
+   "art_src": "penshell"
+  },
+  {
+   "no": "228",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "플레이트코랄",
+   "name_en": "Plate Coral",
+   "sci_name": "Montipora spp.",
+   "art": "Y",
+   "art_key": "platecoral",
+   "note": "",
+   "art_src": "platecoral"
+  },
+  {
+   "no": "229",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "명태",
+   "name_en": "Alaska Pollock",
+   "sci_name": "Gadus chalcogrammus",
+   "art": "Y",
+   "art_key": "pollack",
+   "note": "",
+   "art_src": "pollack"
+  },
+  {
+   "no": "230",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "펄싱제니아",
+   "name_en": "Pulsing Xenia",
+   "sci_name": "Xenia spp.",
+   "art": "Y",
+   "art_key": "pulsingxenia",
+   "note": "",
+   "art_src": "pulsingxenia"
+  },
+  {
+   "no": "231",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "용치놀래기",
+   "name_en": "Rainbow Wrasse",
+   "sci_name": "Halichoeres poecilopterus",
+   "art": "Y",
+   "art_key": "rainbowwrasse",
+   "note": "",
+   "art_src": "rainbowwrasse"
+  },
+  {
+   "no": "232",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "맛조개",
+   "name_en": "Razor Clam",
+   "sci_name": "Solen strictus",
+   "art": "Y",
+   "art_key": "razorclam",
+   "note": "",
+   "art_src": "razorclam",
+   "review": "image_name_mismatch"
+  },
+  {
+   "no": "233",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "레드킹크랩",
+   "name_en": "Red King Crab",
+   "sci_name": "Paralithodes camtschaticus",
+   "art": "Y",
+   "art_key": "redkingcrab",
+   "note": "",
+   "art_src": "redkingcrab"
+  },
+  {
+   "no": "234",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "참돔",
+   "name_en": "Red Seabream",
+   "sci_name": "Pagrus major",
+   "art": "Y",
+   "art_key": "redseabream",
+   "note": "",
+   "art_src": "redseabream"
+  },
+  {
+   "no": "235",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "참게",
+   "name_en": "Japanese Mitten Crab",
+   "sci_name": "Eriocheir japonica",
+   "art": "Y",
+   "art_key": "rivercrab",
+   "note": "",
+   "art_src": "rivercrab"
+  },
+  {
+   "no": "236",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "바위게",
+   "name_en": "Striped Shore Crab",
+   "sci_name": "Pachygrapsus crassipes",
+   "art": "Y",
+   "art_key": "rockcrab",
+   "note": "",
+   "art_src": "rockcrab"
+  },
+  {
+   "no": "237",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "까나리",
+   "name_en": "Pacific Sand Lance",
+   "sci_name": "Ammodytes personatus",
+   "art": "Y",
+   "art_key": "sandlance",
+   "note": "",
+   "art_src": "sandlance"
+  },
+  {
+   "no": "238",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "가리비",
+   "name_en": "Yesso Scallop",
+   "sci_name": "Mizuhopecten yessoensis",
+   "art": "Y",
+   "art_key": "scallop",
+   "note": "",
+   "art_src": "scallop"
+  },
+  {
+   "no": "239",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "스크롤코랄",
+   "name_en": "Scroll Coral",
+   "sci_name": "Turbinaria reniformis",
+   "art": "Y",
+   "art_key": "scrollcoral",
+   "note": "",
+   "art_src": "scrollcoral"
+  },
+  {
+   "no": "240",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "농어",
+   "name_en": "Japanese Seabass",
+   "sci_name": "Lateolabrax japonicus",
+   "art": "Y",
+   "art_key": "seabass",
+   "note": "",
+   "art_src": "seabass"
+  },
+  {
+   "no": "241",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "개불",
+   "name_en": "Fat Innkeeper Worm",
+   "sci_name": "Urechis unicinctus",
+   "art": "Y",
+   "art_key": "seacucumberworm",
+   "note": "",
+   "art_src": "seacucumberworm"
+  },
+  {
+   "no": "242",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "군소",
+   "name_en": "Sea Hare",
+   "sci_name": "Aplysia kurodai",
+   "art": "Y",
+   "art_key": "seahare",
+   "note": "",
+   "art_src": "seahare",
+   "review": "image_name_mismatch"
+  },
+  {
+   "no": "243",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "실키샤크",
+   "name_en": "Silky Shark",
+   "sci_name": "Carcharhinus falciformis",
+   "art": "Y",
+   "art_key": "silkyshark",
+   "note": "",
+   "art_src": "silkyshark"
+  },
+  {
+   "no": "244",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "보리멸",
+   "name_en": "Japanese Whiting",
+   "sci_name": "Sillago japonica",
+   "art": "Y",
+   "art_key": "sillagolike",
+   "note": "",
+   "art_src": "sillagolike"
+  },
+  {
+   "no": "245",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "별상어",
+   "name_en": "Starspotted Smooth-hound",
+   "sci_name": "Mustelus manazo",
+   "art": "Y",
+   "art_key": "starspottedshark",
+   "note": "",
+   "art_src": "starspottedshark"
+  },
+  {
+   "no": "246",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "돌돔",
+   "name_en": "Barred Knifejaw",
+   "sci_name": "Oplegnathus fasciatus",
+   "art": "Y",
+   "art_key": "stripedbeakperch",
+   "note": "",
+   "art_src": "stripedbeakperch"
+  },
+  {
+   "no": "247",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "황줄도미",
+   "name_en": "Goldlined Seabream",
+   "sci_name": "Rhabdosargus sarba",
+   "art": "Y",
+   "art_key": "stripedseabream",
+   "note": "",
+   "art_src": "stripedseabream",
+   "review": "name_check"
+  },
+  {
+   "no": "248",
+   "group": "상어",
+   "subgroup": "상어",
+   "name_ko": "흰배환도상어",
+   "name_en": "Common Thresher Shark",
+   "sci_name": "Alopias vulpinus",
+   "art": "Y",
+   "art_key": "threshershark",
+   "note": "",
+   "art_src": "threshershark"
+  },
+  {
+   "no": "249",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "자주복",
+   "name_en": "Tiger Puffer",
+   "sci_name": "Takifugu rubripes",
+   "art": "Y",
+   "art_key": "tigerpuffer",
+   "note": "",
+   "art_src": "tigerpuffer"
+  },
+  {
+   "no": "250",
+   "group": "산호 · 자포동물",
+   "subgroup": "산호",
+   "name_ko": "토치코랄",
+   "name_en": "Torch Coral",
+   "sci_name": "Euphyllia glabrescens",
+   "art": "Y",
+   "art_key": "torchcoral",
+   "note": "",
+   "art_src": "torchcoral"
+  },
+  {
+   "no": "251",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "나팔고둥",
+   "name_en": "Triton's Trumpet",
+   "sci_name": "Charonia sauliae",
+   "art": "Y",
+   "art_key": "tritonshell",
+   "note": "",
+   "art_src": "tritonshell"
+  },
+  {
+   "no": "252",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "튜브스펀지",
+   "name_en": "Tube Sponge",
+   "sci_name": "Callyspongia spp.",
+   "art": "Y",
+   "art_key": "tubespong",
+   "note": "",
+   "art_src": "tubespong"
+  },
+  {
+   "no": "253",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "소라",
+   "name_en": "Horned Turban",
+   "sci_name": "Turbo cornutus",
+   "art": "Y",
+   "art_key": "turbanshell",
+   "note": "",
+   "art_src": "turbanshell"
+  },
+  {
+   "no": "254",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "민꽃게",
+   "name_en": "Asian Paddle Crab",
+   "sci_name": "Charybdis japonica",
+   "art": "Y",
+   "art_key": "webfootedcrab",
+   "note": "",
+   "art_src": "webfootedcrab",
+   "review": "name_check"
+  },
+  {
+   "no": "255",
+   "group": "두족류",
+   "subgroup": "두족류",
+   "name_ko": "주꾸미",
+   "name_en": "Webfoot Octopus",
+   "sci_name": "Amphioctopus fangsiao",
+   "art": "Y",
+   "art_key": "webfootoctopus",
+   "note": "",
+   "art_src": "webfootoctopus"
+  },
+  {
+   "no": "256",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "위버피쉬",
+   "name_en": "Weever",
+   "sci_name": "Trachinus spp.",
+   "art": "Y",
+   "art_key": "weever",
+   "note": "",
+   "art_src": "weever",
+   "review": "name_check"
+  },
+  {
+   "no": "257",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "흰발농게",
+   "name_en": "Milky Fiddler Crab",
+   "sci_name": "Austruca lactea",
+   "art": "Y",
+   "art_key": "whitefootedcrab",
+   "note": "",
+   "art_src": "whitefootedcrab"
+  },
+  {
+   "no": "258",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "황색농게",
+   "name_en": "Yellow Fiddler Crab",
+   "sci_name": "Austruca perplexa",
+   "art": "Y",
+   "art_key": "yellowfiddlercrab",
+   "note": "",
+   "art_src": "yellowfiddlercrab",
+   "review": "name_check"
+  },
+  {
+   "no": "259",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "옐로핀 도미",
+   "name_en": "Yellowfin Seabream",
+   "sci_name": "Acanthopagrus latus",
+   "art": "Y",
+   "art_key": "yellowfinseabream",
+   "note": "",
+   "art_src": "yellowfinseabream",
+   "review": "name_check"
+  },
+  {
+   "no": "260",
+   "group": "마크로",
+   "subgroup": "해마 · 실고기",
+   "name_ko": "블루스트라이프 파이프피쉬",
+   "name_en": "Bluestripe Pipefish",
+   "sci_name": "Doryrhamphus excisus",
+   "art": "Y",
+   "art_key": "bluestripepipefish",
+   "note": "",
+   "art_src": "sheet02_05",
+   "review": "ai_guess"
+  },
+  {
+   "no": "261",
+   "group": "물고기",
+   "subgroup": "바닥 · 위장 어류",
+   "name_ko": "헤어리 프로그피쉬",
+   "name_en": "Hairy Frogfish",
+   "sci_name": "Antennarius striatus",
+   "art": "Y",
+   "art_key": "hairyfrogfish",
+   "note": "",
+   "art_src": "sheet02_06",
+   "review": "ai_guess"
+  },
+  {
+   "no": "262",
+   "group": "물고기",
+   "subgroup": "바닥 · 위장 어류",
+   "name_ko": "와티 프로그피쉬",
+   "name_en": "Warty Frogfish",
+   "sci_name": "Antennarius maculatus",
+   "art": "Y",
+   "art_key": "wartyfrogfish",
+   "note": "",
+   "art_src": "sheet02_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "263",
+   "group": "산호 · 자포동물",
+   "subgroup": "해파리 · 말미잘",
+   "name_ko": "빗해파리",
+   "name_en": "Comb Jelly",
+   "sci_name": "Ctenophora spp.",
+   "art": "Y",
+   "art_key": "combjelly",
+   "note": "",
+   "art_src": "sheet03_06",
+   "review": "ai_guess"
+  },
+  {
+   "no": "264",
+   "group": "산호 · 자포동물",
+   "subgroup": "해파리 · 말미잘",
+   "name_ko": "블루 젤리피쉬",
+   "name_en": "Bluefire Jellyfish",
+   "sci_name": "Cyanea lamarckii",
+   "art": "Y",
+   "art_key": "bluefirejellyfish",
+   "note": "",
+   "art_src": "sheet03_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "265",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "야자집게",
+   "name_en": "Coconut Crab",
+   "sci_name": "Birgus latro",
+   "art": "Y",
+   "art_key": "coconutcrab",
+   "note": "",
+   "art_src": "sheet04_09",
+   "review": "ai_guess"
+  },
+  {
+   "no": "266",
+   "group": "산호 · 자포동물",
+   "subgroup": "해파리 · 말미잘",
+   "name_ko": "고깔해파리",
+   "name_en": "Portuguese Man o' War",
+   "sci_name": "Physalia physalis",
+   "art": "Y",
+   "art_key": "portuguesemanowar",
+   "note": "",
+   "art_src": "sheet05_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "267",
+   "group": "산호 · 자포동물",
+   "subgroup": "해파리 · 말미잘",
+   "name_ko": "스팟티드 젤리피쉬",
+   "name_en": "Spotted Jellyfish",
+   "sci_name": "Phyllorhiza punctata",
+   "art": "Y",
+   "art_key": "spottedjellyfish",
+   "note": "",
+   "art_src": "sheet05_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "268",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "레드노브 불가사리",
+   "name_en": "Red Knob Sea Star",
+   "sci_name": "Protoreaster linckii",
+   "art": "Y",
+   "art_key": "redknobseastar",
+   "note": "",
+   "art_src": "sheet06_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "269",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "아무르불가사리",
+   "name_en": "Northern Pacific Seastar",
+   "sci_name": "Asterias amurensis",
+   "art": "Y",
+   "art_key": "northernpacificseastar",
+   "note": "",
+   "art_src": "sheet06_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "270",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "보라성게",
+   "name_en": "Purple Sea Urchin",
+   "sci_name": "Heliocidaris crassispina",
+   "art": "Y",
+   "art_key": "purpleseaurchin",
+   "note": "",
+   "art_src": "sheet06_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "271",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "말똥성게",
+   "name_en": "Short-spined Sea Urchin",
+   "sci_name": "Hemicentrotus pulcherrimus",
+   "art": "Y",
+   "art_key": "shortspinedseaurchin",
+   "note": "",
+   "art_src": "sheet06_05",
+   "review": "ai_guess"
+  },
+  {
+   "no": "272",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "쿠션스타",
+   "name_en": "Cushion Star",
+   "sci_name": "Culcita novaeguineae",
+   "art": "Y",
+   "art_key": "cushionstar",
+   "note": "",
+   "art_src": "sheet06_06",
+   "review": "ai_guess"
+  },
+  {
+   "no": "273",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "긴가시성게",
+   "name_en": "Long-spined Sea Urchin",
+   "sci_name": "Diadema setosum",
+   "art": "Y",
+   "art_key": "longspinedseaurchin",
+   "note": "",
+   "art_src": "sheet06_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "274",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "초코칩 불가사리",
+   "name_en": "Chocolate Chip Sea Star",
+   "sci_name": "Protoreaster nodosus",
+   "art": "Y",
+   "art_key": "chocolatechipseastar",
+   "note": "",
+   "art_src": "sheet06_09",
+   "review": "ai_guess"
+  },
+  {
+   "no": "275",
+   "group": "가오리",
+   "subgroup": "가오리",
+   "name_ko": "홍어",
+   "name_en": "Skate",
+   "sci_name": "Okamejei kenojei",
+   "art": "Y",
+   "art_key": "skate",
+   "note": "",
+   "art_src": "sheet08_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "276",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "상괭이",
+   "name_en": "Finless Porpoise",
+   "sci_name": "Neophocaena asiaeorientalis",
+   "art": "Y",
+   "art_key": "finlessporpoise",
+   "note": "",
+   "art_src": "sheet10_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "277",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "귀신고래",
+   "name_en": "Gray Whale",
+   "sci_name": "Eschrichtius robustus",
+   "art": "Y",
+   "art_key": "graywhale",
+   "note": "",
+   "art_src": "sheet10_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "278",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "흑범고래",
+   "name_en": "False Killer Whale",
+   "sci_name": "Pseudorca crassidens",
+   "art": "Y",
+   "art_key": "falsekillerwhale",
+   "note": "",
+   "art_src": "sheet10_06",
+   "review": "ai_guess"
+  },
+  {
+   "no": "279",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "삼치",
+   "name_en": "Japanese Spanish Mackerel",
+   "sci_name": "Scomberomorus niphonius",
+   "art": "Y",
+   "art_key": "japanesespanishmackerel",
+   "note": "",
+   "art_src": "sheet14_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "280",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "타폰",
+   "name_en": "Tarpon",
+   "sci_name": "Megalops atlanticus",
+   "art": "Y",
+   "art_key": "tarpon",
+   "note": "",
+   "art_src": "sheet14_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "281",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "줄무늬 산호새우",
+   "name_en": "Banded Coral Shrimp",
+   "sci_name": "Stenopus hispidus",
+   "art": "Y",
+   "art_key": "bandedcoralshrimp",
+   "note": "",
+   "art_src": "sheet14_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "282",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "해삼",
+   "name_en": "Japanese Sea Cucumber",
+   "sci_name": "Apostichopus japonicus",
+   "art": "Y",
+   "art_key": "japaneseseacucumber",
+   "note": "",
+   "art_src": "sheet14_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "283",
+   "group": "물고기",
+   "subgroup": "산호초 어류",
+   "name_ko": "깃대돔",
+   "name_en": "Moorish Idol",
+   "sci_name": "Zanclus cornutus",
+   "art": "Y",
+   "art_key": "moorishidol",
+   "note": "",
+   "art_src": "sheet15_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "284",
+   "group": "물고기",
+   "subgroup": "산호초 어류",
+   "name_ko": "동갈돔",
+   "name_en": "Cardinalfish",
+   "sci_name": "Apogon spp.",
+   "art": "Y",
+   "art_key": "cardinalfish",
+   "note": "",
+   "art_src": "sheet15_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "285",
+   "group": "물고기",
+   "subgroup": "산호초 어류",
+   "name_ko": "롱노즈 호크피쉬",
+   "name_en": "Longnose Hawkfish",
+   "sci_name": "Oxycirrhites typus",
+   "art": "Y",
+   "art_key": "longnosehawkfish",
+   "note": "",
+   "art_src": "sheet15_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "286",
+   "group": "물고기",
+   "subgroup": "바닥 · 위장 어류",
+   "name_ko": "플라잉 거너드",
+   "name_en": "Flying Gurnard",
+   "sci_name": "Dactyloptena orientalis",
+   "art": "Y",
+   "art_key": "flyinggurnard",
+   "note": "",
+   "art_src": "sheet15_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "287",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "낫돌고래",
+   "name_en": "Pacific White-sided Dolphin",
+   "sci_name": "Lagenorhynchus obliquidens",
+   "art": "Y",
+   "art_key": "pacificwhitesideddolphin",
+   "note": "",
+   "art_src": "sheet16_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "288",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "흰고래",
+   "name_en": "Beluga",
+   "sci_name": "Delphinapterus leucas",
+   "art": "Y",
+   "art_key": "beluga",
+   "note": "",
+   "art_src": "sheet16_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "289",
+   "group": "고래 · 돌고래",
+   "subgroup": "고래 · 돌고래",
+   "name_ko": "줄무늬돌고래",
+   "name_en": "Striped Dolphin",
+   "sci_name": "Stenella coeruleoalba",
+   "art": "Y",
+   "art_key": "stripeddolphin",
+   "note": "",
+   "art_src": "sheet17_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "290",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "바닷가재",
+   "name_en": "European Lobster",
+   "sci_name": "Homarus gammarus",
+   "art": "Y",
+   "art_key": "europeanlobster",
+   "note": "",
+   "art_src": "sheet19_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "291",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "블랙타이거새우",
+   "name_en": "Giant Tiger Prawn",
+   "sci_name": "Penaeus monodon",
+   "art": "Y",
+   "art_key": "gianttigerprawn",
+   "note": "",
+   "art_src": "sheet19_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "292",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "대하",
+   "name_en": "Fleshy Prawn",
+   "sci_name": "Fenneropenaeus chinensis",
+   "art": "Y",
+   "art_key": "fleshyprawn",
+   "note": "",
+   "art_src": "sheet19_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "293",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "노르웨이 랍스터",
+   "name_en": "Norway Lobster",
+   "sci_name": "Nephrops norvegicus",
+   "art": "Y",
+   "art_key": "norwaylobster",
+   "note": "",
+   "art_src": "sheet19_05",
+   "review": "ai_guess"
+  },
+  {
+   "no": "294",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "꽃게",
+   "name_en": "Japanese Blue Crab",
+   "sci_name": "Portunus trituberculatus",
+   "art": "Y",
+   "art_key": "japanesebluecrab",
+   "note": "",
+   "art_src": "sheet19_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "295",
+   "group": "마크로",
+   "subgroup": "갑각류",
+   "name_ko": "대게",
+   "name_en": "Snow Crab",
+   "sci_name": "Chionoecetes opilio",
+   "art": "Y",
+   "art_key": "snowcrab",
+   "note": "",
+   "art_src": "sheet19_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "296",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "블루 불가사리",
+   "name_en": "Blue Sea Star",
+   "sci_name": "Linckia laevigata",
+   "art": "Y",
+   "art_key": "blueseastar",
+   "note": "",
+   "art_src": "sheet20_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "297",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "배럴스펀지",
+   "name_en": "Barrel Sponge",
+   "sci_name": "Xestospongia testudinaria",
+   "art": "Y",
+   "art_key": "barrelsponge",
+   "note": "",
+   "art_src": "sheet20_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "298",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "크리스마스트리웜",
+   "name_en": "Christmas Tree Worm",
+   "sci_name": "Spirobranchus giganteus",
+   "art": "Y",
+   "art_key": "christmastreeworm",
+   "note": "",
+   "art_src": "sheet20_05",
+   "review": "ai_guess"
+  },
+  {
+   "no": "299",
+   "group": "산호 · 자포동물",
+   "subgroup": "해파리 · 말미잘",
+   "name_ko": "보름달물해파리",
+   "name_en": "Moon Jelly",
+   "sci_name": "Aurelia aurita",
+   "art": "Y",
+   "art_key": "moonjelly",
+   "note": "",
+   "art_src": "sheet20_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "300",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "개복치",
+   "name_en": "Ocean Sunfish",
+   "sci_name": "Mola mola",
+   "art": "Y",
+   "art_key": "oceansunfish",
+   "note": "",
+   "art_src": "sheet21_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "301",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "황다랑어",
+   "name_en": "Yellowfin Tuna",
+   "sci_name": "Thunnus albacares",
+   "art": "Y",
+   "art_key": "yellowfintuna",
+   "note": "",
+   "art_src": "sheet21_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "302",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "돛새치",
+   "name_en": "Sailfish",
+   "sci_name": "Istiophorus platypterus",
+   "art": "Y",
+   "art_key": "sailfish",
+   "note": "",
+   "art_src": "sheet21_03",
+   "review": "ai_guess"
+  },
+  {
+   "no": "303",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "청새치",
+   "name_en": "Blue Marlin",
+   "sci_name": "Makaira nigricans",
+   "art": "Y",
+   "art_key": "bluemarlin",
+   "note": "",
+   "art_src": "sheet21_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "304",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "만새기",
+   "name_en": "Mahi-mahi",
+   "sci_name": "Coryphaena hippurus",
+   "art": "Y",
+   "art_key": "mahimahi",
+   "note": "",
+   "art_src": "sheet21_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "305",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "와후",
+   "name_en": "Wahoo",
+   "sci_name": "Acanthocybium solandri",
+   "art": "Y",
+   "art_key": "wahoo",
+   "note": "",
+   "art_src": "sheet21_09",
+   "review": "ai_guess"
+  },
+  {
+   "no": "306",
+   "group": "극피동물",
+   "subgroup": "극피동물",
+   "name_ko": "거미불가사리",
+   "name_en": "Brittle Star",
+   "sci_name": "Ophiuroidea spp.",
+   "art": "Y",
+   "art_key": "brittlestar",
+   "note": "",
+   "art_src": "sheet22_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "307",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "멍게",
+   "name_en": "Sea Pineapple",
+   "sci_name": "Halocynthia roretzi",
+   "art": "Y",
+   "art_key": "seapineapple",
+   "note": "",
+   "art_src": "sheet22_07",
+   "review": "ai_guess"
+  },
+  {
+   "no": "308",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "따개비",
+   "name_en": "Acorn Barnacle",
+   "sci_name": "Balanus spp.",
+   "art": "Y",
+   "art_key": "acornbarnacle",
+   "note": "",
+   "art_src": "sheet22_08",
+   "review": "ai_guess"
+  },
+  {
+   "no": "309",
+   "group": "기타",
+   "subgroup": "연체동물 · 환형동물 · 기타",
+   "name_ko": "홍합",
+   "name_en": "Korean Mussel",
+   "sci_name": "Mytilus coruscus",
+   "art": "Y",
+   "art_key": "koreanmussel",
+   "note": "",
+   "art_src": "sheet22_09",
+   "review": "ai_guess"
+  },
+  {
+   "no": "310",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "부시리",
+   "name_en": "Yellowtail Amberjack",
+   "sci_name": "Seriola lalandi",
+   "art": "Y",
+   "art_key": "yellowtailamberjack",
+   "note": "",
+   "art_src": "sheet23_01",
+   "review": "ai_guess"
+  },
+  {
+   "no": "311",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "방어",
+   "name_en": "Japanese Amberjack",
+   "sci_name": "Seriola quinqueradiata",
+   "art": "Y",
+   "art_key": "japaneseamberjack",
+   "note": "",
+   "art_src": "sheet23_02",
+   "review": "ai_guess"
+  },
+  {
+   "no": "312",
+   "group": "물고기",
+   "subgroup": "한국 연안 어류",
+   "name_ko": "붉바리",
+   "name_en": "Redspotted Grouper",
+   "sci_name": "Epinephelus akaara",
+   "art": "Y",
+   "art_key": "redspottedgrouper",
+   "note": "",
+   "art_src": "sheet23_04",
+   "review": "ai_guess"
+  },
+  {
+   "no": "313",
+   "group": "물고기",
+   "subgroup": "원양 · 회유 어류",
+   "name_ko": "참다랑어",
+   "name_en": "Pacific Bluefin Tuna",
+   "sci_name": "Thunnus orientalis",
+   "art": "Y",
+   "art_key": "pacificbluefintuna",
+   "note": "",
+   "art_src": "sheet23_05",
+   "review": "ai_guess"
+  },
+  {
+   "no": "314",
+   "group": "두족류",
+   "subgroup": "두족류",
+   "name_ko": "원더푸스 문어",
+   "name_en": "Wunderpus Octopus",
+   "sci_name": "Wunderpus photogenicus",
+   "art": "Y",
+   "art_key": "wunderpusoctopus",
+   "note": "",
+   "art_src": "sheet24_08",
+   "review": "ai_guess"
   }
  ]
 }

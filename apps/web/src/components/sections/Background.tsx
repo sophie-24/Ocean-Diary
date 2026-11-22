@@ -15,7 +15,7 @@ export function Background() {
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-          Background
+          우리가 본 문제
         </p>
 
         <h2 style={{ ...type.h1, color: colors.navy, margin: "24px 0 20px", maxWidth: 820 }}>
@@ -50,7 +50,7 @@ export function Background() {
             }}
           >
             <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-              Problem 01
+              문제 01
             </p>
             <div>
               <h3 style={{ ...type.h2, color: colors.navy, margin: "16px 0 14px", lineHeight: 1.15 }}>
@@ -79,7 +79,7 @@ export function Background() {
               }}
             >
               <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-                Problem 02
+                문제 02
               </p>
               <h3 style={{ ...type.h3, color: colors.white, margin: "14px 0 10px" }}>
                 사진은 앨범 어딘가.
@@ -100,7 +100,7 @@ export function Background() {
               }}
             >
               <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-                Problem 03
+                문제 03
               </p>
               <h3 style={{ ...type.h3, color: colors.navy, margin: "14px 0 10px" }}>
                 기록이 재미없어요.

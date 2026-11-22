@@ -106,8 +106,7 @@ export function FeedSlide({
     left: padX,
     fontSize: 24,
     fontWeight: 700,
-    letterSpacing: "0.22em",
-    textTransform: "uppercase",
+    letterSpacing: "-0.005em",
     color: soft,
   };
 
@@ -155,8 +154,7 @@ export function FeedSlide({
     left: padX,
     fontSize: 22,
     fontWeight: 500,
-    letterSpacing: "0.1em",
-    textTransform: "uppercase",
+    letterSpacing: "-0.005em",
     color: soft,
   };
 

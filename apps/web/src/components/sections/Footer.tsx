@@ -27,7 +27,7 @@ export function Footer() {
             <span
               style={{
                 fontFamily: "var(--font-body)",
-                fontWeight: 900,
+                fontWeight: 800,
                 fontSize: 36,
                 letterSpacing: "-0.03em",
                 color: colors.white,
@@ -44,19 +44,19 @@ export function Footer() {
           </p>
         </div>
 
-        <FooterCol heading="Follow">
+        <FooterCol heading="팔로우">
           <FooterLink href="https://instagram.com/molamola_log">Instagram</FooterLink>
           <FooterLink href="https://threads.net/@molamola_log">Threads</FooterLink>
           <FooterLink href="mailto:hello@mola.app">hello@mola.app</FooterLink>
         </FooterCol>
 
-        <FooterCol heading="Product">
+        <FooterCol heading="제품">
           <FooterLink href="#experience">지금 체험</FooterLink>
           <FooterLink href="#signup">출시 연락받기</FooterLink>
-          <FooterLink href="#">iOS · Android (준비 중)</FooterLink>
+          <FooterLink href="#">iOS, Android (준비 중)</FooterLink>
         </FooterCol>
 
-        <FooterCol heading="Legal">
+        <FooterCol heading="법적 고지">
           <FooterLink href="/legal/privacy">개인정보 처리방침</FooterLink>
           <FooterLink href="/legal/terms">이용약관</FooterLink>
         </FooterCol>
@@ -76,7 +76,7 @@ export function Footer() {
         }}
       >
         <p style={{ ...type.caption, color: colors.sky, margin: 0, opacity: 0.55 }}>
-          © 2026 Mola · 대한민국
+          © 2026 Mola
         </p>
         <p style={{ ...type.caption, color: colors.sky, margin: 0, opacity: 0.55 }}>
           made with 🌊 by a diver

@@ -11,7 +11,7 @@ export function Dogam() {
     <SectionShell
       id="dogam"
       background={colors.white}
-      label="Step 04 · 도감"
+      label="도감"
       title={
         <>
           만난 친구들이 쌓여서,
@@ -28,12 +28,12 @@ export function Dogam() {
     >
       <ExperienceBlock
         no="04"
-        label="생물 도감 · 명소 스탬프"
+        label="생물 도감, 명소 스탬프"
         title={<>본 것만 선명하게, 안 본 건 힌트로</>}
         body={
           <>
-            상단 두 탭을 번갈아 눌러 보세요. 바다 생물은 분류별로, 명소 스탬프는 난파선 ·
-            수중 조각 · 동굴로 묶여요.
+            상단 두 탭을 번갈아 눌러 보세요. 바다 생물은 분류별로, 명소 스탬프는 난파선,
+            수중 조각, 동굴로 묶여요.
             <br />
             <br />
             "27/181, 3종 더 모으면 30종 기념 카드" 같은 <strong style={{ color: colors.navy }}>작은 목표</strong>가

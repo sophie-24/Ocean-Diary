@@ -66,8 +66,8 @@ export function DiaryInApp() {
     >
       {/* 상단 바 */}
       <div style={{ padding: "18px 20px 10px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "0.22em", color: colors.oceanBlue }}>
-          그림일기 · 오늘
+        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "-0.005em", color: colors.oceanBlue }}>
+          그림일기
         </span>
         <span style={{ fontSize: 11, color: colors.ink3, fontWeight: 600 }}>
           2026. 11. 18
@@ -94,7 +94,7 @@ export function DiaryInApp() {
           </div>
 
           {/* 장소·시간 */}
-          <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "0.22em", color: colors.oceanBlue, textTransform: "uppercase" }}>
+          <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "-0.005em", color: colors.oceanBlue }}>
             말라파스쿠아 · 모나드 숄
           </div>
 
@@ -151,7 +151,7 @@ export function DiaryInApp() {
             padding: "12px 14px",
           }}
         >
-          <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "0.22em", color: colors.ink3, marginBottom: 6, textTransform: "uppercase" }}>
+          <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "-0.005em", color: colors.ink3, marginBottom: 6 }}>
             오늘 뭐 봤어요?
           </div>
           <input
@@ -175,8 +175,8 @@ export function DiaryInApp() {
 
       {/* 스티커 팔레트 */}
       <div style={{ padding: "4px 16px 14px" }}>
-        <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "0.22em", color: colors.ink3, marginBottom: 8, paddingLeft: 4, textTransform: "uppercase" }}>
-          스티커 · 탭해서 붙이기
+        <div style={{ fontWeight: 800, fontSize: 10, letterSpacing: "-0.005em", color: colors.ink3, marginBottom: 8, paddingLeft: 4 }}>
+          스티커 탭해서 붙이기
         </div>
         <div style={{ display: "grid", gridTemplateColumns: "repeat(8, 1fr)", gap: 6 }}>
           {STICKERS.map((s) => (

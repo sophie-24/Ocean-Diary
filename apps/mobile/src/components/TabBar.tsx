@@ -11,7 +11,7 @@ export type TabKey = "index" | "dogam" | "discover" | "log";
 
 const TABS: Record<TabKey, { label: string; a11y: string }> = {
   index: { label: "홈", a11y: "홈" },
-  dogam: { label: "도감", a11y: "도감" },
+  dogam: { label: "지도", a11y: "지도" },
   discover: { label: "발견", a11y: "발견 · 사진이나 영상 올리기" },
   log: { label: "로그북", a11y: "로그북" },
   // v4: 나의 바다 탭 숨김
@@ -30,8 +30,8 @@ function TabIcon({ tab, color }: { tab: TabKey; color: string }) {
     case "dogam":
       return (
         <Svg width={22} height={22} viewBox="0 0 24 24">
-          <Path d="M4 5 Q8 3.5 12 6 Q16 3.5 20 5 V19 Q16 17.5 12 20 Q8 17.5 4 19 Z" {...common} />
-          <Path d="M12 6 V20" {...common} />
+          <Path d="M12 2.5 C8.4 2.5 5.5 5.4 5.5 9 C5.5 13.5 12 20.5 12 20.5 C12 20.5 18.5 13.5 18.5 9 C18.5 5.4 15.6 2.5 12 2.5 Z" {...common} />
+          <Circle cx={12} cy={9} r={2.5} {...common} />
         </Svg>
       );
     case "discover":
@@ -62,7 +62,7 @@ function TabIcon({ tab, color }: { tab: TabKey; color: string }) {
   }
 }
 
-/** Four-tab bar: 홈 · 도감 · (발견) · 로그북. v4: 나의 바다 탭 숨김 — 배포 후 재활성화 예정 */
+/** Four-tab bar: 홈 · 지도 · (발견) · 로그북. v4: 나의 바다 탭 숨김 — 배포 후 재활성화 예정 */
 export function TabBar({ state, navigateToTab, insets }: BottomTabBarProps) {
   const activeName = state.routes[state.index]?.name;
   // v4: 나의 바다 탭 숨김 — dark mode bar 비활성화

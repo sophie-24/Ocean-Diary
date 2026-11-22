@@ -69,7 +69,7 @@ export function Experience() {
 
         <Block
           no="02"
-          label="물멍 · 수조"
+          label="물멍 수조"
           title="수집한 친구들이 떠다녀요"
           body={
             <>
@@ -211,7 +211,7 @@ function BlockText({
       <span
         style={{
           fontFamily: "var(--font-body)",
-          fontWeight: 900,
+          fontWeight: 800,
           fontSize: "clamp(56px, 7vw, 92px)",
           lineHeight: 1,
           color: colors.oceanBlue,

@@ -1,32 +1,57 @@
 /**
- * Mola web design tokens — mirror of apps/mobile/src/theme/tokens.ts.
- * Font weights kept for Txt compatibility; actual typography styles are in
- * src/theme/typography.ts (role-based).
+ * Mola web design tokens — v3 "조용한 바다" 통일.
+ * apps/mobile/src/theme/tokens.ts 와 동일한 팔레트.
  */
 
 export const colors = {
-  navy: "#16285A",
-  ink2: "#4A5B7E",
-  ink3: "#5E6D8A",
-  inkSoft: "#3D5A9C",
-  oceanBlue: "#2F6FDB",
-  sky: "#DCEBFC",
-  pillLine: "#A8CBF2",
-  line: "#DCE8F5",
-  lineStrong: "#C9DBF0",
-  track: "#E3ECF7",
+  navy: "#1C1C1E",
+  ink2: "#6B6B6F",
+  ink3: "#AEAEB2",
+  inkSoft: "#6B6B6F",
+  oceanBlue: "#2563EB",
+  sky: "#EFF6FF",
+  pillLine: "#BFDBFE",
+  line: "#E5E5EA",
+  lineStrong: "#E5E5EA",
+  track: "#F0F0F2",
   mist: "#F4F8FC",
-  ghostBg: "#EEF4FB",
-  ghostLine: "#BCD2EC",
-  ghostInk: "#A9C3E3",
+  ghostBg: "#F0F4FA",
+  ghostLine: "#D1D5DB",
+  ghostInk: "#9CA3AF",
   white: "#FFFFFF",
-  coral: "#C8432F",
-  sunny: "#F7C948",
+  coral: "#DC2626",
+  sunny: "#D97706",
   deepSea: "#0E2A5C",
-  success: "#1F7A4D",
+  success: "#16A34A",
+
+  // ── v4 파랑 스케일 (메인 oceanBlue = blue600) ─────────────
+  blue100: "#DBEAFE",
+  blue500: "#3B82F6",
+  blue600: "#2563EB",
+  blue700: "#1D4ED8",
+
+  // ── v4 친근한 보조색 (수채 일러스트 톤. 전체의 5% 이내로만) ──
+  honey: "#FBD157",
+  mint: "#7FD1B0",
+  coralSoft: "#F0654A",
 } as const;
 
-export const radii = { sm: 10, md: 14, lg: 18, xl: 22, pill: 999 } as const;
+/** 웹 radius 규칙: 버튼 16(앱과 동일) · 카드 24 · 바텀시트/큰 패널 28. */
+export const radii = {
+  sm: 4,
+  md: 10,
+  lg: 12,
+  xl: 12,
+  btn: 16,
+  card: 24,
+  sheet: 28,
+  pill: 999,
+} as const;
+
+export const shadow = {
+  card: "0 4px 12px rgba(0, 0, 0, 0.04)",
+  float: "0 24px 60px rgba(14, 42, 92, 0.28)",
+} as const;
 export const space = { xs: 4, sm: 8, md: 12, lg: 16, xl: 20, xxl: 28 } as const;
 
 export type FontWeightKey =

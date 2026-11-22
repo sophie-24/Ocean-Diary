@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { colors } from "@/theme/tokens";
 import { Critter } from "@/components/Critter";
@@ -53,10 +55,10 @@ export function DogamGridInApp() {
               fontSize: 10,
               fontWeight: 800,
               color: colors.oceanBlue,
-              letterSpacing: "0.22em",
+              letterSpacing: "-0.005em",
             }}
           >
-            MY SPECIES BOOK
+            나의 생물 도감
           </div>
           <div style={{ fontSize: 22, fontWeight: 900, letterSpacing: "-0.02em", marginTop: 2 }}>
             나의 도감
@@ -368,7 +370,7 @@ function SiteCell({
             color: colors.navy,
             fontSize: 8,
             fontWeight: 900,
-            letterSpacing: "0.04em",
+            letterSpacing: "-0.005em",
           }}
         >
           {date}

@@ -112,7 +112,7 @@ export function TankInApp() {
           alignItems: "center",
         }}
       >
-        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "0.22em", color: colors.sky, opacity: 0.85 }}>
+        <span style={{ fontWeight: 900, fontSize: 12, letterSpacing: "-0.005em", color: colors.sky, opacity: 0.85 }}>
           나의 바다 · 대양 수조
         </span>
         <div

@@ -76,7 +76,7 @@ export function OceanInApp() {
             border: "1px solid rgba(169,210,255,0.22)",
           }}
         >
-          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "0.1em", color: "#8EC5FF" }}>
+          <div style={{ fontSize: 10, fontWeight: 800, letterSpacing: "-0.005em", color: "#8EC5FF" }}>
             나의 바다
           </div>
           <div style={{ fontSize: 15, fontWeight: 900, marginTop: 2 }}>대양 수조</div>

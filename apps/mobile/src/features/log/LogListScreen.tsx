@@ -11,6 +11,7 @@ import { SPECIES } from "../../data/species";
 import { logStats, type DiveLog, type LogKind } from "./logStore";
 import { useDiveLogs } from "../../api/queries";
 import { StateView } from "../../components/ui/StateView";
+import { LogbookOnboarding } from "./LogbookOnboarding";
 
 type Filter = "all" | LogKind;
 
@@ -127,12 +128,19 @@ export function LogListScreen() {
         refreshing={isRefetching}
         onRefresh={() => void refetch()}
         ListEmptyComponent={
-          <StateView loading={isLoading} error={error} onRetry={() => void refetch()} empty="아직 기록이 없어요. 오른쪽 위 + 버튼으로 첫 기록을 남겨 보세요." />
+          isLoading ? (
+            <StateView loading />
+          ) : error && !data ? (
+            <StateView error={error} onRetry={() => void refetch()} />
+          ) : (
+            <LogbookOnboarding onStart={() => router.push('/log/new')} onSkip={() => {}} />
+          )
         }
       />
     </SafeAreaView>
   );
 }
+
 
 function LogCard({ log, tilt, onPress }: { log: DiveLog; tilt: number; onPress: () => void }) {
   const badge = TYPE_BADGE[log.kind];

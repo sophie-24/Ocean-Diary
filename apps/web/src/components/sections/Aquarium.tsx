@@ -16,7 +16,7 @@ export function Aquarium() {
     <SectionShell
       id="aquarium"
       background={colors.navy}
-      label="Step 05 · 나의 바다 · 물멍"
+      label="나의 바다"
       title={
         <span style={{ color: colors.white }}>
           쉬고 싶은 날엔,
@@ -26,7 +26,7 @@ export function Aquarium() {
       }
       lead={
         <span style={{ color: "rgba(255,255,255,0.72)" }}>
-          대양 · 산호초 · 마크로. 내가 본 친구들만 수조 안을 느리게 헤엄쳐요. 소리를
+          대양, 산호초, 마크로. 내가 본 친구들만 수조 안을 느리게 헤엄쳐요. 소리를
           켜면 스쿠버 숨소리, 알림·채팅·경쟁 없음. 조명은 실제 시간대에 맞춰 바뀌어요.
         </span>
       }
@@ -41,7 +41,7 @@ export function Aquarium() {
           marginBottom: 32,
         }}
       >
-        <TankBlock no="A" label="대양 수조" blurb="고래상어 · 환도상어 · 귀상어가 느리게 유영해요. 수심 40m 톤.">
+        <TankBlock no="A" label="대양 수조" blurb="고래상어, 환도상어, 귀상어가 느리게 유영해요. 수심 40m 톤.">
           <ScaledPhone tilt={-2} scale={0.62}><OceanInApp /></ScaledPhone>
         </TankBlock>
 
@@ -84,19 +84,19 @@ function TankBlock({
         <div
           style={{
             display: "inline-block",
-            fontSize: 11,
-            fontWeight: 800,
-            letterSpacing: "0.18em",
+            fontSize: 13,
+            fontWeight: 700,
+            letterSpacing: "-0.005em",
             color: "#8EC5FF",
             marginBottom: 6,
           }}
         >
-          TANK · {no}
+          수조 {no}
         </div>
         <div
           style={{
             fontSize: 22,
-            fontWeight: 900,
+            fontWeight: 800,
             color: colors.white,
             letterSpacing: "-0.02em",
             marginBottom: 8,

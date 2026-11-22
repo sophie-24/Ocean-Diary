@@ -51,7 +51,7 @@ app.include_router(observations_router)
 app.include_router(dive_logs_router)
 app.include_router(admin_router)
 logger = logging.getLogger("ocean_diary.api")
-REQUIRED_DB_SCHEMA_REVISION = "0013_v2_logbook"
+REQUIRED_DB_SCHEMA_REVISION = "0014_enable_rls"
 RATE_LIMIT_RULES = {
     ("POST", "/v1/media/upload-intents"): (20, 600),
     ("POST", "/v1/identification-jobs"): (10, 600),

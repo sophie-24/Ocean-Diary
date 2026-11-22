@@ -1,149 +1,89 @@
-import { type } from "@/theme/typography";
-import { colors } from "@/theme/tokens";
+import type { ReactNode } from "react";
+import { PhoneFrame } from "@/components/PhoneFrame";
+import { DogamGridInApp } from "@/components/DogamGridInApp";
+import { TankInApp } from "@/components/TankInApp";
+import { Critter } from "@/components/Critter";
+import { Button } from "@/components/ui/Button";
+import { Chip } from "@/components/ui/Chip";
 
 /**
- * 히어로 — Pretendard 통일 (2026-11-18 revised).
- * Fraunces italic 서브헤드 제거. 모든 영문도 Pretendard.
- * 레이아웃 비대칭 유지: 좌상단 아이콘 + 라벨, 중앙 공백, 우하단 서브헤드,
- * 바닥 거대 워드마크, 하단 CTA 바.
+ * 히어로 v4 — 제품 중심.
+ *   왼쪽: 라벨 칩 · 제목(핵심 단어 honey 강조) · 설명 · CTA 2개
+ *   오른쪽: 실제 앱 화면 두 개를 겹쳐 기울인 대표 비주얼 + 아래에서 빼꼼 나오는 Critter
+ *   배경: 아주 옅은 거대 워드마크 (브랜드 흔적만 남김)
+ * 스타일/반응형은 app/globals.css 의 .hero-* 클래스.
  */
 export function Hero() {
   return (
-    <section
-      style={{
-        position: "relative",
-        backgroundColor: colors.oceanBlue,
-        color: colors.white,
-        minHeight: "96vh",
-        padding: "48px clamp(24px, 6vw, 80px)",
-        overflow: "hidden",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div
-        aria-hidden
-        style={{
-          position: "absolute",
-          top: "-25%",
-          right: "-10%",
-          width: 1100,
-          height: 1100,
-          borderRadius: "50%",
-          background:
-            "radial-gradient(circle, rgba(255,255,255,0.14), transparent 60%)",
-          pointerEvents: "none",
-        }}
-      />
+    <section id="top" className="hero">
+      <div className="hero-inner">
+        <div>
+          <Chip tone="glass">2026년 겨울 출시 예정</Chip>
+          <h1 className="hero-title">
+            다이빙에서 만난
+            <br />
+            바다 친구들을
+            <br />
+            <span className="hero-hl">그림일기</span>로 남겨요.
+          </h1>
+          <p className="hero-lead">
+            사진 한 장이면 돼요. Mola가 바다 친구를 알아보고,
+            <br />
+            수채 카드로 그려서 나만의 도감에 담아줘요.
+          </p>
+          <div className="hero-cta">
+            <Button href="#signup" tone="dark">
+              출시 연락받기 →
+            </Button>
+            <Button href="#experience" variant="ghost" tone="dark">
+              먼저 체험해보기
+            </Button>
+          </div>
+          <p className="hero-note">iOS, Android 지원 · 로그인·설치 없이 체험</p>
+        </div>
 
-      <div style={{ position: "relative", display: "flex", alignItems: "flex-start", gap: 20 }}>
-        <img
-          src="/brand/mola-icon.png"
-          alt="Mola"
-          width={76}
-          height={76}
-          style={{
-            width: 76,
-            height: 76,
-            borderRadius: 18,
-            boxShadow: "0 12px 28px rgba(14,42,92,0.28)",
-          }}
-        />
-        <div style={{ paddingTop: 8 }}>
-          <p style={{ ...type.label, color: colors.sky, margin: 0, opacity: 0.85 }}>
-            Mola · 다이빙 그림일기
-          </p>
-          <p style={{ ...type.caption, color: colors.sky, margin: "6px 0 0", opacity: 0.7 }}>
-            2026년 겨울 출시 예정
-          </p>
+        <div className="hero-phones">
+          <ScaledPhone className="hero-phone-back" ariaHidden>
+            <DogamGridInApp />
+          </ScaledPhone>
+          <ScaledPhone className="hero-phone-front">
+            <TankInApp />
+          </ScaledPhone>
+
+          <div className="hero-chip-b float-slow">
+            <Chip tone="glass">사진 한 장 → 도감 등록</Chip>
+          </div>
+          <div className="hero-chip-a float-slower">
+            <Chip tone="honey">오늘 새 친구를 만났어요</Chip>
+          </div>
+          <div className="hero-critter float-slow">
+            <Critter kind="mandarin" size={150} />
+          </div>
         </div>
       </div>
 
-      <div style={{ flex: 1, minHeight: 60 }} />
-
-      <div
-        style={{
-          position: "relative",
-          alignSelf: "flex-end",
-          maxWidth: 560,
-          marginBottom: 32,
-          textAlign: "right",
-        }}
-      >
-        <p style={{ ...type.label, color: colors.sky, margin: "0 0 10px", opacity: 0.8 }}>
-          수채화 다이빙 다이어리
-        </p>
-        <p style={{ ...type.lead, color: colors.white, margin: 0, opacity: 0.92 }}>
-          다이빙에서 만난 바다 친구들을
-          <br />
-          수채화 그림일기와 도감으로 남기는 앱.
-        </p>
-      </div>
-
-      <h1
-        style={{
-          ...type.display,
-          color: colors.white,
-          margin: 0,
-          textAlign: "left",
-          marginBottom: "-0.08em",
-        }}
-      >
+      <div className="hero-watermark" aria-hidden>
         Mola
-      </h1>
-
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          marginTop: 28,
-          flexWrap: "wrap",
-          gap: 16,
-        }}
-      >
-        <div style={{ display: "flex", gap: 12, flexWrap: "wrap" }}>
-          <a
-            href="#signup"
-            style={{
-              display: "inline-block",
-              backgroundColor: colors.white,
-              color: colors.navy,
-              padding: "18px 30px",
-              borderRadius: 999,
-              fontFamily: "var(--font-body)",
-              fontWeight: 900,
-              fontSize: 17,
-              letterSpacing: "-0.005em",
-              textDecoration: "none",
-            }}
-          >
-            출시 연락받기 →
-          </a>
-          <a
-            href="#experience"
-            style={{
-              display: "inline-block",
-              backgroundColor: "transparent",
-              color: colors.white,
-              padding: "18px 24px",
-              borderRadius: 999,
-              border: `1px solid ${colors.sky}`,
-              fontFamily: "var(--font-body)",
-              fontWeight: 600,
-              fontSize: 16,
-              letterSpacing: "-0.005em",
-              textDecoration: "none",
-              opacity: 0.9,
-            }}
-          >
-            먼저 체험해보기
-          </a>
-        </div>
-        <p style={{ ...type.caption, color: colors.sky, margin: 0, opacity: 0.65 }}>
-          iOS / Android · 로그인 X · 설치 X
-        </p>
       </div>
     </section>
+  );
+}
+
+/** 390×844 PhoneFrame 을 CSS 변수 --s 비율로 축소해 보여준다 (크기는 .hero-phone 이 계산). */
+function ScaledPhone({
+  children,
+  className,
+  ariaHidden,
+}: {
+  children: ReactNode;
+  className: string;
+  ariaHidden?: boolean;
+}) {
+  return (
+    <div className={`hero-phone ${className}`} aria-hidden={ariaHidden}>
+      <div>
+        <PhoneFrame>{children}</PhoneFrame>
+      </div>
+    </div>
   );
 }

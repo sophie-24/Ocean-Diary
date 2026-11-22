@@ -11,7 +11,7 @@ export function Discover() {
     <SectionShell
       id="discover"
       background={colors.mist}
-      label="Step 03 · AI 생물 찾기"
+      label="AI 생물 찾기"
       title={
         <>
           사진·영상 던지면,

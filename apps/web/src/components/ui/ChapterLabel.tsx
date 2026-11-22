@@ -1,14 +1,9 @@
 import type { CSSProperties } from "react";
-import { colors } from "@/theme/tokens";
 
 /**
- * Small eyebrow label used above each section title.
- * Pattern borrowed from product-landing case studies (Swimie et al.) where a
- * short English chapter name anchors the long-scroll narrative so the reader
- * always knows which part of the story they're in.
- *
- * Always uppercase, generous letter-spacing, oceanBlue to keep brand presence
- * even on dark sections (contrast adjusted by passing `tone`).
+ * 섹션 제목 위의 작은 챕터 라벨 (점 + 한 줄).
+ * 긴 스크롤에서 지금이 어느 장인지 알려주는 앵커. 스타일은 globals.css 의 .eyebrow.
+ * tone="dark" 는 어두운/파랑 배경 위용.
  */
 export function ChapterLabel({
   children,
@@ -19,21 +14,9 @@ export function ChapterLabel({
   tone?: "light" | "dark";
   style?: CSSProperties;
 }) {
-  const color = tone === "dark" ? colors.sky : colors.oceanBlue;
   return (
-    <p
-      style={{
-        fontFamily: "var(--font-noto), system-ui, sans-serif",
-        fontWeight: 900,
-        fontSize: 15,
-        lineHeight: "22px",
-        letterSpacing: "0.3em",
-        textTransform: "uppercase",
-        color,
-        margin: 0,
-        ...style,
-      }}
-    >
+    <p className="eyebrow" data-tone={tone} style={style}>
+      <i aria-hidden />
       {children}
     </p>
   );

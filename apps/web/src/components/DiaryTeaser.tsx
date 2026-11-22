@@ -89,7 +89,7 @@ export function DiaryTeaser() {
               <Txt size={14} weight="extraBold" tracking={0.14} color={colors.oceanBlue}>
                 {s.date}
               </Txt>
-              <span style={{ color: colors.line }}>·</span>
+              
               <Txt size={14} weight="extraBold" color={colors.navy}>
                 {s.spot}
               </Txt>

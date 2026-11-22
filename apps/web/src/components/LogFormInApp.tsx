@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import { colors } from "@/theme/tokens";
 
@@ -179,8 +181,8 @@ function ScubaBody() {
               color: colors.oceanBlue,
             }}
           >
-            <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "0.12em" }}>
-              DIVE NO.
+            <span style={{ fontSize: 9, fontWeight: 700, letterSpacing: "-0.005em" }}>
+              다이브 No.
             </span>
             <span style={{ fontSize: 24, fontWeight: 900, lineHeight: 1 }}>39</span>
           </div>
@@ -297,7 +299,7 @@ function SnorkelBody() {
             fontSize: 12,
             fontWeight: 800,
             color: colors.oceanBlue,
-            letterSpacing: "0.1em",
+            letterSpacing: "-0.005em",
             marginBottom: 10,
           }}
         >
@@ -361,8 +363,7 @@ function SectionLabel({ children, style }: { children: React.ReactNode; style?: 
         fontSize: 11,
         fontWeight: 800,
         color: colors.ink2,
-        letterSpacing: "0.08em",
-        textTransform: "uppercase",
+        letterSpacing: "-0.005em",
         margin: "4px 2px 10px",
         display: "flex",
         alignItems: "center",
