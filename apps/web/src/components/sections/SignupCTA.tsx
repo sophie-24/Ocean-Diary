@@ -3,6 +3,9 @@
 import { useState } from "react";
 import { type } from "@/theme/typography";
 import { colors } from "@/theme/tokens";
+import { ChapterLabel } from "@/components/ui/ChapterLabel";
+import { Button } from "@/components/ui/Button";
+import { Reveal } from "@/components/ui/Reveal";
 
 export function SignupCTA() {
   const [email, setEmail] = useState("");
@@ -38,7 +41,7 @@ export function SignupCTA() {
       style={{
         backgroundColor: colors.oceanBlue,
         color: colors.white,
-        padding: "160px clamp(24px, 6vw, 80px)",
+        padding: "clamp(88px, 12vw, 160px) clamp(20px, 6vw, 80px)",
         position: "relative",
         overflow: "hidden",
       }}
@@ -70,9 +73,7 @@ export function SignupCTA() {
         className="signup-grid"
       >
         <div>
-          <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-            사전 등록
-          </p>
+          <ChapterLabel tone="dark">사전 등록</ChapterLabel>
           <h2 style={{ ...type.h1, color: colors.white, margin: "22px 0 18px", lineHeight: 1.1 }}>
             Mola 출시하면
             <br />
@@ -89,8 +90,8 @@ export function SignupCTA() {
             backgroundColor: "rgba(255,255,255,0.08)",
             backdropFilter: "blur(8px)",
             border: "1px solid rgba(255,255,255,0.18)",
-            borderRadius: 28,
-            padding: "40px 32px",
+            borderRadius: 24,
+            padding: "clamp(28px, 4vw, 40px) clamp(22px, 3vw, 32px)",
           }}
         >
           {state === "sent" ? (
@@ -127,7 +128,7 @@ export function SignupCTA() {
                 style={{
                   width: "100%",
                   padding: "18px 20px",
-                  borderRadius: 14,
+                  borderRadius: 16,
                   border: "none",
                   outline: "none",
                   fontSize: 17,
@@ -138,26 +139,14 @@ export function SignupCTA() {
                   boxSizing: "border-box",
                 }}
               />
-              <button
+              <Button
                 type="submit"
+                tone="dark"
                 disabled={state === "loading"}
-                style={{
-                  width: "100%",
-                  padding: "18px 24px",
-                  borderRadius: 14,
-                  border: "none",
-                  backgroundColor: colors.navy,
-                  color: colors.white,
-                  fontFamily: "var(--font-body)",
-                  fontWeight: 800,
-                  fontSize: 17,
-                  letterSpacing: "-0.005em",
-                  cursor: state === "loading" ? "wait" : "pointer",
-                  opacity: state === "loading" ? 0.7 : 1,
-                }}
+                style={{ width: "100%" }}
               >
                 {state === "loading" ? "보내는 중…" : "출시 연락받기 →"}
-              </button>
+              </Button>
               {err ? (
                 <p style={{ ...type.caption, color: "#FFD4CC", margin: "12px 0 0" }}>
                   {err}

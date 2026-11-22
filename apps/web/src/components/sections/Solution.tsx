@@ -1,6 +1,9 @@
 import { type } from "@/theme/typography";
 import { colors } from "@/theme/tokens";
 import { Critter } from "@/components/Critter";
+import { ChapterLabel } from "@/components/ui/ChapterLabel";
+import { Chip } from "@/components/ui/Chip";
+import { Reveal } from "@/components/ui/Reveal";
 import type { CritterKind } from "@/data/illustrations";
 
 type Step = {
@@ -41,15 +44,13 @@ export function Solution() {
       style={{
         backgroundColor: colors.deepSea,
         color: colors.white,
-        padding: "160px clamp(24px, 6vw, 80px)",
+        padding: "clamp(88px, 12vw, 160px) clamp(20px, 6vw, 80px)",
         position: "relative",
         overflow: "hidden",
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-          이렇게 해결해요
-        </p>
+        <ChapterLabel tone="dark">이렇게 해결해요</ChapterLabel>
 
         <h2 style={{ ...type.h1, color: colors.white, margin: "22px 0 18px", maxWidth: 900 }}>
           사진 한 장이면 돼요.
@@ -57,14 +58,16 @@ export function Solution() {
           나머지는 Mola가 다 해줄게요.
         </h2>
 
-        <p style={{ ...type.lead, color: colors.sky, margin: "0 0 96px", maxWidth: 640, opacity: 0.85 }}>
+        <p style={{ ...type.lead, color: colors.sky, margin: "0 0 clamp(48px, 7vw, 96px)", maxWidth: 640, opacity: 0.85 }}>
           AI가 바다 친구를 알아보고, 수채 카드로 그려주고, 당신의 도감에
           기록해둬요. 마치 그림일기 한 장 넘기듯이.
         </p>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 80 }}>
           {STEPS.map((s, i) => (
-            <StepRow key={s.no} step={s} align={i % 2 === 0 ? "left" : "right"} />
+            <Reveal key={s.no}>
+              <StepRow step={s} align={i % 2 === 0 ? "left" : "right"} />
+            </Reveal>
           ))}
         </div>
       </div>
@@ -76,6 +79,7 @@ function StepRow({ step, align }: { step: Step; align: "left" | "right" }) {
   const textFirst = align === "left";
   return (
     <div
+      className="step-row"
       style={{
         display: "grid",
         gridTemplateColumns: textFirst ? "1fr auto" : "auto 1fr",
@@ -94,9 +98,7 @@ function StepRow({ step, align }: { step: Step; align: "left" | "right" }) {
 function StepText({ step }: { step: Step }) {
   return (
     <div style={{ maxWidth: 520 }}>
-      <p style={{ ...type.label, color: colors.sky, margin: 0, opacity: 0.8 }}>
-        {step.no}단계
-      </p>
+      <Chip tone="glass">{step.no}단계</Chip>
       <h3 style={{ ...type.h2, color: colors.white, margin: "10px 0 14px", lineHeight: 1.15 }}>
         {step.title}
       </h3>
@@ -113,7 +115,7 @@ function StepArt({ step }: { step: Step }) {
       style={{
         width: step.critterSize + 40,
         height: step.critterSize + 40,
-        borderRadius: 32,
+        borderRadius: 24,
         backgroundColor: "rgba(220,235,252,0.06)",
         border: "1px solid rgba(169,210,255,0.14)",
         display: "flex",

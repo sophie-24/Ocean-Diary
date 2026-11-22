@@ -1,6 +1,8 @@
 import { type } from "@/theme/typography";
 import { colors } from "@/theme/tokens";
 import { Critter } from "@/components/Critter";
+import { ChapterLabel } from "@/components/ui/ChapterLabel";
+import { Reveal } from "@/components/ui/Reveal";
 import type { CritterKind } from "@/data/illustrations";
 
 type Feat = {
@@ -62,12 +64,13 @@ export function Features() {
     <section
       style={{
         backgroundColor: colors.ghostBg,
-        padding: "160px clamp(24px, 6vw, 80px)",
+        padding: "clamp(88px, 12vw, 160px) clamp(20px, 6vw, 80px)",
         color: colors.navy,
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
         <div
+          className="feat-head"
           style={{
             display: "flex",
             justifyContent: "space-between",
@@ -78,9 +81,7 @@ export function Features() {
           }}
         >
           <div style={{ maxWidth: 740 }}>
-            <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-              핵심 기능
-            </p>
+            <ChapterLabel>핵심 기능</ChapterLabel>
             <h2 style={{ ...type.h1, color: colors.navy, margin: "22px 0 18px" }}>
               다이버의 하루를
               <br />
@@ -92,6 +93,7 @@ export function Features() {
           </p>
         </div>
 
+        <Reveal>
         <div
           style={{
             display: "grid",
@@ -109,6 +111,7 @@ export function Features() {
             <FeatureCard key={f.area} feat={f} />
           ))}
         </div>
+        </Reveal>
 
         <style>{`
           @media (max-width: 760px) {
@@ -139,7 +142,7 @@ function FeatureCard({ feat }: { feat: Feat }) {
         backgroundColor: feat.bg,
         color: feat.fg,
         border: feat.bg === "#FFFFFF" ? `1px solid ${colors.line}` : "none",
-        borderRadius: 28,
+        borderRadius: 24,
         padding: "32px 30px",
         display: "flex",
         flexDirection: "column",

@@ -2,6 +2,8 @@ import type { ReactNode } from "react";
 import { type } from "@/theme/typography";
 import { colors } from "@/theme/tokens";
 import { PhoneFrame } from "@/components/PhoneFrame";
+import { ChapterLabel } from "@/components/ui/ChapterLabel";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * 플로우 섹션 공통 블록 — 좌/우 지그재그로 PhoneFrame 하나 + 설명.
@@ -37,26 +39,34 @@ export function ExperienceBlock({
       style={{
         display: "grid",
         gridTemplateColumns: "1fr 1fr",
-        gap: 60,
+        gap: "clamp(28px, 5vw, 60px)",
         alignItems: "center",
-        marginBottom: 120,
+        marginBottom: "clamp(64px, 9vw, 120px)",
       }}
     >
       {phoneFirst ? (
         <>
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-            <ScaledPhone tilt={tilt}>{children}</ScaledPhone>
-            {extras}
-          </div>
-          <BlockText no={no} label={label} title={title} body={body} />
+          <Reveal>
+            <div className="stage">
+              <ScaledPhone tilt={tilt}>{children}</ScaledPhone>
+              {extras}
+            </div>
+          </Reveal>
+          <Reveal delay={120}>
+            <BlockText no={no} label={label} title={title} body={body} />
+          </Reveal>
         </>
       ) : (
         <>
-          <BlockText no={no} label={label} title={title} body={body} />
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 16 }}>
-            <ScaledPhone tilt={tilt}>{children}</ScaledPhone>
-            {extras}
-          </div>
+          <Reveal delay={120}>
+            <BlockText no={no} label={label} title={title} body={body} />
+          </Reveal>
+          <Reveal>
+            <div className="stage">
+              <ScaledPhone tilt={tilt}>{children}</ScaledPhone>
+              {extras}
+            </div>
+          </Reveal>
         </>
       )}
 
@@ -125,7 +135,7 @@ function BlockText({
       >
         {no}
       </span>
-      <p style={{ ...type.label, color: colors.oceanBlue, margin: "0 0 14px" }}>{label}</p>
+      <ChapterLabel style={{ marginBottom: 14 }}>{label}</ChapterLabel>
       <h3 style={{ ...type.h2, color: colors.navy, margin: "0 0 20px", lineHeight: 1.18 }}>
         {title}
       </h3>
@@ -141,9 +151,11 @@ export function SectionShell({
   title,
   lead,
   children,
+  tone = "light",
 }: {
   id: string;
   background: string;
+  tone?: "light" | "dark";
   label: string;
   title: ReactNode;
   lead?: ReactNode;
@@ -154,13 +166,14 @@ export function SectionShell({
       id={id}
       style={{
         backgroundColor: background,
-        padding: "160px clamp(24px, 6vw, 80px)",
+        padding: "clamp(88px, 12vw, 160px) clamp(20px, 6vw, 80px)",
         color: colors.navy,
         overflow: "hidden",
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>{label}</p>
+        <Reveal>
+        <ChapterLabel tone={tone}>{label}</ChapterLabel>
         <h2
           style={{
             ...type.h1,
@@ -172,10 +185,18 @@ export function SectionShell({
           {title}
         </h2>
         {lead && (
-          <p style={{ ...type.lead, color: colors.ink2, margin: "0 0 96px", maxWidth: 620 }}>
+          <p
+            style={{
+              ...type.lead,
+              color: colors.ink2,
+              margin: "0 0 clamp(48px, 7vw, 96px)",
+              maxWidth: 620,
+            }}
+          >
             {lead}
           </p>
         )}
+        </Reveal>
         {children}
       </div>
     </section>

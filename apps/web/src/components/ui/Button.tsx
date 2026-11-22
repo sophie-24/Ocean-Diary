@@ -20,6 +20,7 @@ export function Button({
   onClick,
   type = "button",
   ariaLabel,
+  disabled,
 }: {
   children: ReactNode;
   href?: string;
@@ -31,6 +32,7 @@ export function Button({
   onClick?: () => void;
   type?: "button" | "submit";
   ariaLabel?: string;
+  disabled?: boolean;
 }) {
   const common = {
     className: "mola-btn",
@@ -48,7 +50,13 @@ export function Button({
     );
   }
   return (
-    <button type={type} onClick={onClick} {...common}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      {...common}
+      style={{ ...style, ...(disabled ? { opacity: 0.7, cursor: "wait" } : null) }}
+    >
       {children}
     </button>
   );

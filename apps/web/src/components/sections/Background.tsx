@@ -1,5 +1,8 @@
 import { type } from "@/theme/typography";
 import { colors } from "@/theme/tokens";
+import { ChapterLabel } from "@/components/ui/ChapterLabel";
+import { Chip } from "@/components/ui/Chip";
+import { Reveal } from "@/components/ui/Reveal";
 
 /**
  * "Background" — Pretendard 통일. Fraunces italic 영문 중간 삽입구 제거.
@@ -9,14 +12,12 @@ export function Background() {
     <section
       style={{
         backgroundColor: colors.mist,
-        padding: "140px clamp(24px, 6vw, 80px)",
+        padding: "clamp(80px, 11vw, 140px) clamp(20px, 6vw, 80px)",
         color: colors.navy,
       }}
     >
       <div style={{ maxWidth: 1180, margin: "0 auto" }}>
-        <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-          우리가 본 문제
-        </p>
+        <ChapterLabel>우리가 본 문제</ChapterLabel>
 
         <h2 style={{ ...type.h1, color: colors.navy, margin: "24px 0 20px", maxWidth: 820 }}>
           다이빙 다녀오면
@@ -29,7 +30,9 @@ export function Background() {
           앨범엔 그 날의 바다가 수백 장 묻혀 있어요.
         </p>
 
+        <Reveal>
         <div
+          className="bg-grid"
           style={{
             display: "grid",
             gridTemplateColumns: "minmax(0, 1.4fr) minmax(0, 1fr)",
@@ -41,17 +44,17 @@ export function Background() {
             style={{
               backgroundColor: colors.white,
               border: `1px solid ${colors.line}`,
-              borderRadius: 32,
-              padding: "48px 40px",
+              borderRadius: 24,
+              padding: "clamp(28px, 4vw, 48px) clamp(22px, 3.5vw, 40px)",
               display: "flex",
               flexDirection: "column",
               justifyContent: "space-between",
               minHeight: 340,
             }}
           >
-            <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-              문제 01
-            </p>
+            <div>
+              <Chip tone="blue">문제 01</Chip>
+            </div>
             <div>
               <h3 style={{ ...type.h2, color: colors.navy, margin: "16px 0 14px", lineHeight: 1.15 }}>
                 로그북은
@@ -78,9 +81,9 @@ export function Background() {
                 justifyContent: "space-between",
               }}
             >
-              <p style={{ ...type.label, color: colors.sky, margin: 0 }}>
-                문제 02
-              </p>
+              <div>
+                <Chip tone="glass">문제 02</Chip>
+              </div>
               <h3 style={{ ...type.h3, color: colors.white, margin: "14px 0 10px" }}>
                 사진은 앨범 어딘가.
               </h3>
@@ -99,9 +102,9 @@ export function Background() {
                 justifyContent: "space-between",
               }}
             >
-              <p style={{ ...type.label, color: colors.oceanBlue, margin: 0 }}>
-                문제 03
-              </p>
+              <div>
+                <Chip tone="blue">문제 03</Chip>
+              </div>
               <h3 style={{ ...type.h3, color: colors.navy, margin: "14px 0 10px" }}>
                 기록이 재미없어요.
               </h3>
@@ -111,6 +114,7 @@ export function Background() {
             </article>
           </div>
         </div>
+        </Reveal>
       </div>
     </section>
   );

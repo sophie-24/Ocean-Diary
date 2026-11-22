@@ -16,6 +16,7 @@ export function Aquarium() {
     <SectionShell
       id="aquarium"
       background={colors.navy}
+      tone="dark"
       label="나의 바다"
       title={
         <span style={{ color: colors.white }}>

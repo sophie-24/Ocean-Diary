@@ -7,7 +7,7 @@ export function Footer() {
       style={{
         backgroundColor: colors.deepSea,
         color: colors.sky,
-        padding: "96px clamp(24px, 6vw, 80px) 48px",
+        padding: "clamp(64px, 9vw, 96px) clamp(20px, 6vw, 80px) 48px",
       }}
     >
       <div
