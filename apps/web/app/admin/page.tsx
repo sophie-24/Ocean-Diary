@@ -42,7 +42,7 @@ async function load(secret: string): Promise<{ stats?: Stats; signups?: SignupsS
     // 사전등록 요약도 함께 로드
     let signups: SignupsSummary | undefined;
     try {
-      const sr = await fetch(`${API_BASE()}/v1/admin/signups?limit=0`, {
+      const sr = await fetch(`${API_BASE()}/v1/admin/signups?limit=1`, {
         headers: { Authorization: `Bearer ${secret}` },
         cache: "no-store",
       });
