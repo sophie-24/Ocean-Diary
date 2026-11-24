@@ -5,6 +5,7 @@ import { Card } from "@/components/ui/Card";
 
 const LINKS = [
   { href: "/admin", label: "대시보드" },
+  { href: "/admin/signups", label: "사전등록" },
   { href: "/admin/users", label: "가입자" },
   { href: "/admin/identifications", label: "AI 식별" },
   { href: "/admin/species", label: "도감 종" },

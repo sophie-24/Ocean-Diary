@@ -27,7 +27,9 @@ type Stats = {
 
 const nf = new Intl.NumberFormat("ko-KR");
 
-async function load(secret: string): Promise<{ stats?: Stats; error?: string; authFailed?: boolean }> {
+type SignupsSummary = { total: number; not_notified: number };
+
+async function load(secret: string): Promise<{ stats?: Stats; signups?: SignupsSummary; error?: string; authFailed?: boolean }> {
   try {
     const res = await fetch(`${API_BASE()}/v1/admin/stats`, {
       headers: { Authorization: `Bearer ${secret}` },
@@ -35,7 +37,22 @@ async function load(secret: string): Promise<{ stats?: Stats; error?: string; au
     });
     if (res.status === 401) return { authFailed: true };
     if (!res.ok) return { error: `API 오류 (${res.status})` };
-    return { stats: (await res.json()) as Stats };
+    const stats = (await res.json()) as Stats;
+
+    // 사전등록 요약도 함께 로드
+    let signups: SignupsSummary | undefined;
+    try {
+      const sr = await fetch(`${API_BASE()}/v1/admin/signups?limit=0`, {
+        headers: { Authorization: `Bearer ${secret}` },
+        cache: "no-store",
+      });
+      if (sr.ok) {
+        const sd = await sr.json();
+        signups = { total: sd.total ?? 0, not_notified: sd.not_notified ?? 0 };
+      }
+    } catch { /* 사전등록 테이블 없어도 대시보드는 정상 작동 */ }
+
+    return { stats, signups };
   } catch {
     return { error: "API 서버에 연결할 수 없어요." };
   }
@@ -78,6 +95,9 @@ export default async function AdminPage() {
       </p>
 
       <section style={grid}>
+        {result.signups ? (
+          <Stat href="/admin/signups" label="사전등록" value={result.signups.total} sub={`미발송 ${nf.format(result.signups.not_notified)}명`} />
+        ) : null}
         <Stat href="/admin/users" label="전체 가입자" value={s.users.total} sub={`오늘 +${s.users.today} · 7일 +${s.users.last_7d} · 30일 +${s.users.last_30d}`} />
         <Stat label="7일 활성 사용자" value={s.active_users.last_7d} />
         <Stat label="관찰 기록" value={s.observations.total} sub={`최근 7일 ${nf.format(s.observations.last_7d)} · 종 ${nf.format(s.observations.unique_species)}`} />

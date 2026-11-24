@@ -760,3 +760,130 @@ def admin_species_delete(species_id: UUID, session: Session = Depends(get_sessio
     session.commit()
     _delete_objects(old_keys)
     return {"result": "deleted", "observation_count": 0}
+
+
+# ---------------------------------------------------------------------------
+# /v1/admin/signups — 사전등록 이메일 목록 (Supabase pre_launch_signups)
+# ---------------------------------------------------------------------------
+
+_SIGNUPS_TABLE_ENSURED = False
+
+_SIGNUPS_DDL = """
+CREATE TABLE IF NOT EXISTS pre_launch_signups (
+  id           uuid DEFAULT gen_random_uuid() PRIMARY KEY,
+  email        text NOT NULL,
+  source       text NOT NULL DEFAULT 'mola.app',
+  signed_up_at timestamptz NOT NULL DEFAULT now(),
+  notified_at  timestamptz,
+  CONSTRAINT email_unique UNIQUE (email)
+);
+CREATE INDEX IF NOT EXISTS idx_signups_not_notified
+  ON pre_launch_signups (signed_up_at)
+  WHERE notified_at IS NULL;
+ALTER TABLE pre_launch_signups ENABLE ROW LEVEL SECURITY;
+DO $$
+BEGIN
+  IF NOT EXISTS (
+    SELECT 1 FROM pg_policies WHERE tablename = 'pre_launch_signups' AND policyname = 'service_role_all'
+  ) THEN
+    CREATE POLICY "service_role_all" ON pre_launch_signups
+      FOR ALL TO service_role USING (true) WITH CHECK (true);
+  END IF;
+END $$;
+"""
+
+
+def _ensure_signups_table(session: Session) -> None:
+    global _SIGNUPS_TABLE_ENSURED
+    if _SIGNUPS_TABLE_ENSURED:
+        return
+    try:
+        session.execute(text(_SIGNUPS_DDL))
+        session.commit()
+        _SIGNUPS_TABLE_ENSURED = True
+        logger.info("pre_launch_signups table ensured")
+    except Exception:
+        session.rollback()
+        logger.warning("could not ensure pre_launch_signups table", exc_info=True)
+        raise HTTPException(status_code=500, detail={"code": "TABLE_INIT_FAILED"})
+
+
+@router.get("/signups", dependencies=[Depends(_require_admin)])
+def admin_signups(
+    q: str | None = Query(default=None, max_length=100),
+    limit: int = Query(default=50, ge=1, le=200),
+    offset: int = Query(default=0, ge=0, le=100_000),
+    session: Session = Depends(get_session),
+):
+    _ensure_signups_table(session)
+
+    pattern = _like_pattern(q)
+    where = "(CAST(:p AS text) IS NULL OR s.email ILIKE CAST(:p AS text) ESCAPE '!')"
+
+    total = session.execute(
+        text(f"SELECT count(*) FROM pre_launch_signups s WHERE {where}"),
+        {"p": pattern},
+    ).scalar_one()
+
+    rows = session.execute(
+        text(
+            f"""
+            SELECT s.id, s.email, s.source, s.signed_up_at, s.notified_at
+            FROM pre_launch_signups s
+            WHERE {where}
+            ORDER BY s.signed_up_at DESC
+            LIMIT :limit OFFSET :offset
+            """
+        ),
+        {"p": pattern, "limit": limit, "offset": offset},
+    ).all()
+
+    not_notified = session.execute(
+        text("SELECT count(*) FROM pre_launch_signups WHERE notified_at IS NULL")
+    ).scalar_one()
+
+    return {
+        "total": total,
+        "not_notified": not_notified,
+        "items": [
+            {
+                "id": str(r.id),
+                "email": r.email,
+                "source": r.source,
+                "signed_up_at": _iso(r.signed_up_at),
+                "notified_at": _iso(r.notified_at),
+            }
+            for r in rows
+        ],
+    }
+
+
+@router.get("/signups/export", dependencies=[Depends(_require_admin)])
+def admin_signups_export(
+    session: Session = Depends(get_session),
+):
+    """미발송 이메일 목록을 CSV 형식으로 내보내기."""
+    _ensure_signups_table(session)
+
+    from fastapi.responses import Response as RawResponse
+
+    rows = session.execute(
+        text(
+            """
+            SELECT email, source, signed_up_at
+            FROM pre_launch_signups
+            WHERE notified_at IS NULL
+            ORDER BY signed_up_at ASC
+            """
+        )
+    ).all()
+
+    lines = ["email,source,signed_up_at"]
+    for r in rows:
+        lines.append(f"{r.email},{r.source},{r.signed_up_at.isoformat() if r.signed_up_at else ''}")
+
+    return RawResponse(
+        content="\n".join(lines),
+        media_type="text/csv",
+        headers={"Content-Disposition": "attachment; filename=mola_signups.csv"},
+    )
