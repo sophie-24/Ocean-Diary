@@ -15,7 +15,7 @@ export function Footer() {
           maxWidth: 1180,
           margin: "0 auto",
           display: "grid",
-          gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr) minmax(0, 1fr)",
+          gridTemplateColumns: "minmax(0, 2fr) minmax(0, 1fr) minmax(0, 1fr)",
           gap: 48,
           marginBottom: 72,
         }}
@@ -47,13 +47,6 @@ export function Footer() {
         <FooterCol heading="팔로우">
           <FooterLink href="https://instagram.com/molamola_log">Instagram</FooterLink>
           <FooterLink href="https://threads.net/@molamola_log">Threads</FooterLink>
-          <FooterLink href="mailto:hello@mola.app">hello@mola.app</FooterLink>
-        </FooterCol>
-
-        <FooterCol heading="제품">
-          <FooterLink href="#experience">지금 체험</FooterLink>
-          <FooterLink href="#signup">출시 연락받기</FooterLink>
-          <FooterLink href="#">iOS, Android (준비 중)</FooterLink>
         </FooterCol>
 
         <FooterCol heading="법적 고지">
@@ -68,18 +61,10 @@ export function Footer() {
           margin: "0 auto",
           paddingTop: 32,
           borderTop: "1px solid rgba(220,235,252,0.14)",
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-          flexWrap: "wrap",
-          gap: 12,
         }}
       >
         <p style={{ ...type.caption, color: colors.sky, margin: 0, opacity: 0.55 }}>
           © 2026 Mola
-        </p>
-        <p style={{ ...type.caption, color: colors.sky, margin: 0, opacity: 0.55 }}>
-          made with 🌊 by a diver
         </p>
       </div>
 

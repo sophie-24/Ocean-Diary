@@ -9,6 +9,8 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // 관리자 화면의 종 이미지 업로드(최대 4MB)를 서버 액션으로 받기 위해 한도를 올린다.
+  experimental: { serverActions: { bodySizeLimit: "5mb" } },
 };
 
 export default nextConfig;

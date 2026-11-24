@@ -1,14 +1,13 @@
 import type { ReactNode } from "react";
 import { PhoneFrame } from "@/components/PhoneFrame";
-import { DogamGridInApp } from "@/components/DogamGridInApp";
-import { TankInApp } from "@/components/TankInApp";
+import { ScreenImage } from "@/components/ScreenImage";
 import { Critter } from "@/components/Critter";
 import { Button } from "@/components/ui/Button";
 import { Chip } from "@/components/ui/Chip";
 
 /**
  * 히어로 v4 — 제품 중심.
- *   왼쪽: 라벨 칩 · 제목(핵심 단어 honey 강조) · 설명 · CTA 2개
+ *   왼쪽: 라벨 칩 · 제목(핵심 단어 honey 강조) · 설명 · CTA
  *   오른쪽: 실제 앱 화면 두 개를 겹쳐 기울인 대표 비주얼 + 아래에서 빼꼼 나오는 Critter
  *   배경: 아주 옅은 거대 워드마크 (브랜드 흔적만 남김)
  * 스타일/반응형은 app/globals.css 의 .hero-* 클래스.
@@ -35,19 +34,15 @@ export function Hero() {
             <Button href="#signup" tone="dark">
               출시 연락받기 →
             </Button>
-            <Button href="#experience" variant="ghost" tone="dark">
-              먼저 체험해보기
-            </Button>
           </div>
-          <p className="hero-note">iOS, Android 지원 · 로그인·설치 없이 체험</p>
         </div>
 
         <div className="hero-phones">
           <ScaledPhone className="hero-phone-back" ariaHidden>
-            <DogamGridInApp />
+            <ScreenImage src="/screens/dogam-grid.png" alt="도감 화면" />
           </ScaledPhone>
           <ScaledPhone className="hero-phone-front">
-            <TankInApp />
+            <ScreenImage src="/screens/log-list.png" alt="로그북 목록 화면" />
           </ScaledPhone>
 
           <div className="hero-chip-b float-slow">

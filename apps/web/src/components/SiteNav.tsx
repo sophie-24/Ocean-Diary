@@ -25,9 +25,6 @@ export function SiteNav() {
           Mola
         </a>
         <nav className="nav-right" aria-label="주요 메뉴">
-          <a className="nav-link" href="#experience">
-            먼저 체험해보기
-          </a>
           <Button
             href="#signup"
             size="md"
