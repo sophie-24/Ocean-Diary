@@ -24,7 +24,13 @@ DATABASE_URL = os.environ.get(
 engine = create_engine(
     DATABASE_URL,
     pool_pre_ping=True,
-    connect_args={"connect_timeout": settings.database_connect_timeout_seconds},
+    connect_args={
+        "connect_timeout": settings.database_connect_timeout_seconds,
+        # Supabase's pooler can hand a different backend connection to the same
+        # session, which breaks psycopg's auto-prepared statements
+        # ("prepared statement _pg3_0 does not exist"). Disable them.
+        "prepare_threshold": None,
+    },
 )
 SessionLocal = sessionmaker(bind=engine, autoflush=False, expire_on_commit=False)
 
