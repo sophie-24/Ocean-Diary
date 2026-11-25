@@ -15,7 +15,7 @@ primary_region = 'nrt'
 [env]
   APP_ENV = 'production'
   DEV_AUTH_ENABLED = 'false'
-  IDENTIFICATION_PROVIDER = 'mock'
+  IDENTIFICATION_PROVIDER = 'openai'
   MAX_IDENTIFICATION_JOBS_PER_USER_PER_DAY = '10'
   S3_BUCKET_NAME = 'mola-media'
   S3_REGION = 'auto'

@@ -33,7 +33,7 @@ export function PrivacyScreen() {
 
       <ScrollView contentContainerStyle={styles.scroll}>
         <Txt size={13} color={colors.ink2}>
-          시행일: 2026년 11월 17일
+          시행일: 2026년 11월 24일
         </Txt>
 
         <Txt size={14} style={styles.intro}>
@@ -42,13 +42,13 @@ export function PrivacyScreen() {
 
         <Section title="1. 수집하는 개인정보">
           <Txt size={14} weight="bold">필수 항목</Txt>
-          <Bullet>이메일 주소 (Google 계정 로그인 시)</Bullet>
+          <Bullet>이메일 주소 (Apple·Google 로그인 시. Apple은 비공개 릴레이 주소일 수 있음)</Bullet>
           <Bullet>서비스 식별자 (Supabase 계정 ID)</Bullet>
 
           <Txt size={14} weight="bold" style={styles.subhead}>
             선택 항목
           </Txt>
-          <Bullet>프로필 이미지 (Google 계정 연동 시 자동)</Bullet>
+          <Bullet>이름·프로필 이미지 (Google 로그인 시), 닉네임·프로필 이미지 (카카오 로그인 시)</Bullet>
 
           <Txt size={14} weight="bold" style={styles.subhead}>
             이용자가 직접 입력·업로드
@@ -77,9 +77,11 @@ export function PrivacyScreen() {
 
         <Section title="4. 제3자 제공·위탁">
           <Txt size={14}>다음 서비스에 제한된 정보가 처리됩니다.</Txt>
-          <Bullet>Supabase (인증·데이터 저장): 이메일, 계정 ID, 이용자 입력 데이터</Bullet>
-          <Bullet>Google OAuth (로그인): 이메일, 프로필 정보</Bullet>
-          <Bullet>OpenAI (AI 생물 식별): 이용자가 업로드한 사진 — 식별 결과 반환 후 영구 저장하지 않음</Bullet>
+          <Bullet>Supabase (인증·데이터 저장, 인도): 계정 정보, 이용자 입력 데이터</Bullet>
+          <Bullet>Fly.io (API 서버, 일본): 요청 처리 중 전송되는 항목</Bullet>
+          <Bullet>Cloudflare R2 (사진 저장): 이용자가 업로드한 사진</Bullet>
+          <Bullet>Apple·Google·카카오 (로그인): 인증 정보</Bullet>
+          <Bullet>OpenAI (AI 생물 식별, 미국): 식별을 요청한 사진. 저장 옵션을 끄고 전송하며, 사업자 정책에 따라 남용 방지 목적으로 일정 기간 보관될 수 있음</Bullet>
         </Section>
 
         <Section title="5. 이용자 권리">
@@ -116,7 +118,7 @@ export function PrivacyScreen() {
         </Section>
 
         <Txt size={12} color={colors.ink2} align="center" style={styles.footer}>
-          이 문서는 베타 버전입니다. 정식 출시 전 법률 검토를 거쳐 업데이트됩니다.
+          전문은 https://today.mola.app/privacy 에서도 볼 수 있습니다.
         </Txt>
       </ScrollView>
     </SafeAreaView>
